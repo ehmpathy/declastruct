@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getReferenceTo should be able to reference by unique key 1`] = `
+Object {
+  "identifiedBy": Object {
+    "key": "UNIQUE_KEY",
+    "value": Object {
+      "serialNumber": "821",
+    },
+  },
+  "referenceOf": "CNCMachine",
+}
+`;
+
+exports[`getReferenceTo should reference by primary key if posible 1`] = `
+Object {
+  "identifiedBy": Object {
+    "key": "PRIMARY_KEY",
+    "value": Object {
+      "uuid": "de0e34ca-ce61-4884-ace5-093a1a32ff92",
+    },
+  },
+  "referenceOf": "CNCMachine",
+}
+`;
+
+exports[`getReferenceTo should throw a helpful error if the resource is not an instance of a domain object 1`] = `
+[Error: Can not reference declared resource of class 'Object' because the resource is not an instance of a DomainObject class.
+
+resource
+{
+  "name": "bob",
+  "age": 21
+}]
+`;
+
+exports[`getReferenceTo should throw a helpful error the class does not have primary key defined correctly 1`] = `[Error: Can not reference declared resource of class 'CNCMachine'. Instances of the class 'CNCMachine' can not be referenced because the static property 'primary' was not defined as an array of strings.]`;
+
+exports[`getReferenceTo should throw a helpful error the class does not have unique key defined 1`] = `[Error: Can not reference declared resource of class 'CNCMachine'. Instances of the class 'CNCMachine' can not be referenced because the static property 'unique' was not defined as an array of strings.]`;
