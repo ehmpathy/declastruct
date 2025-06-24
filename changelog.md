@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2025-06-24)
+
+
+### Features
+
+* **init:** initialize based on domain-glossary-price ([fd85888](https://github.com/ehmpathy/declastruct/commit/fd858884285c66a545d4893f4ef390b59e046e6b))
+
 ## [1.0.1](https://github.com/ehmpathy/declastruct/compare/v1.0.0...v1.0.1) (2025-06-24)
 
 
