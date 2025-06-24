@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`detectDifferenceBetweenDesiredAndRemoteStateOfResource should return a helpful displayable difference and usable difference 1`] = `
+{
+  "displayable": "[2m  CNCMachine {[22m
+[32m+   "location": "basement",[39m
+[31m-   "location": "moon",[39m
+[2m    "serialNumber": "821",[22m
+[2m    "size": "big",[22m
+[2m  }[22m",
+  "usable": {
+    "added": {},
+    "deleted": {},
+    "updated": {
+      "location": "basement",
+    },
+  },
+}
+`;
+
+exports[`detectDifferenceBetweenDesiredAndRemoteStateOfResource should show the case where we want to create a new resource well 1`] = `
+{
+  "displayable": "[32m+ CNCMachine {[39m
+[32m+   "location": "basement",[39m
+[32m+   "serialNumber": "821",[39m
+[32m+   "size": "big",[39m
+[32m+ }[39m
+[31m- null[39m",
+  "usable": {
+    "added": {
+      "location": "basement",
+      "serialNumber": "821",
+      "size": "big",
+    },
+    "deleted": {},
+    "updated": {},
+  },
+}
+`;
