@@ -17,7 +17,12 @@
   "engines": {
     "node": ">=8.0.0"
   },
+  "types": "dist/index.d.ts",
+  "bin": {
+    "declastruct": "./bin/run"
+  },
   "files": [
+    "/bin",
     "/dist"
   ],
   "scripts": {
