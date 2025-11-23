@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/ehmpathy/declastruct/compare/v1.1.0...v1.1.1) (2025-11-23)
+
+
+### Bug Fixes
+
+* **docs:** improve readme ([447071f](https://github.com/ehmpathy/declastruct/commit/447071fd7f99765ecd5eca5df4f91ac5ee363c4d))
+
 ## [1.1.0](https://github.com/ehmpathy/declastruct/compare/v1.0.0...v1.1.0) (2025-11-23)
 
 
