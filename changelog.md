@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/ehmpathy/declastruct/compare/v1.1.2...v1.1.3) (2025-11-23)
+
+
+### Bug Fixes
+
+* **context:** passthrough the provider context correctly ([1ef91a1](https://github.com/ehmpathy/declastruct/commit/1ef91a1b42390ad2304abc4d81bc6ea04721fbd1))
+
 ## [1.1.2](https://github.com/ehmpathy/declastruct/compare/v1.1.1...v1.1.2) (2025-11-23)
 
 
