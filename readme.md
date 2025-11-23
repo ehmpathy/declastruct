@@ -59,7 +59,6 @@ apply the plan to fulfill the wish
 npx declastruct apply --plan provision/.temp/plan.json
 ```
 
-
 # benefits
 
 - no dedicated state required
@@ -70,21 +69,8 @@ npx declastruct apply --plan provision/.temp/plan.json
   - no awkward new-language limitations
   - reuse your existing domain language to manage your resources
 
-# features
-
-- flexible resource references
-  - eliminate primary-key constraint; enable declaration of resources via unique-key references
-  - eliminate single-key constraint; enable usage of whichever key is accessible
-
-- declarative resource structures
-  - manage resource states declaratively
-
-- declarative persistence structures
-  - standard shape for any operation for interaction with resources
-  - plug and play handlers of resources (interface w/ many remote state stores for the same resource via prebuilt providers)
-
-- declarative instructions
-  - declare desired state
-  - plan changes required to get to desired state
-  - apply changes to get to desired state
-
+- pit of success adapters
+  - each repo that implements a declastruct adapter to control their remote state follows a pit of success
+  - idempotency is required on operations, to guarantee they operate safely
+  - clear declaration of unique and primary keys is required, to guarantee readability, composability, and true comparisons against reality
+  - not only can you use them via declastruct, you can leverage them directly as well

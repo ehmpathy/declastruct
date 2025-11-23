@@ -1,6 +1,9 @@
 import { DomainEntity } from 'domain-objects';
 
-import { DeclastructChange, DeclastructChangeAction } from './DeclastructChange';
+import {
+  DeclastructChange,
+  DeclastructChangeAction,
+} from './DeclastructChange';
 
 describe('DeclastructChange', () => {
   describe('DeclastructChangeAction', () => {
