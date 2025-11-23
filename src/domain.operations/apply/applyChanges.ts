@@ -69,7 +69,6 @@ export const applyChanges = async (
       change,
       resource: resourceFound,
       providers: input.providers,
-      context,
     });
 
     // log success immediately

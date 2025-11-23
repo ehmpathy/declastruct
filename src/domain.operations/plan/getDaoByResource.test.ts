@@ -18,7 +18,7 @@ describe('getDaoByResource', () => {
     public static unique = ['id'] as const;
   }
 
-  it('should return DAO when exactly one provider matches', () => {
+  it('should return DAO and context when exactly one provider matches', () => {
     const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
       get: {
         byUnique: async () => null,
@@ -29,10 +29,12 @@ describe('getDaoByResource', () => {
       },
     };
 
+    const providerContext = { testKey: 'testValue' };
+
     const provider = new DeclastructProvider({
       name: 'test-provider',
       daos: { DemoResource: demoDao },
-      context: {},
+      context: providerContext,
       hooks: {
         beforeAll: async () => {},
         afterAll: async () => {},
@@ -46,7 +48,8 @@ describe('getDaoByResource', () => {
       providers: [provider],
     });
 
-    expect(result).toBe(demoDao);
+    expect(result.dao).toBe(demoDao);
+    expect(result.context).toBe(providerContext);
   });
 
   it('should throw UnexpectedCodePathError when multiple providers support same resource', () => {

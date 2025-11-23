@@ -13,16 +13,14 @@ import { getDaoByResource } from '../plan/getDaoByResource';
  * .why = executes the actual infrastructure modification
  * .note = different actions require different DAO methods; fails fast if method not available
  */
-export const applyChange = async <TContext = any>({
+export const applyChange = async ({
   resource,
   change,
   providers,
-  context,
 }: {
   resource: DomainEntity<any>;
   change: DeclastructChange;
-  providers: DeclastructProvider<any, TContext>[];
-  context: TContext;
+  providers: DeclastructProvider<any, any>[];
 }): Promise<DeclastructChange> => {
   // skip KEEP actions immediately
   if (change.action === DeclastructChangeAction.KEEP) return change;
@@ -34,7 +32,8 @@ export const applyChange = async <TContext = any>({
       { resource, change },
     );
 
-  const dao = getDaoByResource({
+  // find DAO and provider context for this resource
+  const { dao, context: providerContext } = getDaoByResource({
     resource,
     providers,
   });
@@ -42,39 +41,74 @@ export const applyChange = async <TContext = any>({
   // execute action based on change type
   switch (change.action) {
     case DeclastructChangeAction.CREATE:
-      // create new resource
-      await dao.set.finsert(change.state.desired!, context);
+      // create new resource using provider context
+      await dao.set.finsert(
+        change.state.desired ??
+          UnexpectedCodePathError.throw(
+            'expected change.state.desired for CREATE',
+            { change },
+          ),
+        providerContext,
+      );
       return change;
 
     case DeclastructChangeAction.UPDATE:
-      // update existing resource
+      // update existing resource using provider context
       if (!dao.set.upsert) {
         throw new UnexpectedCodePathError('DAO does not support updates', {
           resourceClassName: change.forResource.class,
         });
       }
-      await dao.set.upsert(change.state.desired!, context);
+      await dao.set.upsert(
+        change.state.desired ??
+          UnexpectedCodePathError.throw(
+            'expected change.state.desired for UPDATE',
+            { change },
+          ),
+        providerContext,
+      );
       return change;
 
     case DeclastructChangeAction.DESTROY:
-      // delete resource
+      // delete resource using provider context
       if (!dao.set.delete) {
         throw new UnexpectedCodePathError('DAO does not support deletes', {
           resourceClassName: change.forResource.class,
         });
       }
-      await dao.set.delete(change.state.remote as any, context);
+      await dao.set.delete(
+        change.state.remote ??
+          UnexpectedCodePathError.throw(
+            'expected change.state.remote for DESTROY',
+            { change },
+          ),
+        providerContext,
+      );
       return change;
 
     case DeclastructChangeAction.REPLACE:
-      // delete then create
+      // delete then create using provider context
       if (!dao.set.delete) {
         throw new UnexpectedCodePathError('DAO does not support deletes', {
           resourceClassName: change.forResource.class,
         });
       }
-      await dao.set.delete(change.state.remote as any, context);
-      await dao.set.finsert(change.state.desired!, context);
+      await dao.set.delete(
+        change.state.remote ??
+          UnexpectedCodePathError.throw(
+            'expected change.state.remote for REPLACE',
+            { change },
+          ),
+        providerContext,
+      );
+      await dao.set.finsert(
+        change.state.desired ??
+          UnexpectedCodePathError.throw(
+            'expected change.state.desired for REPLACE',
+            { change },
+          ),
+        providerContext,
+      );
       return change;
 
     default:

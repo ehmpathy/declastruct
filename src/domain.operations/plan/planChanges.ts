@@ -33,14 +33,14 @@ export const planChanges = async (
   const changes = await Promise.all(
     input.resources.map((resource) =>
       bottleneck.schedule(async () => {
-        // find DAO for this resource
-        const dao = getDaoByResource({
+        // find DAO and provider context for this resource
+        const { dao, context: providerContext } = getDaoByResource({
           resource,
           providers: input.providers,
         });
 
-        // fetch current remote state
-        const remoteState = await dao.get.byUnique(resource, context);
+        // fetch current remote state using provider context
+        const remoteState = await dao.get.byUnique(resource, providerContext);
 
         // compute change
         const change = computeChange({

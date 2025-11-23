@@ -42,7 +42,6 @@ describe('applyChange', () => {
       resource,
       change,
       providers: [],
-      context: {},
     });
 
     expect(result).toBe(change);
@@ -89,7 +88,6 @@ describe('applyChange', () => {
       resource,
       change,
       providers: [provider],
-      context: {},
     });
 
     expect(finsertSpy).toHaveBeenCalledWith(resource, {});
@@ -138,7 +136,6 @@ describe('applyChange', () => {
       resource: desired,
       change,
       providers: [provider],
-      context: {},
     });
 
     expect(upsertSpy).toHaveBeenCalledWith(desired, {});
@@ -186,7 +183,6 @@ describe('applyChange', () => {
         resource: desired,
         change,
         providers: [provider],
-        context: {},
       }),
     );
 
@@ -235,7 +231,6 @@ describe('applyChange', () => {
       resource,
       change,
       providers: [provider],
-      context: {},
     });
 
     expect(deleteSpy).toHaveBeenCalledWith(resource, {});
@@ -285,7 +280,6 @@ describe('applyChange', () => {
       resource: desired,
       change,
       providers: [provider],
-      context: {},
     });
 
     expect(deleteSpy).toHaveBeenCalledWith(remote, {});

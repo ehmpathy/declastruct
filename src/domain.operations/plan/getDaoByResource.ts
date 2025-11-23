@@ -5,8 +5,8 @@ import { DeclastructDao } from '../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 
 /**
- * .what = gets the DAO for a given resource from available providers
- * .why = enables automatic routing of operations to the correct provider
+ * .what = gets the DAO and provider context for a given resource from available providers
+ * .why = enables automatic routing of operations to the correct provider with proper context
  * .note = fails fast if multiple providers support same resource or if no provider is found
  */
 export const getDaoByResource = ({
@@ -15,32 +15,36 @@ export const getDaoByResource = ({
 }: {
   resource: DomainEntity<any>;
   providers: DeclastructProvider<any, any>[];
-}): DeclastructDao<DomainEntity<any>, any, any> => {
+}): {
+  dao: DeclastructDao<DomainEntity<any>, any, any>;
+  context: any;
+} => {
   // get resource class name
   const resourceClassName = resource.constructor.name;
 
-  // find all DAOs applicable to this resource
-  const daosApplicable = providers
+  // find all providers applicable to this resource
+  const providersApplicable = providers
     .map((provider) => ({
-      from: provider.name,
+      name: provider.name,
       dao: provider.daos[resourceClassName],
+      context: provider.context,
     }))
     .filter((match) => match.dao);
 
   // reject if multiple providers support same resource
-  if (daosApplicable.length > 1) {
+  if (providersApplicable.length > 1) {
     throw new UnexpectedCodePathError(
       'multiple providers support same resource',
       {
         resource: resourceClassName,
-        providers: daosApplicable.map((m) => m.from),
+        providers: providersApplicable.map((m) => m.name),
       },
     );
   }
 
-  // reject if no DAO found
-  const [matchedDao] = daosApplicable;
-  if (!matchedDao) {
+  // reject if no provider found
+  const [matchedProvider] = providersApplicable;
+  if (!matchedProvider) {
     throw new UnexpectedCodePathError('no DAO found for resource', {
       resourceClassName,
       availableProviders: providers.map((p) => ({
@@ -50,5 +54,5 @@ export const getDaoByResource = ({
     });
   }
 
-  return matchedDao.dao;
+  return { dao: matchedProvider.dao, context: matchedProvider.context };
 };
