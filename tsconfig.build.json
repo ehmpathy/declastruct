@@ -13,6 +13,7 @@
     "prettier.*",
     "commitlint.*",
     "codegen.*",
+    "rhachet.use.ts",
     "src/**/*.test.(ts|js)",
     "src/**/__test_utils__/**/*.(ts|js)"
   ]
