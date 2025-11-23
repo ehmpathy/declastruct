@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/ehmpathy/declastruct/compare/v1.1.1...v1.1.2) (2025-11-23)
+
+
+### Bug Fixes
+
+* **cli:** ensure the binary is available for use ([1d253f2](https://github.com/ehmpathy/declastruct/commit/1d253f2fab59abdbf7870f4cacad27f0d2151f4d))
+
 ## [1.1.1](https://github.com/ehmpathy/declastruct/compare/v1.1.0...v1.1.1) (2025-11-23)
 
 
