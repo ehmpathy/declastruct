@@ -72,6 +72,16 @@ export const planChanges = async (
     ),
   );
 
+  // log success message if everything is in sync
+  const allInSync = changes.every(
+    (change) => change.action === DeclastructChangeAction.KEEP,
+  );
+  if (allInSync) {
+    context.log.info('');
+    context.log.info('Everything is in sync 🎉');
+    context.log.info('');
+  }
+
   // return plan
   return new DeclastructPlan({
     hash: hashChanges(changes),

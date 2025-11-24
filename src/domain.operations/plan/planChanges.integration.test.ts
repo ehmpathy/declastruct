@@ -78,14 +78,15 @@ describe('planChanges', () => {
     await dao.set.finsert(resources[0]!, {});
     await dao.set.finsert(resources[1]!, {});
 
-    // plan changes
+    // plan changes with spy context
+    const context = createContext();
     const plan = await planChanges(
       {
         resources,
         providers: [demoProvider],
         wishFilePath,
       },
-      createContext(),
+      context,
     );
 
     // verify all changes are KEEP
@@ -96,6 +97,9 @@ describe('planChanges', () => {
       expect(change.state.desired).toBeDefined();
       expect(change.state.remote).toBeDefined();
     });
+
+    // verify success message was logged when everything is in sync
+    expect(context.log.info).toHaveBeenCalledWith('Everything is in sync 🎉');
   });
 
   it('should plan UPDATE actions for resources that changed remotely', async () => {
