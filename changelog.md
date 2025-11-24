@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.7](https://github.com/ehmpathy/declastruct/compare/v1.1.6...v1.1.7) (2025-11-24)
+
+
+### Bug Fixes
+
+* **diff:** omit metadata and serialize before decide diff ([c8143cb](https://github.com/ehmpathy/declastruct/commit/c8143cb24d5f6660e8248db77a0e35022655bddc))
+* **obs:** log when everything is in sync ([c7cedb7](https://github.com/ehmpathy/declastruct/commit/c7cedb7e28edb1151702d9adae5768fc31b86956))
+* **obs:** show diffs on plan ([0ad1f9a](https://github.com/ehmpathy/declastruct/commit/0ad1f9acd3ace8e85e0714a8ce7438c22d2e82d9))
+
 ## [1.1.6](https://github.com/ehmpathy/declastruct/compare/v1.1.5...v1.1.6) (2025-11-24)
 
 
