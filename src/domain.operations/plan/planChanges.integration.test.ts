@@ -99,7 +99,7 @@ describe('planChanges', () => {
     });
 
     // verify success message was logged when everything is in sync
-    expect(context.log.info).toHaveBeenCalledWith('Everything is in sync 🎉');
+    expect(context.log.info).toHaveBeenCalledWith('🎉 everything is in sync!');
   });
 
   it('should plan UPDATE actions for resources that changed remotely', async () => {
