@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
-import { writeFile } from 'fs/promises';
+import { mkdir, writeFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
-import { resolve } from 'path';
+import { dirname, resolve } from 'path';
 
 import { planChanges } from '../../domain.operations/plan/planChanges';
 
@@ -56,7 +56,7 @@ export const executePlanCommand = async ({
 
   // create context
   const context = {
-    bottleneck: new Bottleneck({ maxConcurrent: 10 }),
+    bottleneck: new Bottleneck({ maxConcurrent: 1 }),
     log,
   };
 
@@ -69,6 +69,10 @@ export const executePlanCommand = async ({
     },
     context,
   );
+
+  // ensure output directory exists
+  const planDir = dirname(resolvedPlanPath);
+  await mkdir(planDir, { recursive: true });
 
   // write plan to file
   await writeFile(resolvedPlanPath, JSON.stringify(plan, null, 2), 'utf-8');

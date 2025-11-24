@@ -1,4 +1,8 @@
-import { DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
+import {
+  DomainEntity,
+  getUniqueIdentifierSlug,
+  omitMetadataValues,
+} from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 import { diff } from 'jest-diff';
 
@@ -10,15 +14,19 @@ import {
 /**
  * .what = checks if two resources are equivalent
  * .why = determines whether a resource needs to be updated
- * .note = uses JSON serialization for deep equality check
+ * .note = uses JSON serialization for deep equality check, ignoring metadata
  */
 const resourcesAreEquivalent = (
   remote: DomainEntity<any>,
   desired: DomainEntity<any>,
 ): boolean => {
+  // omit metadata before comparison
+  const remoteWithoutMetadata = omitMetadataValues(remote);
+  const desiredWithoutMetadata = omitMetadataValues(desired);
+
   // serialize both to JSON for deep comparison
-  const remoteJson = JSON.stringify(remote);
-  const desiredJson = JSON.stringify(desired);
+  const remoteJson = JSON.stringify(remoteWithoutMetadata);
+  const desiredJson = JSON.stringify(desiredWithoutMetadata);
 
   return remoteJson === desiredJson;
 };
@@ -26,7 +34,7 @@ const resourcesAreEquivalent = (
 /**
  * .what = computes human-readable diff between two resources
  * .why = helps users understand what will change
- * .note = returns null if resources are identical; for CREATE uses empty object to show all attributes
+ * .note = returns null if resources are identical; for CREATE uses empty object to show all attributes; ignores metadata
  */
 const computeDiff = ({
   from,
@@ -38,12 +46,12 @@ const computeDiff = ({
   // no diff if both are null
   if (from === null && into === null) return null;
 
-  // use empty object for CREATE to show all attributes in diff
-  const fromValue = from === null ? {} : from;
-  const intoValue = into === null ? {} : into;
+  // omit metadata before diff
+  const fromWithoutMetadata = from === null ? {} : omitMetadataValues(from);
+  const intoWithoutMetadata = into === null ? {} : omitMetadataValues(into);
 
   // compute diff using jest-diff
-  const difference = diff(fromValue, intoValue, {
+  const difference = diff(fromWithoutMetadata, intoWithoutMetadata, {
     aAnnotation: 'Remote',
     bAnnotation: 'Desired',
   });
