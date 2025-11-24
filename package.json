@@ -56,7 +56,7 @@
   "dependencies": {
     "bottleneck": "2.19.5",
     "commander": "14.0.2",
-    "domain-objects": "0.25.7",
+    "domain-objects": "0.28.1",
     "helpful-errors": "1.4.0",
     "jest-diff": "30.0.2",
     "simple-log-methods": "0.6.1",

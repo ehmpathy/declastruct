@@ -1,4 +1,5 @@
 import { DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
+import { HelpfulError } from 'helpful-errors';
 import { diff } from 'jest-diff';
 
 import {
@@ -50,6 +51,27 @@ const computeDiff = ({
   return difference;
 };
 
+// todo: lift this into `helpful-errors`
+export const withHelpfulError = <TLogic extends (...args: any[]) => any>(
+  logic: TLogic,
+  options: {
+    message: string;
+    metadata: Record<string, any>;
+  },
+) => {
+  return (...args: Parameters<typeof logic>): ReturnType<typeof logic> => {
+    try {
+      return logic(...args);
+    } catch (error) {
+      if (!(error instanceof Error)) throw error;
+      throw new HelpfulError(options.message, {
+        ...options.metadata,
+        cause: error,
+      });
+    }
+  };
+};
+
 /**
  * .what = computes a single change by comparing desired vs remote state
  * .why = determines the action needed to achieve desired state for one resource
@@ -91,7 +113,10 @@ export const computeChange = ({
   return new DeclastructChange({
     forResource: {
       class: resourceForChange.constructor.name,
-      slug: getUniqueIdentifierSlug(resourceForChange),
+      slug: withHelpfulError(() => getUniqueIdentifierSlug(resourceForChange), {
+        message: 'failed to getUniqueIdentifierSlug',
+        metadata: { input: { desired, remote } },
+      })(),
     },
     action,
     state: {
