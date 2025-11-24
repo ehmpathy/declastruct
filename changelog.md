@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/ehmpathy/declastruct/compare/v1.1.3...v1.1.4) (2025-11-24)
+
+
+### Bug Fixes
+
+* **obs:** add increased observability around getUniqueIdentifier ([0f4a796](https://github.com/ehmpathy/declastruct/commit/0f4a79641568dd204e5429d98dee343c23f1de9a))
+
 ## [1.1.3](https://github.com/ehmpathy/declastruct/compare/v1.1.2...v1.1.3) (2025-11-23)
 
 
