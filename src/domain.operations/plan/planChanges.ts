@@ -58,6 +58,7 @@ export const planChanges = async (
           change.action === DeclastructChangeAction.KEEP ? '↓' : '○';
         context.log.info(
           `${symbol} [${change.action}] ${change.forResource.slug}`,
+          {},
         );
 
         // and the diff too

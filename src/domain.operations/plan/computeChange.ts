@@ -2,6 +2,7 @@ import {
   DomainEntity,
   getUniqueIdentifierSlug,
   omitMetadataValues,
+  serialize,
 } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 import { diff } from 'jest-diff';
@@ -14,21 +15,17 @@ import {
 /**
  * .what = checks if two resources are equivalent
  * .why = determines whether a resource needs to be updated
- * .note = uses JSON serialization for deep equality check, ignoring metadata
+ * .note = uses deterministic serialization for deep equality check, ignoring metadata
  */
 const resourcesAreEquivalent = (
   remote: DomainEntity<any>,
   desired: DomainEntity<any>,
 ): boolean => {
-  // omit metadata before comparison
-  const remoteWithoutMetadata = omitMetadataValues(remote);
-  const desiredWithoutMetadata = omitMetadataValues(desired);
+  // serialize both deterministically for deep comparison, omitting metadata
+  const remoteSerialized = serialize(omitMetadataValues(remote));
+  const desiredSerialized = serialize(omitMetadataValues(desired));
 
-  // serialize both to JSON for deep comparison
-  const remoteJson = JSON.stringify(remoteWithoutMetadata);
-  const desiredJson = JSON.stringify(desiredWithoutMetadata);
-
-  return remoteJson === desiredJson;
+  return remoteSerialized === desiredSerialized;
 };
 
 /**
@@ -45,6 +42,13 @@ const computeDiff = ({
 }): string | null => {
   // no diff if both are null
   if (from === null && into === null) return null;
+
+  // check if resources are equivalent after omitting metadata
+  if (from !== null && into !== null) {
+    const fromSerialized = serialize(omitMetadataValues(from));
+    const intoSerialized = serialize(omitMetadataValues(into));
+    if (fromSerialized === intoSerialized) return null;
+  }
 
   // omit metadata before diff
   const fromWithoutMetadata = from === null ? {} : omitMetadataValues(from);
