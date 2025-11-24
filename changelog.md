@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.9](https://github.com/ehmpathy/declastruct/compare/v1.1.8...v1.1.9) (2025-11-24)
+
+
+### Bug Fixes
+
+* **cicd:** propogate test fix ([14b13b7](https://github.com/ehmpathy/declastruct/commit/14b13b7b72044a912da87c983c7a59ca7d691e28))
+
 ## [1.1.8](https://github.com/ehmpathy/declastruct/compare/v1.1.7...v1.1.8) (2025-11-24)
 
 
