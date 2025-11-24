@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.6](https://github.com/ehmpathy/declastruct/compare/v1.1.5...v1.1.6) (2025-11-24)
+
+
+### Bug Fixes
+
+* **obs:** improve cli logs ([4f103ac](https://github.com/ehmpathy/declastruct/commit/4f103ac15a71d50e22da10969d8df2cd0ef1b98f))
+
 ## [1.1.5](https://github.com/ehmpathy/declastruct/compare/v1.1.4...v1.1.5) (2025-11-24)
 
 
