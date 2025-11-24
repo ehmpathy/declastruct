@@ -42,6 +42,15 @@ export const applyChanges = async (
     currentPlan,
   });
 
+  // log plan validation success
+  context.log.info('');
+  context.log.info('👌 plan still valid...');
+
+  // log apply phase header
+  context.log.info('');
+  context.log.info('🪄  apply changes...');
+  context.log.info('');
+
   // apply each change with real-time logging
   const appliedChanges: DeclastructChange[] = [];
 

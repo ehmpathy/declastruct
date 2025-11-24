@@ -23,6 +23,11 @@ export const planChanges = async (
   },
   context: ContextLogTrail & ContextDeclastruct,
 ): Promise<DeclastructPlan> => {
+  // log plan phase header
+  context.log.info('');
+  context.log.info('🔮 plan changes...');
+  context.log.info('');
+
   // extract bottleneck for planning
   const bottleneck =
     'onPlan' in context.bottleneck

@@ -63,16 +63,15 @@ export const executeApplyCommand = async ({
   };
 
   // apply changes (logs emitted in real-time by applyChanges)
-  log.info('🪄 apply changes...');
-  log.info('');
-
   const result = await applyChanges({ plan, resources, providers }, context);
 
   // cleanup providers
+  log.info('');
   log.info('✨ stop providers...');
   await Promise.all(providers.map((p: any) => p.hooks.afterAll()));
 
   // log summary
   log.info('');
   log.info(`🌊 applied ${result.appliedChanges.length} changes`);
+  log.info('');
 };

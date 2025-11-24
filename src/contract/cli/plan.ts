@@ -61,8 +61,6 @@ export const executePlanCommand = async ({
   };
 
   // plan changes (logs emitted in real-time by planChanges)
-  log.info('🔮 plan changes...');
-  log.info('');
   const plan = await planChanges(
     {
       resources,
@@ -76,6 +74,7 @@ export const executePlanCommand = async ({
   await writeFile(resolvedPlanPath, JSON.stringify(plan, null, 2), 'utf-8');
 
   // cleanup providers
+  log.info('');
   log.info('✨ stop providers...');
   await Promise.all(providers.map((p: any) => p.hooks.afterAll()));
 
@@ -83,4 +82,5 @@ export const executePlanCommand = async ({
   log.info('');
   log.info(`🌊 planned for ${plan.changes.length} resources`);
   log.info(`   into ${resolvedPlanPath}`);
+  log.info('');
 };
