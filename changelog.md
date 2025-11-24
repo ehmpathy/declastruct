@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.8](https://github.com/ehmpathy/declastruct/compare/v1.1.7...v1.1.8) (2025-11-24)
+
+
+### Bug Fixes
+
+* **logs:** standardize all in sync message ([492e5e2](https://github.com/ehmpathy/declastruct/commit/492e5e25a0969ec59f1551002f7e74f89743c25b))
+
 ## [1.1.7](https://github.com/ehmpathy/declastruct/compare/v1.1.6...v1.1.7) (2025-11-24)
 
 
