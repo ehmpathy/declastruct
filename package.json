@@ -56,12 +56,14 @@
   "dependencies": {
     "bottleneck": "2.19.5",
     "commander": "14.0.2",
-    "domain-objects": "0.28.1",
-    "helpful-errors": "1.4.0",
+    "helpful-errors": "1.5.3",
     "jest-diff": "30.0.2",
     "simple-log-methods": "0.6.1",
     "type-fns": "1.19.0",
     "uuid-fns": "1.0.2"
+  },
+  "peerDependencies": {
+    "domain-objects": ">=0.29.0"
   },
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
