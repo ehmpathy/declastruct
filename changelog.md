@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/ehmpathy/declastruct/compare/v1.1.4...v1.1.5) (2025-11-24)
+
+
+### Bug Fixes
+
+* **deps:** bump to latest of domain-objects for cross-version compat ([ee84051](https://github.com/ehmpathy/declastruct/commit/ee840515a9dd55731ebd95ab4c4096137ecf364e))
+
 ## [1.1.4](https://github.com/ehmpathy/declastruct/compare/v1.1.3...v1.1.4) (2025-11-24)
 
 
