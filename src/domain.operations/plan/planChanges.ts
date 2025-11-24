@@ -78,8 +78,7 @@ export const planChanges = async (
   );
   if (allInSync) {
     context.log.info('');
-    context.log.info('Everything is in sync 🎉');
-    context.log.info('');
+    context.log.info('🎉 everything is in sync!');
   }
 
   // return plan
