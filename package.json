@@ -59,11 +59,12 @@
     "helpful-errors": "1.5.3",
     "jest-diff": "30.0.2",
     "simple-log-methods": "0.6.2",
+    "tsx": "4.20.6",
     "type-fns": "1.19.0",
     "uuid-fns": "1.0.2"
   },
   "peerDependencies": {
-    "domain-objects": ">=0.29.1"
+    "domain-objects": ">=0.29.3"
   },
   "devDependencies": {
     "@commitlint/cli": "19.3.0",
