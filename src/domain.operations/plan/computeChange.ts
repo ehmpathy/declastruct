@@ -17,13 +17,13 @@ import {
  * .why = determines whether a resource needs to be updated
  * .note = uses deterministic serialization for deep equality check, ignoring metadata
  */
-const resourcesAreEquivalent = (
-  remote: DomainEntity<any>,
-  desired: DomainEntity<any>,
-): boolean => {
+const checkAreResourcesEquivalent = (input: {
+  remote: DomainEntity<any>;
+  desired: DomainEntity<any>;
+}): boolean => {
   // serialize both deterministically for deep comparison, omitting metadata
-  const remoteSerialized = serialize(omitMetadataValues(remote));
-  const desiredSerialized = serialize(omitMetadataValues(desired));
+  const remoteSerialized = serialize(omitMetadataValues(input.remote));
+  const desiredSerialized = serialize(omitMetadataValues(input.desired));
 
   return remoteSerialized === desiredSerialized;
 };
@@ -84,8 +84,20 @@ export const computeChange = ({
     if (!desired) return DeclastructChangeAction.DESTROY;
 
     // no changes needed
-    if (resourcesAreEquivalent(remote, desired))
-      return DeclastructChangeAction.KEEP;
+    const areResourcesEquivalent = UnexpectedCodePathError.wrap(
+      () => checkAreResourcesEquivalent({ remote, desired }),
+      {
+        message: 'failed to checkAreResourcesEquivalent',
+        metadata: {
+          input: { desired, remote },
+          ctors: {
+            desired: desired?.constructor.name,
+            remote: remote?.constructor.name,
+          },
+        },
+      },
+    )();
+    if (areResourcesEquivalent) return DeclastructChangeAction.KEEP;
 
     // resource exists and needs updating
     return DeclastructChangeAction.UPDATE;

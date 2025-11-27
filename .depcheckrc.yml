@@ -8,6 +8,6 @@ ignores:
   - serverless-prune-plugin
   - core-js
   - ts-jest
-  - ts-node
+  - tsx
   - husky
   - if-env
