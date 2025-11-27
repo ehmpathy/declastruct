@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.10](https://github.com/ehmpathy/declastruct/compare/v1.1.9...v1.1.10) (2025-11-27)
+
+
+### Bug Fixes
+
+* **deps:** bump domain-objects dep to latest best ([b5dac72](https://github.com/ehmpathy/declastruct/commit/b5dac72c1bbb2e8b849d6362394d2d537109e225))
+* **tests:** extend test coverage to explicitly cover metadata optional primary key resources ([776e8ed](https://github.com/ehmpathy/declastruct/commit/776e8ed428277a96ae51fcd9b08a7b32db735449))
+
 ## [1.1.9](https://github.com/ehmpathy/declastruct/compare/v1.1.8...v1.1.9) (2025-11-24)
 
 
