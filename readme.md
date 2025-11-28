@@ -3,20 +3,40 @@
 ![test](https://github.com/ehmpathy/declastruct/workflows/test/badge.svg)
 ![publish](https://github.com/ehmpathy/declastruct/workflows/publish/badge.svg)
 
-declarative control for any resource constructs, batteries included
+declarative control of any resource constructs, batteries included
 
 # intro
 
-Add declarative control to any resource construct. Declare, plan, and apply within an observable pit-of-success.
-
-Declare the structures you want. Plan to see the changes required. Apply to make it so 🪄
-
+Control any resource construct declaratively. Declare what you want ✨. Plan to see what must change 🔮. Apply to make it so 🪄
 
 ## what is it?
 
-`declastruct` is a framework for managing any resource construct declaratively using TypeScript.
+`declastruct` is a framework to control any resource construct via **declarative instructions** — you describe **what** you want the end state to be, and the system figures out **how** to get there.
 
-declare what you want, plan the changes, and apply them safely — all without managing separate state files or learning a new language.
+**declarative instructions** means:
+- you declare the desired state of your resources
+- the system compares your desires against reality
+- the system computes the changes required to reconcile reality with your desires
+- you review and apply those changes
+
+in contrast to **imperative instructions**, where you specify each step and _hope_ it produces what you want:
+```ts
+// imperative 👎 = you say HOW to do things, step by step
+await createBucket({ name: 'my-bucket' });
+await enableVersioning({ bucket: 'my-bucket' });
+await setEncryption({ bucket: 'my-bucket', type: 'AES256' });
+```
+
+the advantage of **declarative instructions** is that you simply declare what you want and _know_ it will work:
+```ts
+// declarative 👍 = you say WHAT you want, the system figures out how
+const bucket = DeclaredAwsS3Bucket.as({
+  name: 'my-bucket',
+  versioning: true,
+  encryption: 'AES256',
+});
+await apply({ resources: [bucket] });
+```
 
 works with:
 - **infrastructure** — AWS, GCP, Azure resources
@@ -26,7 +46,7 @@ works with:
 
 think Terraform, but:
 - **no state files to manage** — compares directly against live remote state
-- **no new language to learn** — uses TypeScript and your existing domain objects
+- **no new language to learn** — declare via TypeScript, reuse domain objects and operations
 - **pit-of-success by default** — enforces idempotency, clear unique keys, and safe operations
 - **not just infrastructure** — works with any resource construct (saas, databases, apis, etc)
 
@@ -42,7 +62,7 @@ npm install declastruct --save-dev
 
 ### 1. **declare** your desired state ✨
 
-define resource constructs with strongly-typed domain objects:
+declare your wish via strongly-typed [domain-objects](https://github.com/ehmpathy/domain-objects). these are the declarative instructions that will control your resources.
 
 ```ts
 import { getDeclastructAwsProvider, DeclaredAwsS3Bucket } from 'declastruct-aws';
@@ -78,7 +98,7 @@ export const getResources = async () => {
 
 ### 2. **plan** the required changes 🔮
 
-see exactly what will change before applying:
+see exactly what must change to make your wish come true, ahead of time
 
 ```sh
 npx declastruct plan \
@@ -102,7 +122,7 @@ planned changes:
 
 ### 3. **apply** the plan 🪄
 
-execute the plan to make your desired state reality:
+apply the plan to make your wish come true
 
 ```sh
 npx declastruct apply --plan provision/.temp/plan.json
@@ -116,11 +136,11 @@ npx declastruct apply --plan provision/.temp/plan.json
 
 ✅ **type-safe** — full TypeScript support with domain objects
 
-✅ **idempotent** — safe to run plans multiple times
+✅ **idempotent** — safe to plan and apply repeatedly
 
-✅ **observable** — see exactly what will change before applying
+✅ **observable** — see exactly what would change if you apply
 
-✅ **composable** — reuse domain objects and operations across application code and resource management
+✅ **composable** — reuse domain objects and operations across application code and declarative instructions
 
 ✅ **pit-of-success** — enforced best practices via idempotent dao interfaces
 
@@ -131,20 +151,20 @@ npx declastruct apply --plan provision/.temp/plan.json
 
 ### no state file management
 
-traditional declarative tools (like Terraform) require maintaining a separate state file that tracks what resources exist. this creates problems:
+traditional declarative tools (like Terraform) require separate state files to track resources existence. this creates problems:
 - state files can drift from reality
-- state locking issues in team environments
+- state lock issues in team environments
 - state files must be carefully secured and backed up
 
-**declastruct eliminates state files entirely.** it compares your desired resource constructs directly against live remote state using unique keys, so the source of truth is always reality itself.
+**declastruct eliminates state files entirely.** it compares your declared desires directly against live remote state via unique keys, so the source of truth is always reality itself.
 
 ### use your existing domain language
 
-instead of learning HCL, YAML, or another DSL:
-- declare resource constructs as TypeScript using `domain-objects`
-- reuse the same domain objects across your application code and remote resource management
-- leverage TypeScript's type safety, IDE autocomplete, and refactoring tools
-- compose and test resource definitions like any other code
+instead of HCL, YAML, or another DSL:
+- write declarative instructions via TypeScript with [`domain-objects`](https://github.com/ehmpathy/domain-objects)
+- reuse the domain objects and domain operations across your application code and declarative instructions
+- leverage TypeScript's type safety, IDE autocomplete, and refactor tools
+- compose and test declarative instructions like any other code
 
 ### enforced best practices
 
@@ -153,14 +173,14 @@ declastruct providers follow a pit-of-success pattern that guarantees:
 **idempotency** — all operations can be safely retried
 - `finsert`: find-or-insert (safe create)
 - `upsert`: update-or-insert (safe update)
-- running the same plan multiple times produces the same result
+- repeat any operation multiple times, get the same result each time
 
 **explicit unique keys** — every resource declares how to uniquely identify it
 - prevents accidental duplicates
 - enables accurate comparison against live state
 - makes resource relationships clear, typesafe, and composable
 
-**observable change plans** — see exactly what will change before applying
+**observable change plans** — see exactly what must change before you apply
 - diff view shows before & after for each resource
 - change actions: CREATE, UPDATE, KEEP, DESTROY
 - no surprises in production
@@ -175,14 +195,14 @@ declastruct is designed to support any resource construct through adapters:
 - `declastruct-github` — Github resources (repos, branches, protection, etc.)
 - etc
 
-**build your own provider** for any resource construct (GitHub repos, Slack channels, database records, etc.) by implementing the `DeclastructDao` and `DeclastructProvider` interfaces.
+**build your own provider** for any resource construct (GitHub repos, Slack channels, database records, etc.) via the `DeclastructDao` and `DeclastructProvider` interfaces.
 
 ## use cases
 
-- **infrastructure as code** — manage AWS, GCP, Azure resources declaratively
-- **SaaS platform management** — manage Stripe customers, GitHub repos, Slack channels, etc declaratively
-- **database state management** — control database resource states declaratively
-- **api state management** — control remote resource state through api's declaratively
+- **infrastructure as code** — control AWS, GCP, Azure resources via declarative instructions
+- **SaaS platform management** — control Stripe customers, GitHub repos, Slack channels via declarative instructions
+- **database state management** — control database resource states via declarative instructions
+- **api state management** — control remote resource state via declarative instructions
 - **multi-platform orchestration** — coordinate resources across different providers in one plan
 
 
@@ -192,7 +212,7 @@ declastruct is designed to support any resource construct through adapters:
 
 ### DeclastructDao
 
-the core abstraction that defines how to interact with a resource type:
+the core abstraction that defines how to get and set a resource type:
 
 ```ts
 interface DeclastructDao<TResource, TResourceClass, TContext> {
@@ -209,7 +229,7 @@ interface DeclastructDao<TResource, TResourceClass, TContext> {
 }
 ```
 
-every resource class gets a DeclastructDao that enforces safe, idempotent operations.
+every resource class has a DeclastructDao that enforces safe, idempotent operations.
 
 ### DeclastructProvider
 
@@ -229,7 +249,7 @@ interface DeclastructProvider<TDaos, TContext> {
 
 ### DeclastructPlan
 
-captures the changes needed to achieve desired state:
+captures the changes needed to reconcile reality with declared desires:
 
 ```ts
 interface DeclastructPlan {
@@ -249,4 +269,4 @@ each `DeclastructChange` includes:
 
 ## inspiration
 
-inspired by Terraform's declarative approach, but designed to eliminate state management overhead, work with any resource construct, and leverage TypeScript's type system for safer declarative resource management.
+inspired by Terraform's declarative approach, but designed to eliminate state file overhead, work with any resource construct, be reusable across both prod codepaths and cicd control, and leverage TypeScript's type system for safer declarative instructions.
