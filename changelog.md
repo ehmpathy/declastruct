@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/ehmpathy/declastruct/compare/v1.2.0...v1.3.0) (2025-11-28)
+
+
+### Features
+
+* **obs:** emit began and ended logs on apply per resource ([b56c8fd](https://github.com/ehmpathy/declastruct/commit/b56c8fdd8567f21f5b6033b8918fd2234f8a9935))
+
 ## [1.2.0](https://github.com/ehmpathy/declastruct/compare/v1.1.12...v1.2.0) (2025-11-28)
 
 
