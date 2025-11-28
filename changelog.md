@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.11](https://github.com/ehmpathy/declastruct/compare/v1.1.10...v1.1.11) (2025-11-28)
+
+
+### Bug Fixes
+
+* **refs:** ensure dao interfaces support getByPrimary with metadata primary keys ([58224a7](https://github.com/ehmpathy/declastruct/commit/58224a79429c7c1a86196446c489c05d158a3de3))
+
 ## [1.1.10](https://github.com/ehmpathy/declastruct/compare/v1.1.9...v1.1.10) (2025-11-27)
 
 
