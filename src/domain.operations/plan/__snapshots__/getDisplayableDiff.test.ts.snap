@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getDisplayableDiff given: from and into have keys in different orders when: getDisplayableDiff is called then: it should preserve key order from into (desired) 1`] = `
+"[32m- Remote[39m
+[31m+ Desired[39m
+
+[2m  OrderedResource {[22m
+[2m    "exid": "order-test",[22m
+[32m-   "zulu": "z-old",[39m
+[31m+   "zulu": "z-new",[39m
+[2m    "yankee": "y",[22m
+[2m    "xray": "x",[22m
+[2m  }[22m"
+`;
+
+exports[`getDisplayableDiff given: from has a value and into is null when: getDisplayableDiff is called then: it should return a diff showing all attributes as removed 1`] = `
+"[32m- Remote[39m
+[31m+ Desired[39m
+
+[32m- DemoResource {[39m
+[32m-   "exid": "old-1",[39m
+[32m-   "alpha": "a",[39m
+[32m-   "beta": "b",[39m
+[32m-   "gamma": "g",[39m
+[32m- }[39m
+[31m+ Object {}[39m"
+`;

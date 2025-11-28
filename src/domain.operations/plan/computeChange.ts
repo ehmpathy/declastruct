@@ -5,12 +5,12 @@ import {
   serialize,
 } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
-import { diff } from 'jest-diff';
 
 import {
   DeclastructChange,
   DeclastructChangeAction,
 } from '../../domain.objects/DeclastructChange';
+import { getDisplayableDiff } from './getDisplayableDiff';
 
 /**
  * .what = checks if two resources are equivalent
@@ -26,41 +26,6 @@ const checkAreResourcesEquivalent = (input: {
   const desiredSerialized = serialize(omitReadonly(input.desired));
 
   return remoteSerialized === desiredSerialized;
-};
-
-/**
- * .what = computes human-readable diff between two resources
- * .why = helps users understand what will change
- * .note = returns null if resources are identical; for CREATE uses empty object to show all attributes; ignores readonly
- */
-const computeDiff = ({
-  from,
-  into,
-}: {
-  from: DomainEntity<any> | null;
-  into: DomainEntity<any> | null;
-}): string | null => {
-  // no diff if both are null
-  if (from === null && into === null) return null;
-
-  // check if resources are equivalent after omitting readonly
-  if (from !== null && into !== null) {
-    const fromSerialized = serialize(omitReadonly(from));
-    const intoSerialized = serialize(omitReadonly(into));
-    if (fromSerialized === intoSerialized) return null;
-  }
-
-  // omit readonly before diff
-  const fromWithoutReadonly = from === null ? {} : omitReadonly(from);
-  const intoWithoutReadonly = into === null ? {} : omitReadonly(into);
-
-  // compute diff using jest-diff
-  const difference = diff(fromWithoutReadonly, intoWithoutReadonly, {
-    aAnnotation: 'Remote',
-    bAnnotation: 'Desired',
-  });
-
-  return difference;
 };
 
 /**
@@ -107,7 +72,7 @@ export const computeChange = ({
   const difference =
     action === DeclastructChangeAction.KEEP
       ? null
-      : computeDiff({ from: remote, into: desired });
+      : getDisplayableDiff({ from: remote, into: desired });
 
   // get resource info for change record
   const resourceForChange = desired || remote!;
