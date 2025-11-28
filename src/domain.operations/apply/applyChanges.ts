@@ -81,15 +81,21 @@ export const applyChanges = async (
         { change },
       );
 
-    // apply the change
+    // log action start
+    context.log.info(`○ [${change.action}] ${change.forResource.slug}`, {});
+
+    // apply the change with timing
+    const startMs = Date.now();
     const applied = await applyChange({
       change,
       resource: resourceFound,
       providers: input.providers,
     });
+    const durationMs = Date.now() - startMs;
 
-    // log success immediately
-    context.log.info(`✔ [${applied.action}] ${applied.forResource.slug}`, {});
+    // log completion with duration
+    const durationSec = (durationMs / 1000).toFixed(2);
+    context.log.info(`   └─ ✔ done in ${durationSec}s`, {});
 
     appliedChanges.push(applied);
   }
