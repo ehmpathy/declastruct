@@ -1,4 +1,4 @@
-import { IsoTimestamp } from './IsoTimestamp';
+import { type IsoTimestamp } from './IsoTimestamp';
 
 describe('IsoTimestamp', () => {
   it('should be a string type', () => {

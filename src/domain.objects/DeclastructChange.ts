@@ -1,4 +1,4 @@
-import { DomainEntity, DomainLiteral } from 'domain-objects';
+import { type DomainEntity, DomainLiteral } from 'domain-objects';
 
 /**
  * .what = actions that can be proposed for a resource

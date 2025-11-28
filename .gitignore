@@ -3,10 +3,10 @@
 .artifact
 .env
 .serverless
+.temp
 .terraform
 .terraform.lock
 .yalc
 coverage
 dist
 node_modules
-.temp

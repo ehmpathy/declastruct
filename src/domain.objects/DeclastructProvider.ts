@@ -1,6 +1,6 @@
 import { DomainLiteral } from 'domain-objects';
 
-import { DeclastructDao } from './DeclastructDao';
+import { type DeclastructDao } from './DeclastructDao';
 
 export type DeclastructDaosShape<TContext> = Record<
   string,

@@ -11,3 +11,4 @@ ignores:
   - tsx
   - husky
   - if-env
+  - babel-jest

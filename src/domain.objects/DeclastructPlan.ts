@@ -1,7 +1,7 @@
 import { DomainEntity } from 'domain-objects';
 
-import { DeclastructChange } from './DeclastructChange';
-import { IsoTimestamp } from './IsoTimestamp';
+import { type DeclastructChange } from './DeclastructChange';
+import { type IsoTimestamp } from './IsoTimestamp';
 
 /**
  * .what = collection of all planned changes required to fulfill a wish

@@ -15,5 +15,3 @@ concurrency:
 jobs:
   suite:
     uses: ./.github/workflows/.test.yml
-    secrets:
-      prep-stripe-secret-key: ${{ secrets.PREP_STRIPE_SECRET_KEY }}

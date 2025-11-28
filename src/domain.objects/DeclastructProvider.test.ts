@@ -1,6 +1,6 @@
 import { DomainEntity } from 'domain-objects';
 
-import { DeclastructDao } from './DeclastructDao';
+import { type DeclastructDao } from './DeclastructDao';
 import { DeclastructProvider } from './DeclastructProvider';
 
 describe('DeclastructProvider', () => {
