@@ -103,7 +103,7 @@ describe('executeApplyCommand', () => {
     await expect(executeApplyCommand({ planFilePath })).rejects.toThrow();
   });
 
-  it('should throw when wish file does not export getProviders', async () => {
+  it('should throw when wish file does not export getResources', async () => {
     const badWishPath = resolve(
       process.cwd(),
       'src/.test/assets/bad-apply-wish.ts',
@@ -123,7 +123,7 @@ describe('executeApplyCommand', () => {
     await writeFile(planFilePath, JSON.stringify(invalidPlan, null, 2));
 
     await expect(executeApplyCommand({ planFilePath })).rejects.toThrow(
-      'Wish file must export getProviders() function',
+      'Wish file must export getResources() function',
     );
 
     // cleanup
@@ -198,5 +198,98 @@ describe('executeApplyCommand', () => {
     await expect(executeApplyCommand({ planFilePath })).rejects.toThrow(
       'plan is stale',
     );
+  });
+
+  describe('yolo mode (--plan yolo)', () => {
+    it('should apply changes directly from wish file without plan file', async () => {
+      // create isolated wish file for this test
+      const wishFilePath = await createIsolatedWishFile();
+
+      // spy on console to verify yolo logging
+      const logSpy = jest.spyOn(console, 'info');
+
+      // apply in yolo mode (no plan file needed)
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+
+      // verify yolo mode logging occurred
+      const logCalls = logSpy.mock.calls.map((call) => call.join(' '));
+      expect(logCalls.some((log) => log.includes('yolo'))).toBe(true);
+      expect(logCalls.some((log) => log.includes('🤙'))).toBe(true);
+
+      // cleanup spy
+      logSpy.mockRestore();
+    });
+
+    it('should throw when --wish is not provided with --plan yolo', async () => {
+      await expect(
+        executeApplyCommand({ planFilePath: 'yolo' }),
+      ).rejects.toThrow('--wish required when --plan yolo');
+    });
+
+    it('should throw when wish file does not exist in yolo mode', async () => {
+      await expect(
+        executeApplyCommand({
+          planFilePath: 'yolo',
+          wishFilePath: '/nonexistent/wish.ts',
+        }),
+      ).rejects.toThrow('Wish file not found');
+    });
+
+    it('should skip staleness validation in yolo mode', async () => {
+      // create isolated wish file for this test
+      const wishFilePath = await createIsolatedWishFile();
+
+      // first apply to create resources
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+
+      // apply again - should succeed without staleness check
+      // (in standard mode with stale plan this would fail)
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+    });
+
+    it('should handle CREATE actions in yolo mode', async () => {
+      // create isolated wish file for this test
+      const wishFilePath = await createIsolatedWishFile();
+
+      // spy on console to verify CREATE logging
+      const logSpy = jest.spyOn(console, 'info');
+
+      // apply in yolo mode
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+
+      // verify CREATE logging occurred (plan phase + apply phase = 4 total, 2 per phase)
+      const logCalls = logSpy.mock.calls.map((call) => call.join(' '));
+      const createLogs = logCalls.filter((log) => log.includes('CREATE'));
+      expect(createLogs.length).toBeGreaterThanOrEqual(2);
+
+      // cleanup spy
+      logSpy.mockRestore();
+    });
+
+    it('should handle KEEP actions in yolo mode', async () => {
+      // create isolated wish file for this test
+      const wishFilePath = await createIsolatedWishFile();
+
+      // first apply to create resources
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+
+      // spy on console to verify KEEP logging
+      const logSpy = jest.spyOn(console, 'info');
+
+      // apply again - should show KEEP actions
+      await executeApplyCommand({ planFilePath: 'yolo', wishFilePath });
+
+      // verify KEEP logging occurred (plan phase + apply phase = 4 total, 2 per phase)
+      const logCalls = logSpy.mock.calls.map((call) => call.join(' '));
+      const keepLogs = logCalls.filter((log) => log.includes('KEEP'));
+      expect(keepLogs.length).toBeGreaterThanOrEqual(2);
+
+      // cleanup spy
+      logSpy.mockRestore();
+    });
+  });
+
+  it('should throw when neither --plan nor --wish is provided', async () => {
+    await expect(executeApplyCommand({})).rejects.toThrow('--plan required');
   });
 });

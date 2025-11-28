@@ -11,44 +11,66 @@ import { applyChanges } from '../../domain.operations/apply/applyChanges';
 const log = console;
 
 /**
- * .what = executes the apply command to apply an infrastructure change plan
+ * .what = executes the apply command to apply infrastructure changes
  * .why = provides CLI interface for applying infrastructure changes
- * .note = loads plan from file and wish file from plan.wish.uri
+ * .note = supports two modes:
+ *   - standard: load plan from file, validate staleness, apply
+ *   - yolo: plan from wish directly, skip validation, apply immediately
  */
-export const executeApplyCommand = async ({
-  planFilePath,
-}: {
-  planFilePath: string;
+export const executeApplyCommand = async (input: {
+  planFilePath?: string;
+  wishFilePath?: string;
 }): Promise<void> => {
-  // resolve path
-  const resolvedPlanPath = resolve(process.cwd(), planFilePath);
-
-  // validate plan file exists
-  if (!existsSync(resolvedPlanPath)) {
-    throw new BadRequestError(`Plan file not found: ${resolvedPlanPath}`);
+  // determine mode and validate input
+  const isYoloMode = input.planFilePath === 'yolo';
+  if (isYoloMode) {
+    // yolo mode requires --wish
+    if (!input.wishFilePath)
+      throw new BadRequestError('--wish required when --plan yolo');
+  } else {
+    // standard mode requires --plan (not "yolo")
+    if (!input.planFilePath) throw new BadRequestError('--plan required');
   }
 
+  // resolve plan path (null for yolo mode)
+  const resolvedPlanPath = isYoloMode
+    ? null
+    : resolve(process.cwd(), input.planFilePath!);
+
+  // load plan from file (standard mode only)
+  const plan = await (async (): Promise<DeclastructPlan | null> => {
+    if (!resolvedPlanPath) return null;
+    if (!existsSync(resolvedPlanPath))
+      throw new BadRequestError(`Plan file not found: ${resolvedPlanPath}`);
+    const planJson = await readFile(resolvedPlanPath, 'utf-8');
+    return new DeclastructPlan(JSON.parse(planJson));
+  })();
+
+  // resolve wish path (from input or from plan file)
+  const resolvedWishPath = isYoloMode
+    ? resolve(process.cwd(), input.wishFilePath!)
+    : plan!.wish.uri;
+
+  // validate wish file exists
+  if (!existsSync(resolvedWishPath))
+    throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
+
+  // log header
   log.info('🌊 declastruct apply');
-  log.info(`   plan: ${resolvedPlanPath}`);
+  if (resolvedPlanPath) log.info(`   plan: ${resolvedPlanPath}`);
+  log.info(`   wish: ${resolvedWishPath}`);
   log.info('');
 
-  // load plan from file
-  const planJson = await readFile(resolvedPlanPath, 'utf-8');
-  const plan = new DeclastructPlan(JSON.parse(planJson));
-
-  // import wish file from plan
-  const wishPath = plan.wish.uri;
-  const wish = await import(wishPath);
+  // import wish file
+  const wish = await import(resolvedWishPath);
 
   // validate exports
-  if (typeof wish.getProviders !== 'function') {
-    throw new BadRequestError('Wish file must export getProviders() function');
-  }
-  if (typeof wish.getResources !== 'function') {
+  if (typeof wish.getResources !== 'function')
     throw new BadRequestError('Wish file must export getResources() function');
-  }
+  if (typeof wish.getProviders !== 'function')
+    throw new BadRequestError('Wish file must export getProviders() function');
 
-  // get resources and providers from wish file
+  // get resources and providers
   const resources = await wish.getResources();
   const providers = await wish.getProviders();
 
@@ -62,8 +84,15 @@ export const executeApplyCommand = async ({
     log,
   };
 
-  // apply changes (logs emitted in real-time by applyChanges)
-  const result = await applyChanges({ plan, resources, providers }, context);
+  // apply changes (plan=null triggers yolo mode, skipping validation)
+  const result = await applyChanges(
+    {
+      plan,
+      resources,
+      providers,
+    },
+    context,
+  );
 
   // cleanup providers
   log.info('');

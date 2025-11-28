@@ -39,11 +39,13 @@ export const invoke = async ({ args }: { args: string[] }): Promise<void> => {
   program
     .command('apply')
     .description('Apply changes from a plan file')
-    .requiredOption('--plan <file>', 'Path to plan file')
+    .option('--plan <file>', 'Path to plan file, or "yolo" for immediate apply')
+    .option('--wish <file>', 'Path to wish file (required when --plan yolo)')
     .action(async (options) => {
       try {
         await executeApplyCommand({
           planFilePath: options.plan,
+          wishFilePath: options.wish,
         });
       } catch (error) {
         log.error('✖ Error during apply:', error);

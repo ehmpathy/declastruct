@@ -14,37 +14,45 @@ import { assertPlanStillValid } from '../plan/validate';
 import { applyChange } from './applyChange';
 
 /**
- * .what = applies a validated plan to achieve desired state
+ * .what = applies changes to achieve desired state
  * .why = executes infrastructure changes in a controlled, observable manner
  * .note = idempotent - reapplying same plan is safe (guards check if already applied)
+ *   - when plan is provided, validates staleness before applying
+ *   - when plan is null (yolo mode), skips validation and applies immediately
  */
 export const applyChanges = async (
   input: {
-    plan: DeclastructPlan;
+    plan: DeclastructPlan | null;
     resources: DomainEntity<any>[];
     providers: DeclastructProvider<any, any>[];
   },
   context: ContextLogTrail & ContextDeclastruct,
 ): Promise<{ appliedChanges: DeclastructChange[] }> => {
-  // replan to ensure plan is still valid
+  // replan to get current state
   const currentPlan = await planChanges(
     {
       resources: input.resources,
       providers: input.providers,
-      wishFilePath: input.plan.wish.uri,
+      wishFilePath: input.plan?.wish.uri ?? 'ignorable',
     },
     context,
   );
 
-  // validate plan matches current state
-  assertPlanStillValid({
-    originalPlan: input.plan,
-    currentPlan,
-  });
+  // validate plan matches current state (skip if no plan provided, i.e. yolo mode)
+  if (input.plan) {
+    assertPlanStillValid({
+      originalPlan: input.plan,
+      currentPlan,
+    });
+    context.log.info('');
+    context.log.info('👌 plan still valid...');
+  } else {
+    context.log.info('');
+    context.log.info('🤙 yolo, plan not reviewed...');
+  }
 
-  // log plan validation success
-  context.log.info('');
-  context.log.info('👌 plan still valid...');
+  // use current plan for apply (works for both modes)
+  const planToApply = currentPlan;
 
   // log apply phase header
   context.log.info('');
@@ -54,7 +62,7 @@ export const applyChanges = async (
   // apply each change with real-time logging
   const appliedChanges: DeclastructChange[] = [];
 
-  for (const change of input.plan.changes) {
+  for (const change of planToApply.changes) {
     // log KEEP actions and skip
     if (change.action === DeclastructChangeAction.KEEP) {
       context.log.info(`↓ [KEEP] ${change.forResource.slug}`, {});
@@ -69,7 +77,7 @@ export const applyChanges = async (
           getUniqueIdentifierSlug(candidate) === change.forResource.slug,
       ) ??
       UnexpectedCodePathError.throw(
-        'could not find resource specified in plan. was it removed and plan is no longer valid?',
+        'could not find resource specified in plan. was it removed?',
         { change },
       );
 
