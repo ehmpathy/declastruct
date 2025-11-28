@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/ehmpathy/declastruct/compare/v1.1.12...v1.2.0) (2025-11-28)
+
+
+### Features
+
+* **yolo:** support apply --plan yolo mode, for autoapprove with intuitive risk callout ([e4bd538](https://github.com/ehmpathy/declastruct/commit/e4bd53858ade700e4abe68ed92da4e6784fa48e0))
+
 ## [1.1.12](https://github.com/ehmpathy/declastruct/compare/v1.1.11...v1.1.12) (2025-11-28)
 
 
