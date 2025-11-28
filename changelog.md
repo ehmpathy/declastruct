@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.12](https://github.com/ehmpathy/declastruct/compare/v1.1.11...v1.1.12) (2025-11-28)
+
+
+### Bug Fixes
+
+* **diff:** compute diff after omitReadonly ([d58d408](https://github.com/ehmpathy/declastruct/commit/d58d4082d761ad001b6f5d86b7b99d153a02a719))
+
 ## [1.1.11](https://github.com/ehmpathy/declastruct/compare/v1.1.10...v1.1.11) (2025-11-28)
 
 
