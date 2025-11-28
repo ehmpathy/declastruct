@@ -1,7 +1,7 @@
 import {
   DomainEntity,
   getUniqueIdentifierSlug,
-  omitMetadataValues,
+  omitReadonly,
   serialize,
 } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
@@ -15,15 +15,15 @@ import {
 /**
  * .what = checks if two resources are equivalent
  * .why = determines whether a resource needs to be updated
- * .note = uses deterministic serialization for deep equality check, ignoring metadata
+ * .note = uses deterministic serialization for deep equality check, ignoring readonly
  */
 const checkAreResourcesEquivalent = (input: {
   remote: DomainEntity<any>;
   desired: DomainEntity<any>;
 }): boolean => {
-  // serialize both deterministically for deep comparison, omitting metadata
-  const remoteSerialized = serialize(omitMetadataValues(input.remote));
-  const desiredSerialized = serialize(omitMetadataValues(input.desired));
+  // serialize both deterministically for deep comparison, omitting readonly
+  const remoteSerialized = serialize(omitReadonly(input.remote));
+  const desiredSerialized = serialize(omitReadonly(input.desired));
 
   return remoteSerialized === desiredSerialized;
 };
@@ -31,7 +31,7 @@ const checkAreResourcesEquivalent = (input: {
 /**
  * .what = computes human-readable diff between two resources
  * .why = helps users understand what will change
- * .note = returns null if resources are identical; for CREATE uses empty object to show all attributes; ignores metadata
+ * .note = returns null if resources are identical; for CREATE uses empty object to show all attributes; ignores readonly
  */
 const computeDiff = ({
   from,
@@ -43,19 +43,19 @@ const computeDiff = ({
   // no diff if both are null
   if (from === null && into === null) return null;
 
-  // check if resources are equivalent after omitting metadata
+  // check if resources are equivalent after omitting readonly
   if (from !== null && into !== null) {
-    const fromSerialized = serialize(omitMetadataValues(from));
-    const intoSerialized = serialize(omitMetadataValues(into));
+    const fromSerialized = serialize(omitReadonly(from));
+    const intoSerialized = serialize(omitReadonly(into));
     if (fromSerialized === intoSerialized) return null;
   }
 
-  // omit metadata before diff
-  const fromWithoutMetadata = from === null ? {} : omitMetadataValues(from);
-  const intoWithoutMetadata = into === null ? {} : omitMetadataValues(into);
+  // omit readonly before diff
+  const fromWithoutReadonly = from === null ? {} : omitReadonly(from);
+  const intoWithoutReadonly = into === null ? {} : omitReadonly(into);
 
   // compute diff using jest-diff
-  const difference = diff(fromWithoutMetadata, intoWithoutMetadata, {
+  const difference = diff(fromWithoutReadonly, intoWithoutReadonly, {
     aAnnotation: 'Remote',
     bAnnotation: 'Desired',
   });
