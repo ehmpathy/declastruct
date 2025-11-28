@@ -10,8 +10,12 @@ import { HasMetadata } from 'type-fns';
 
 /**
  * .what = standardized data access interface for any resource type
+ *
  * .why = enforces idempotent semantics and consistent access patterns across all providers
- * .note = TResourceClass is the class constructor (e.g., typeof MyResource) with static unique/primary properties
+ *
+ * .note =
+ *   - TResourceClass is the class constructor (e.g., typeof MyResource) with static unique/primary properties
+ *   - uses method syntax in the get & set for bivariance, to enable assignment to DeclastructDao<any, any, any>
  */
 export interface DeclastructDao<
   TResource extends DomainEntity<any>,
@@ -22,49 +26,49 @@ export interface DeclastructDao<
     /**
      * required - fetch by unique keys (enables idempotency)
      */
-    byUnique: (
+    byUnique(
       input: RefByUnique<TResourceClass>,
       context: TContext,
-    ) => Promise<TResource | null>;
+    ): Promise<TResource | null>;
 
     /**
      * optional - fetch by primary keys (if resource supports them)
      */
-    byPrimary?: (
+    byPrimary?(
       input: RefByPrimary<TResourceClass>,
       context: TContext,
-    ) => Promise<TResource | null>;
+    ): Promise<TResource | null>;
 
     /**
      * required - fetch by any supported reference type
      */
-    byRef: (
+    byRef(
       input: Ref<TResourceClass>,
       context: TContext,
-    ) => Promise<TResource | null>;
+    ): Promise<TResource | null>;
   };
 
   set: {
     /**
      * required - find or insert resource (idempotent create)
      */
-    finsert: (
+    finsert(
       input: TResource,
       context: TContext,
-    ) => Promise<HasMetadata<TResource>>;
+    ): Promise<HasMetadata<TResource>>;
 
     /**
      * optional - create or update resource (idempotent upsert)
      */
-    upsert?: (
+    upsert?(
       input: TResource,
       context: TContext,
-    ) => Promise<HasMetadata<TResource>>;
+    ): Promise<HasMetadata<TResource>>;
 
     /**
      * optional - delete resource
      */
-    delete?: (input: Ref<TResourceClass>, context: TContext) => Promise<void>;
+    delete?(input: Ref<TResourceClass>, context: TContext): Promise<void>;
   };
 }
 
