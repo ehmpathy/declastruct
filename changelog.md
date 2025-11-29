@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.1](https://github.com/ehmpathy/declastruct/compare/v1.3.0...v1.3.1) (2025-11-29)
+
+
+### Bug Fixes
+
+* **diff:** display diffs in desired order of keys ([bbb12a1](https://github.com/ehmpathy/declastruct/commit/bbb12a139254e1bf2ea1b7a8c37dfb5022d3ef6d))
+* **docs:** bump readme terms ([c776b69](https://github.com/ehmpathy/declastruct/commit/c776b695b1757ac889427bc4ab4d91ba0c8ae59a))
+* **practs:** bump to latest best ([d3aa503](https://github.com/ehmpathy/declastruct/commit/d3aa503d37020ea9b93ffcb401d27de74ac72978))
+
 ## [1.3.0](https://github.com/ehmpathy/declastruct/compare/v1.2.0...v1.3.0) (2025-11-28)
 
 
