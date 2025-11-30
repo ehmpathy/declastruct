@@ -1,11 +1,13 @@
-import { DomainEntity } from 'domain-objects';
-import { ContextLogTrail } from 'simple-log-methods';
+import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
+import { type ContextLogTrail } from 'simple-log-methods';
 
-import { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
+import { type ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import { type DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 import { asIsoTimestamp } from '../../infra/asIsoTimestamp';
+import { colorizeAction } from '../../infra/colorizeAction';
+import { withSpinner } from '../../infra/withSpinner';
 import { computeChange } from './computeChange';
 import { getDaoByResource } from './getDaoByResource';
 import { hashChanges } from './hashChanges';
@@ -24,7 +26,6 @@ export const planChanges = async (
   context: ContextLogTrail & ContextDeclastruct,
 ): Promise<DeclastructPlan> => {
   // log plan phase header
-  context.log.info('');
   context.log.info('🔮 plan changes...');
   context.log.info('');
 
@@ -35,42 +36,51 @@ export const planChanges = async (
       : context.bottleneck;
 
   // compute change for each resource with real-time logging
-  const changes = await Promise.all(
-    input.resources.map((resource) =>
-      bottleneck.schedule(async () => {
-        // find DAO and provider context for this resource
-        const { dao, context: providerContext } = getDaoByResource({
-          resource,
-          providers: input.providers,
-        });
+  const changes = [];
+  for (const resource of input.resources) {
+    const change = await bottleneck.schedule(async () => {
+      // find DAO and provider context for this resource
+      const { dao, context: providerContext } = getDaoByResource({
+        resource,
+        providers: input.providers,
+      });
 
-        // fetch current remote state using provider context
-        const remoteState = await dao.get.byUnique(resource, providerContext);
+      // log the resource being planned
+      context.log.info(`○ ${getUniqueIdentifierSlug(resource)}`);
 
-        // compute change
-        const change = computeChange({
-          desired: resource,
-          remote: remoteState,
-        });
+      // fetch current remote state using provider context with spinner
+      const { result: remoteState, durationMs } = await withSpinner({
+        message: 'inflight',
+        operation: () => dao.get.byUnique(resource, providerContext),
+      });
 
-        // log change as it's computed
-        const symbol =
-          change.action === DeclastructChangeAction.KEEP ? '↓' : '○';
-        context.log.info(
-          `${symbol} [${change.action}] ${change.forResource.slug}`,
-          {},
-        );
+      // log done (replaces spinner)
+      const durationSec = (durationMs / 1000).toFixed(2);
+      context.log.info(`   ├─ ✔ done in ${durationSec}s`);
 
-        // and the diff too
-        if (change.state.difference) {
-          context.log.info(change.state.difference);
-          context.log.info('');
-        }
+      // compute change
+      const computed = computeChange({
+        desired: resource,
+        remote: remoteState,
+      });
 
-        return change;
-      }),
-    ),
-  );
+      // log decision
+      context.log.info(`   └─ decision ${colorizeAction(computed.action)}`);
+
+      // and the diff too, indented to align with tree
+      if (computed.state.difference) {
+        const indentedDiff = computed.state.difference
+          .split('\n')
+          .map((line) => `      ${line}`)
+          .join('\n');
+        context.log.info(indentedDiff);
+      }
+      context.log.info('');
+
+      return computed;
+    });
+    changes.push(change);
+  }
 
   // log success message if everything is in sync
   const allInSync = changes.every(

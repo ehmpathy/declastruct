@@ -30,6 +30,7 @@ export const executePlanCommand = async ({
     throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
   }
 
+  log.info('');
   log.info('🌊 declastruct plan');
   log.info(`   wish: ${resolvedWishPath}`);
   log.info(`   plan: ${resolvedPlanPath}`);
@@ -51,7 +52,7 @@ export const executePlanCommand = async ({
   const providers = await wish.getProviders();
 
   // initialize providers
-  log.info('✨ start providers...');
+  // log.info('✨ start providers...');
   await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
 
   // create context
@@ -78,8 +79,8 @@ export const executePlanCommand = async ({
   await writeFile(resolvedPlanPath, JSON.stringify(plan, null, 2), 'utf-8');
 
   // cleanup providers
-  log.info('');
-  log.info('✨ stop providers...');
+  // log.info('');
+  // log.info('✨ stop providers...');
   await Promise.all(providers.map((p: any) => p.hooks.afterAll()));
 
   // log summary

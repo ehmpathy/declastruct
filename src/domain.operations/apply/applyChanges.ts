@@ -1,14 +1,16 @@
-import { DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
+import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
-import { ContextLogTrail } from 'simple-log-methods';
+import { type ContextLogTrail } from 'simple-log-methods';
 
-import { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
+import { type ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
 import {
-  DeclastructChange,
+  type DeclastructChange,
   DeclastructChangeAction,
 } from '../../domain.objects/DeclastructChange';
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import { type DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import { type DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import { colorizeAction } from '../../infra/colorizeAction';
+import { withSpinner } from '../../infra/withSpinner';
 import { planChanges } from '../plan/planChanges';
 import { assertPlanStillValid } from '../plan/validate';
 import { applyChange } from './applyChange';
@@ -38,6 +40,17 @@ export const applyChanges = async (
     context,
   );
 
+  // use current plan for apply (works for both modes)
+  const planToApply = currentPlan;
+
+  // check if there are any actionable changes (non-KEEP)
+  const hasActionableChanges = planToApply.changes.some(
+    (change) => change.action !== DeclastructChangeAction.KEEP,
+  );
+
+  // skip apply phase if everything is in sync
+  if (!hasActionableChanges) return { appliedChanges: [] };
+
   // validate plan matches current state (skip if no plan provided, i.e. yolo mode)
   if (input.plan) {
     assertPlanStillValid({
@@ -48,11 +61,8 @@ export const applyChanges = async (
     context.log.info('👌 plan still valid...');
   } else {
     context.log.info('');
-    context.log.info('🤙 yolo, plan not reviewed...');
+    context.log.info('🤙 yolo, plan auto approved...');
   }
-
-  // use current plan for apply (works for both modes)
-  const planToApply = currentPlan;
 
   // log apply phase header
   context.log.info('');
@@ -65,7 +75,9 @@ export const applyChanges = async (
   for (const change of planToApply.changes) {
     // log KEEP actions and skip
     if (change.action === DeclastructChangeAction.KEEP) {
-      context.log.info(`↓ [KEEP] ${change.forResource.slug}`, {});
+      context.log.info(
+        `↓ ${colorizeAction(change.action)} ${change.forResource.slug}`,
+      );
       continue;
     }
 
@@ -81,21 +93,25 @@ export const applyChanges = async (
         { change },
       );
 
-    // log action start
-    context.log.info(`○ [${change.action}] ${change.forResource.slug}`, {});
+    // log the action line (stays fixed)
+    const actionLabel = colorizeAction(change.action);
+    context.log.info(`○ ${actionLabel} ${change.forResource.slug}`);
 
-    // apply the change with timing
-    const startMs = Date.now();
-    const applied = await applyChange({
-      change,
-      resource: resourceFound,
-      providers: input.providers,
+    // apply the change with spinner on line below
+    const { result: applied, durationMs } = await withSpinner({
+      message: 'inflight',
+      operation: () =>
+        applyChange({
+          change,
+          resource: resourceFound,
+          providers: input.providers,
+        }),
     });
-    const durationMs = Date.now() - startMs;
 
     // log completion with duration
     const durationSec = (durationMs / 1000).toFixed(2);
-    context.log.info(`   └─ ✔ done in ${durationSec}s`, {});
+    context.log.info(`   └─ ✔ done in ${durationSec}s`);
+    context.log.info('');
 
     appliedChanges.push(applied);
   }

@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "bottleneck": "2.19.5",
+    "chalk": "5.4.1",
     "commander": "14.0.2",
     "helpful-errors": "1.5.3",
     "jest-diff": "30.0.2",
