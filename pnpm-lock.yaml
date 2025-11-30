@@ -11,6 +11,9 @@ importers:
       bottleneck:
         specifier: 2.19.5
         version: 2.19.5
+      chalk:
+        specifier: 5.4.1
+        version: 5.4.1
       commander:
         specifier: 14.0.2
         version: 14.0.2
@@ -2461,8 +2464,8 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
-  chalk@5.6.2:
-    resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
+  chalk@5.4.1:
+    resolution: {integrity: sha512-zgVZuo2WcZgfUEmsn6eO3kINexW8RAE4maiQ8QNs8CtpPCSyMiYsULR3HQYkm3w8FIA3SberyMJMSldGsW+U3w==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
 
   change-case@4.1.2:
@@ -6568,7 +6571,7 @@ snapshots:
   '@commitlint/format@19.8.1':
     dependencies:
       '@commitlint/types': 19.8.1
-      chalk: 5.6.2
+      chalk: 5.4.1
 
   '@commitlint/is-ignored@19.8.1':
     dependencies:
@@ -6588,7 +6591,7 @@ snapshots:
       '@commitlint/execute-rule': 19.8.1
       '@commitlint/resolve-extends': 19.8.1
       '@commitlint/types': 19.8.1
-      chalk: 5.6.2
+      chalk: 5.4.1
       cosmiconfig: 9.0.0(typescript@5.4.5)
       cosmiconfig-typescript-loader: 6.2.0(@types/node@22.15.29)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
       lodash.isplainobject: 4.0.6
@@ -6604,7 +6607,7 @@ snapshots:
       '@commitlint/execute-rule': 20.0.0
       '@commitlint/resolve-extends': 20.1.0
       '@commitlint/types': 20.0.0
-      chalk: 5.6.2
+      chalk: 5.4.1
       cosmiconfig: 9.0.0(typescript@5.4.5)
       cosmiconfig-typescript-loader: 6.2.0(@types/node@22.15.29)(cosmiconfig@9.0.0(typescript@5.4.5))(typescript@5.4.5)
       lodash.isplainobject: 4.0.6
@@ -6666,12 +6669,12 @@ snapshots:
   '@commitlint/types@19.8.1':
     dependencies:
       '@types/conventional-commits-parser': 5.0.2
-      chalk: 5.6.2
+      chalk: 5.4.1
 
   '@commitlint/types@20.0.0':
     dependencies:
       '@types/conventional-commits-parser': 5.0.2
-      chalk: 5.6.2
+      chalk: 5.4.1
     optional: true
 
   '@cspotcode/source-map-support@0.8.1':
@@ -8558,7 +8561,7 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
-  chalk@5.6.2: {}
+  chalk@5.4.1: {}
 
   change-case@4.1.2:
     dependencies:
@@ -11220,7 +11223,7 @@ snapshots:
   simple-log-methods@0.6.1:
     dependencies:
       '@ehmpathy/error-fns': 1.3.7
-      '@ehmpathy/uni-time': 1.9.0
+      '@ehmpathy/uni-time': 1.9.1
       domain-glossary-procedure: 1.0.0
       type-fns: 1.21.0
 
@@ -11235,7 +11238,7 @@ snapshots:
     dependencies:
       '@aws-sdk/client-s3': 3.940.0
       '@ehmpathy/error-fns': 1.0.2
-      '@ehmpathy/uni-time': 1.8.1
+      '@ehmpathy/uni-time': 1.9.1
       bottleneck: 2.19.5
       hash-fns: 1.1.0
       serde-fns: 1.2.0

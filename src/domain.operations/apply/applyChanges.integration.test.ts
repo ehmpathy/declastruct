@@ -186,10 +186,9 @@ describe('applyChanges', () => {
     // verify KEEP was not included in applied changes
     expect(result.appliedChanges.length).toBe(0);
 
-    // verify log was emitted for KEEP
+    // verify log was emitted for KEEP (format: ↓ [KEEP] slug)
     expect(context.log.info).toHaveBeenCalledWith(
       expect.stringContaining('[KEEP]'),
-      {},
     );
 
     // verify file still exists with same content
@@ -230,10 +229,12 @@ describe('applyChanges', () => {
       context,
     );
 
-    // verify logs were emitted (logs include the full slug with hash)
+    // verify logs were emitted (format: ○ [CREATE] slug)
     expect(context.log.info).toHaveBeenCalledWith(
-      expect.stringContaining(`[CREATE] DemoResource.`),
-      {},
+      expect.stringContaining(`[CREATE]`),
+    );
+    expect(context.log.info).toHaveBeenCalledWith(
+      expect.stringContaining(`DemoResource.`),
     );
     expect(context.log.info).toHaveBeenCalled();
   });

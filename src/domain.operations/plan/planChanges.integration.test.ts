@@ -179,10 +179,13 @@ describe('planChanges', () => {
       context,
     );
 
-    // verify logs were emitted (logs include the full slug with hash)
+    // verify logs were emitted
+    // resource slug is logged on one line, decision on another
     expect(context.log.info).toHaveBeenCalledWith(
-      expect.stringContaining(`[CREATE] DemoResource.`),
-      {},
+      expect.stringContaining(`○ DemoResource.`),
+    );
+    expect(context.log.info).toHaveBeenCalledWith(
+      expect.stringContaining(`decision`),
     );
     expect(context.log.info).toHaveBeenCalled();
   });

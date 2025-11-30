@@ -56,6 +56,7 @@ export const executeApplyCommand = async (input: {
     throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
 
   // log header
+  log.info('');
   log.info('🌊 declastruct apply');
   if (resolvedPlanPath) log.info(`   plan: ${resolvedPlanPath}`);
   log.info(`   wish: ${resolvedWishPath}`);
@@ -75,7 +76,7 @@ export const executeApplyCommand = async (input: {
   const providers = await wish.getProviders();
 
   // initialize providers
-  log.info('✨ start providers...');
+  // log.info('✨ start providers...');
   await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
 
   // create context
@@ -95,8 +96,8 @@ export const executeApplyCommand = async (input: {
   );
 
   // cleanup providers
-  log.info('');
-  log.info('✨ stop providers...');
+  // log.info('');
+  // log.info('✨ stop providers...');
   await Promise.all(providers.map((p: any) => p.hooks.afterAll()));
 
   // log summary
