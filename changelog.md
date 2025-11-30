@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/ehmpathy/declastruct/compare/v1.3.1...v1.4.0) (2025-11-30)
+
+
+### Features
+
+* **obs:** add spinners on apply and plan ([#20](https://github.com/ehmpathy/declastruct/issues/20)) ([1964d23](https://github.com/ehmpathy/declastruct/commit/1964d2394ab4c2fc22da0eb8dbe9948afcbed41b))
+
 ## [1.3.1](https://github.com/ehmpathy/declastruct/compare/v1.3.0...v1.3.1) (2025-11-29)
 
 
