@@ -1,10 +1,10 @@
-import { DomainEntity } from 'domain-objects';
+import type { DomainEntity } from 'domain-objects';
 
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 import {
-  genSampleDemoResource,
   DemoResource,
   demoProvider,
+  genSampleDemoResource,
 } from './providers/demo.provider';
 
 /**

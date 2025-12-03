@@ -1,6 +1,6 @@
-import { DomainEntity } from 'domain-objects';
+import type { DomainEntity } from 'domain-objects';
 
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import type { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 
 /**
  * .what = extracts resources from a plan's changes

@@ -4,7 +4,7 @@ import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import { DeclastructDao } from '../../../domain.objects/DeclastructDao';
+import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
 
 /**

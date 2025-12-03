@@ -1,5 +1,5 @@
 import { DomainEntity } from 'domain-objects';
-import { given, when, then } from 'test-fns';
+import { given, then, when } from 'test-fns';
 
 import { getDisplayableDiff } from './getDisplayableDiff';
 

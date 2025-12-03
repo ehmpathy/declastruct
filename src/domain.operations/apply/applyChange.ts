@@ -1,11 +1,11 @@
-import { DomainEntity } from 'domain-objects';
+import type { DomainEntity } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 
 import {
-  DeclastructChange,
+  type DeclastructChange,
   DeclastructChangeAction,
 } from '../../domain.objects/DeclastructChange';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 import { getDaoByResource } from '../plan/getDaoByResource';
 
 /**

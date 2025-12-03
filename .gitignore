@@ -6,6 +6,7 @@
 .temp
 .terraform
 .terraform.lock
+.vscode
 .yalc
 coverage
 dist

@@ -2,8 +2,8 @@ import Bottleneck from 'bottleneck';
 import { resolve } from 'path';
 
 import {
-  genSampleDemoResource,
   demoProvider,
+  genSampleDemoResource,
 } from '../../.test/assets/providers/demo.provider';
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
 import { planChanges } from './planChanges';
