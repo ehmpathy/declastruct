@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/ehmpathy/declastruct/compare/v1.4.2...v1.4.3) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** bump declastruct and declapract deps ([#26](https://github.com/ehmpathy/declastruct/issues/26)) ([131a0de](https://github.com/ehmpathy/declastruct/commit/131a0deb663d4e97653dec03ea104cc8b6b2a200))
+
 ## [1.4.2](https://github.com/ehmpathy/declastruct/compare/v1.4.1...v1.4.2) (2025-12-04)
 
 
