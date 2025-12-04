@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/ehmpathy/declastruct/compare/v1.4.1...v1.4.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** revert to peer deps for dobjs ([#24](https://github.com/ehmpathy/declastruct/issues/24)) ([5085a97](https://github.com/ehmpathy/declastruct/commit/5085a9736e7cbca5ec49991ae4899788071fc4cd))
+
 ## [1.4.1](https://github.com/ehmpathy/declastruct/compare/v1.4.0...v1.4.1) (2025-12-04)
 
 
