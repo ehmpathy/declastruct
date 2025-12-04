@@ -58,7 +58,6 @@
     "bottleneck": "2.19.5",
     "chalk": "5.4.1",
     "commander": "14.0.2",
-    "domain-objects": "0.31.3",
     "helpful-errors": "1.5.3",
     "jest-diff": "30.0.2",
     "simple-log-methods": "0.6.2",
@@ -67,7 +66,7 @@
     "uuid-fns": "1.0.2"
   },
   "peerDependencies": {
-    "domain-objects": "0.31.0"
+    "domain-objects": ">=0.31.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.8",
