@@ -1,4 +1,4 @@
-import { DomainEntity, omitReadonly, serialize } from 'domain-objects';
+import { type DomainEntity, omitReadonly, serialize } from 'domain-objects';
 import { diff } from 'jest-diff';
 
 /**

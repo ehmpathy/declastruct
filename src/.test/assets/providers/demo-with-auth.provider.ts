@@ -5,7 +5,7 @@ import { BadRequestError, UnexpectedCodePathError } from 'helpful-errors';
 import { resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import { DeclastructDao } from '../../../domain.objects/DeclastructDao';
+import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
 
 /**

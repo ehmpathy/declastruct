@@ -1,5 +1,5 @@
 import {
-  DomainEntity,
+  type DomainEntity,
   getUniqueIdentifierSlug,
   omitReadonly,
   serialize,

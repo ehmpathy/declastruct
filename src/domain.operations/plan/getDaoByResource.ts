@@ -1,8 +1,8 @@
-import { DomainEntity } from 'domain-objects';
+import type { DomainEntity } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 
-import { DeclastructDao } from '../../domain.objects/DeclastructDao';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
+import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 
 /**
  * .what = gets the DAO and provider context for a given resource from available providers

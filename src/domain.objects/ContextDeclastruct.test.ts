@@ -1,7 +1,7 @@
 import Bottleneck from 'bottleneck';
-import { type ContextLogTrail } from 'simple-log-methods';
+import type { ContextLogTrail } from 'simple-log-methods';
 
-import { type ContextDeclastruct } from './ContextDeclastruct';
+import type { ContextDeclastruct } from './ContextDeclastruct';
 
 describe('ContextDeclastruct', () => {
   it('should accept single bottleneck configuration', () => {

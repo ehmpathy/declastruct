@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`getDisplayableDiff given: from and into have keys in different orders when: getDisplayableDiff is called then: it should preserve key order from into (desired) 1`] = `
 "[32m- Remote[39m

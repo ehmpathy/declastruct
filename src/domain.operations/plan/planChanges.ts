@@ -1,10 +1,10 @@
 import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
-import { type ContextLogTrail } from 'simple-log-methods';
+import type { ContextLogTrail } from 'simple-log-methods';
 
-import { type ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
+import type { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import { type DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 import { asIsoTimestamp } from '../../infra/asIsoTimestamp';
 import { colorizeAction } from '../../infra/colorizeAction';
 import { withSpinner } from '../../infra/withSpinner';

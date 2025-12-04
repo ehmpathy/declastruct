@@ -4,9 +4,8 @@ import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 
 import {
-  genSampleDemoResource,
   demoProvider,
-  DemoResource,
+  genSampleDemoResource,
 } from '../../.test/assets/providers/demo.provider';
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
 import { planChanges } from '../plan/planChanges';

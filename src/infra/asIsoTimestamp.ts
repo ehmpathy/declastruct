@@ -1,4 +1,4 @@
-import { type IsoTimestamp } from '../domain.objects/IsoTimestamp';
+import type { IsoTimestamp } from '../domain.objects/IsoTimestamp';
 
 /**
  * .what = converts a Date to ISO 8601 timestamp string

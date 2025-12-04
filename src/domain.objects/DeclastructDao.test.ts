@@ -1,6 +1,6 @@
 import { DomainEntity, type RefByPrimary } from 'domain-objects';
 
-import { type DeclastructDao } from './DeclastructDao';
+import type { DeclastructDao } from './DeclastructDao';
 
 describe('DeclastructDao', () => {
   // demo resource for testing

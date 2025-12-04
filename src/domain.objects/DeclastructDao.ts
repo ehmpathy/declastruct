@@ -6,7 +6,7 @@ import {
   type RefByPrimary,
   type RefByUnique,
 } from 'domain-objects';
-import { type HasMetadata } from 'type-fns';
+import type { HasMetadata } from 'type-fns';
 
 /**
  * .what = standardized data access interface for any resource type

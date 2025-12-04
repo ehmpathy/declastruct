@@ -1,6 +1,6 @@
 import { DomainLiteral } from 'domain-objects';
 
-import { type DeclastructDao } from './DeclastructDao';
+import type { DeclastructDao } from './DeclastructDao';
 
 export type DeclastructDaosShape<TContext> = Record<
   string,
@@ -12,7 +12,8 @@ export type DeclastructDaosShape<TContext> = Record<
  * .why = enables plug-and-play support for different infrastructure backends (AWS, GCP, Azure, etc)
  */
 export interface DeclastructProvider<
-  TDeclastructDaos extends DeclastructDaosShape<TContext> = DeclastructDaosShape<any>,
+  TDeclastructDaos extends
+    DeclastructDaosShape<TContext> = DeclastructDaosShape<any>,
   TContext = any,
 > {
   /**
@@ -40,7 +41,8 @@ export interface DeclastructProvider<
 }
 
 export class DeclastructProvider<
-    TDeclastructDaos extends DeclastructDaosShape<TContext> = DeclastructDaosShape<any>,
+    TDeclastructDaos extends
+      DeclastructDaosShape<TContext> = DeclastructDaosShape<any>,
     TContext = any,
   >
   extends DomainLiteral<DeclastructProvider<TDeclastructDaos, TContext>>

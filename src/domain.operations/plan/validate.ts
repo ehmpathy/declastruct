@@ -1,6 +1,6 @@
 import { BadRequestError } from 'helpful-errors';
 
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import type { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 
 /**
  * .what = validates that a plan hasn't become stale

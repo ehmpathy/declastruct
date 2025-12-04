@@ -5,7 +5,7 @@ import {
   DeclastructChange,
   DeclastructChangeAction,
 } from '../../domain.objects/DeclastructChange';
-import { DeclastructDao } from '../../domain.objects/DeclastructDao';
+import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
 import { applyChange } from './applyChange';
 
