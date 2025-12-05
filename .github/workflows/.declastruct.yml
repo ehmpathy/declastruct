@@ -43,6 +43,9 @@ jobs:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
 
+      - name: build since self-reference
+        run: npm run build
+
       - name: declastruct plan
         id: plan
         run: npx declastruct plan --wish ${{ inputs.wish-path }} --into ${{ inputs.wish-path }}.plan.json | tee ./plan.log
@@ -102,6 +105,9 @@ jobs:
         with:
           name: declastruct-plan
           path: ${{ steps.extract-dir.outputs.wish-dir }}
+
+      - name: build since self-reference
+        run: npm run build
 
       - name: declastruct apply
         run: npx declastruct apply --plan ${{ inputs.wish-path }}.plan.json | tee ./apply.log
