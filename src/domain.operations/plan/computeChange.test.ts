@@ -36,7 +36,10 @@ describe('computeChange', () => {
     expect(change.action).toBe(DeclastructChangeAction.CREATE);
     expect(change.forResource.class).toBe('DemoResource');
     expect(change.forResource.slug).toBe(getUniqueIdentifierSlug(desired));
-    expect(change.state.desired).toBe(desired);
+    expect(change.state.desired).toEqual({
+      exid: 'new-1',
+      name: 'New Resource',
+    });
     expect(change.state.remote).toBeNull();
     expect(change.state.difference).toBeTruthy();
   });
@@ -56,7 +59,10 @@ describe('computeChange', () => {
     expect(change.forResource.class).toBe('DemoResource');
     expect(change.forResource.slug).toBe(getUniqueIdentifierSlug(remote));
     expect(change.state.desired).toBeNull();
-    expect(change.state.remote).toBe(remote);
+    expect(change.state.remote).toEqual({
+      exid: 'old-1',
+      name: 'Old Resource',
+    });
     expect(change.state.difference).toBeTruthy();
   });
 
@@ -78,8 +84,14 @@ describe('computeChange', () => {
     expect(change.action).toBe(DeclastructChangeAction.KEEP);
     expect(change.forResource.class).toBe('DemoResource');
     expect(change.forResource.slug).toBe(getUniqueIdentifierSlug(desired));
-    expect(change.state.desired).toBe(desired);
-    expect(change.state.remote).toBe(remote);
+    expect(change.state.desired).toEqual({
+      exid: 'same-1',
+      name: 'Same Resource',
+    });
+    expect(change.state.remote).toEqual({
+      exid: 'same-1',
+      name: 'Same Resource',
+    });
     expect(change.state.difference).toBeNull();
   });
 
@@ -101,8 +113,11 @@ describe('computeChange', () => {
     expect(change.action).toBe(DeclastructChangeAction.UPDATE);
     expect(change.forResource.class).toBe('DemoResource');
     expect(change.forResource.slug).toBe(getUniqueIdentifierSlug(desired));
-    expect(change.state.desired).toBe(desired);
-    expect(change.state.remote).toBe(remote);
+    expect(change.state.desired).toEqual({
+      exid: 'update-1',
+      name: 'New Name',
+    });
+    expect(change.state.remote).toEqual({ exid: 'update-1', name: 'Old Name' });
     expect(change.state.difference).toBeTruthy();
     expect(change.state.difference).toContain('Old Name');
     expect(change.state.difference).toContain('New Name');
@@ -181,5 +196,83 @@ describe('computeChange', () => {
     // should be KEEP because only metadata differs
     expect(change.action).toBe(DeclastructChangeAction.KEEP);
     expect(change.state.difference).toBeNull();
+  });
+
+  it('should omit readonly attributes from state.desired and state.remote in emitted change', () => {
+    const desired = new DemoResource({
+      exid: 'omit-readonly-1',
+      name: 'New Name',
+    });
+    const remote = new DemoResource({
+      id: 'db-id-999',
+      uuid: 'uuid-xyz-999',
+      exid: 'omit-readonly-1',
+      name: 'Old Name',
+      createdAt: '2024-01-01T00:00:00Z',
+      updatedAt: '2024-01-03T00:00:00Z',
+    });
+
+    const change = computeChange({
+      desired,
+      remote,
+    });
+
+    // readonly attributes should be omitted from state
+    expect(change.state.desired).toEqual({
+      exid: 'omit-readonly-1',
+      name: 'New Name',
+    });
+    expect(change.state.remote).toEqual({
+      exid: 'omit-readonly-1',
+      name: 'Old Name',
+    });
+
+    // readonly attributes should NOT be present
+    expect(change.state.remote).not.toHaveProperty('id');
+    expect(change.state.remote).not.toHaveProperty('uuid');
+    expect(change.state.remote).not.toHaveProperty('createdAt');
+    expect(change.state.remote).not.toHaveProperty('updatedAt');
+  });
+
+  it('should omit readonly attributes from CREATE change state', () => {
+    const desired = new DemoResource({
+      exid: 'create-readonly-1',
+      name: 'New Resource',
+    });
+
+    const change = computeChange({
+      desired,
+      remote: null,
+    });
+
+    expect(change.action).toBe(DeclastructChangeAction.CREATE);
+    expect(change.state.desired).toEqual({
+      exid: 'create-readonly-1',
+      name: 'New Resource',
+    });
+    expect(change.state.remote).toBeNull();
+  });
+
+  it('should omit readonly attributes from DESTROY change state', () => {
+    const remote = new DemoResource({
+      id: 'db-id-destroy',
+      exid: 'destroy-readonly-1',
+      name: 'Old Resource',
+      createdAt: '2024-01-01T00:00:00Z',
+    });
+
+    const change = computeChange({
+      desired: null,
+      remote,
+    });
+
+    expect(change.action).toBe(DeclastructChangeAction.DESTROY);
+    expect(change.state.desired).toBeNull();
+    expect(change.state.remote).toEqual({
+      exid: 'destroy-readonly-1',
+      name: 'Old Resource',
+    });
+    expect(change.state.remote).not.toHaveProperty('id');
+    expect(change.state.remote).not.toHaveProperty('createdAt');
   });
 });

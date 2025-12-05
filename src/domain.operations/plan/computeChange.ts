@@ -97,8 +97,8 @@ export const computeChange = ({
     },
     action,
     state: {
-      desired,
-      remote,
+      desired: desired ? omitReadonly(desired) : null,
+      remote: remote ? omitReadonly(remote) : null,
       difference,
     },
   });
