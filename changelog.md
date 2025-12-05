@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/ehmpathy/declastruct/compare/v1.4.3...v1.4.4) (2025-12-05)
+
+
+### Bug Fixes
+
+* **plan:** omitReadonly on plan state files ([#28](https://github.com/ehmpathy/declastruct/issues/28)) ([3f6a2e9](https://github.com/ehmpathy/declastruct/commit/3f6a2e9b77811595f7616a4167571d88beb60729))
+
 ## [1.4.3](https://github.com/ehmpathy/declastruct/compare/v1.4.2...v1.4.3) (2025-12-04)
 
 
