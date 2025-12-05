@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/ehmpathy/declastruct/compare/v1.4.4...v1.4.5) (2025-12-05)
+
+
+### Bug Fixes
+
+* **cicd:** revive selfbuild in .declastruct ghaction ([#30](https://github.com/ehmpathy/declastruct/issues/30)) ([5144e27](https://github.com/ehmpathy/declastruct/commit/5144e27492c8d3c8e88ec89f16c380aa3cf0db8b))
+
 ## [1.4.4](https://github.com/ehmpathy/declastruct/compare/v1.4.3...v1.4.4) (2025-12-05)
 
 
