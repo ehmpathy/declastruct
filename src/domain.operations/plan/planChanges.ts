@@ -51,7 +51,7 @@ export const planChanges = async (
       // fetch current remote state using provider context with spinner
       const { result: remoteState, durationMs } = await withSpinner({
         message: 'inflight',
-        operation: () => dao.get.byUnique(resource, providerContext),
+        operation: () => dao.get.one.byUnique(resource, providerContext),
       });
 
       // log done (replaces spinner)

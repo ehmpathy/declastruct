@@ -52,12 +52,22 @@ describe('applyChange', () => {
     const finsertSpy = jest.fn().mockResolvedValue(resource);
 
     const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: finsertSpy,
+        upsert: null,
+        delete: null,
       },
     };
 
@@ -99,13 +109,22 @@ describe('applyChange', () => {
     const upsertSpy = jest.fn().mockResolvedValue(desired);
 
     const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
         upsert: upsertSpy,
+        delete: null,
       },
     };
 
@@ -146,12 +165,22 @@ describe('applyChange', () => {
     const desired = new DemoResource({ id: 'update-1', name: 'New Name' });
 
     const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
+        upsert: null,
+        delete: null,
       },
     };
 
@@ -194,12 +223,21 @@ describe('applyChange', () => {
     const deleteSpy = jest.fn().mockResolvedValue(undefined);
 
     const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
+        upsert: null,
         delete: deleteSpy,
       },
     };
@@ -243,12 +281,21 @@ describe('applyChange', () => {
     const finsertSpy = jest.fn().mockResolvedValue(desired);
 
     const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: finsertSpy,
+        upsert: null,
         delete: deleteSpy,
       },
     };

@@ -31,25 +31,33 @@ const getResourceFilePath = (id: string): string => {
  * .why = provides real persistence for integration tests
  */
 const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+  dobj: DemoResource,
   get: {
-    byUnique: async (input) => {
-      const filePath = getResourceFilePath(input.exid);
+    one: {
+      byUnique: async (input) => {
+        const filePath = getResourceFilePath(input.exid);
 
-      // check if file exists
-      if (!existsSync(filePath)) return null;
+        // check if file exists
+        if (!existsSync(filePath)) return null;
 
-      // read and parse file
-      const json = await readFile(filePath, 'utf-8');
-      const data = JSON.parse(json);
+        // read and parse file
+        const json = await readFile(filePath, 'utf-8');
+        const data = JSON.parse(json);
 
-      return DemoResource.as(data);
+        return DemoResource.as(data);
+      },
+      byPrimary: null,
+      byRef: async (ref) => {
+        // extract exid from ref
+        const exid = (ref as any).exid;
+        if (!exid) return null;
+
+        return demoDao.get.one.byUnique({ exid } as any, {});
+      },
     },
-    byRef: async (ref) => {
-      // extract exid from ref
-      const exid = (ref as any).exid;
-      if (!exid) return null;
-
-      return demoDao.get.byUnique({ exid } as any, {});
+    ref: {
+      byPrimary: null,
+      byUnique: null,
     },
   },
   set: {
@@ -70,7 +78,7 @@ const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
       return resource;
     },
     delete: async (ref) => {
-      const resource = await demoDao.get.byRef(ref, {});
+      const resource = await demoDao.get.one.byRef(ref, {});
       if (!resource) return;
 
       const filePath = getResourceFilePath(resource.exid);

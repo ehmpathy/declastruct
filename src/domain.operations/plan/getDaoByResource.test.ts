@@ -20,12 +20,22 @@ describe('getDaoByResource', () => {
 
   it('should return DAO and context when exactly one provider matches', () => {
     const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
+        upsert: null,
+        delete: null,
       },
     };
 
@@ -54,22 +64,42 @@ describe('getDaoByResource', () => {
 
   it('should throw UnexpectedCodePathError when multiple providers support same resource', () => {
     const dao1: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
+        upsert: null,
+        delete: null,
       },
     };
 
     const dao2: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+      dobj: DemoResource,
       get: {
-        byUnique: async () => null,
-        byRef: async () => null,
+        one: {
+          byUnique: async () => null,
+          byPrimary: null,
+          byRef: async () => null,
+        },
+        ref: {
+          byPrimary: null,
+          byUnique: null,
+        },
       },
       set: {
         finsert: async (input) => input as any,
+        upsert: null,
+        delete: null,
       },
     };
 
