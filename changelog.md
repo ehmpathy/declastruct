@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/ehmpathy/declastruct/compare/v1.4.5...v1.5.0) (2025-12-07)
+
+
+### Features
+
+* **ref:** expose dao.get.ref.byUnique,.byPrimary ([#32](https://github.com/ehmpathy/declastruct/issues/32)) ([2274bde](https://github.com/ehmpathy/declastruct/commit/2274bde0b13c45c22531ad7c95a80fea7a65c937))
+
 ## [1.4.5](https://github.com/ehmpathy/declastruct/compare/v1.4.4...v1.4.5) (2025-12-05)
 
 
