@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/ehmpathy/declastruct/compare/v1.5.0...v1.5.1) (2025-12-07)
+
+
+### Bug Fixes
+
+* **shapes:** infer TResource from TResourceClass ([#34](https://github.com/ehmpathy/declastruct/issues/34)) ([51fedfb](https://github.com/ehmpathy/declastruct/commit/51fedfbd5fed4a00f45ce829638d1e7734982c87))
+
 ## [1.5.0](https://github.com/ehmpathy/declastruct/compare/v1.4.5...v1.5.0) (2025-12-07)
 
 
