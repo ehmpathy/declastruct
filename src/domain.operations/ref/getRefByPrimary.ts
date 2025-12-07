@@ -1,5 +1,4 @@
 import {
-  type DomainEntity,
   isRefByPrimary,
   isRefByUnique,
   type Ref,
@@ -17,7 +16,6 @@ import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
  * .note = if ref is already RefByPrimary, returns as-is without db call
  */
 export const getRefByPrimary = async <
-  TResource extends DomainEntity<any>,
   TResourceClass extends Refable<any, any, any>,
   TContext extends Record<string, any>,
 >(
@@ -25,7 +23,7 @@ export const getRefByPrimary = async <
     ref: Ref<TResourceClass>;
   },
   context: {
-    dao: DeclastructDao<TResource, TResourceClass, TContext>;
+    dao: DeclastructDao<TResourceClass, TContext>;
   } & TContext,
 ): Promise<RefByPrimary<TResourceClass>> => {
   // if already RefByPrimary, return as-is without db call
@@ -43,9 +41,7 @@ export const getRefByPrimary = async <
       });
 
     // extract primary key from the resource
-    return refByPrimary<TResourceClass>(
-      resource as InstanceType<TResourceClass>,
-    );
+    return refByPrimary<TResourceClass>(resource);
   }
 
   // otherwise, unexpected ref type

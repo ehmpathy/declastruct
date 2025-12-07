@@ -28,7 +28,7 @@ describe('getRefByPrimary', () => {
         // setup spy to verify no db call is made
         const byUniqueSpy = jest.fn();
 
-        const dao: DeclastructDao<TestResource, typeof TestResource, any> = {
+        const dao: DeclastructDao<typeof TestResource, any> = {
           dobj: TestResource,
           get: {
             one: {
@@ -74,7 +74,7 @@ describe('getRefByPrimary', () => {
 
         const byUniqueSpy = jest.fn().mockResolvedValue(foundResource);
 
-        const dao: DeclastructDao<TestResource, typeof TestResource, any> = {
+        const dao: DeclastructDao<typeof TestResource, any> = {
           dobj: TestResource,
           get: {
             one: {
@@ -115,7 +115,7 @@ describe('getRefByPrimary', () => {
       then('it should throw BadRequestError', async () => {
         const byUniqueSpy = jest.fn().mockResolvedValue(null);
 
-        const dao: DeclastructDao<TestResource, typeof TestResource, any> = {
+        const dao: DeclastructDao<typeof TestResource, any> = {
           dobj: TestResource,
           get: {
             one: {
@@ -150,7 +150,7 @@ describe('getRefByPrimary', () => {
     when('used in context', () => {
       then('it should fit the context shape', () => {
         // type test: verify dao fits context shape
-        const dao: DeclastructDao<TestResource, typeof TestResource, any> = {
+        const dao: DeclastructDao<typeof TestResource, any> = {
           dobj: TestResource,
           get: {
             one: {
@@ -187,7 +187,7 @@ describe('getRefByPrimary', () => {
           name: 'Found Resource',
         });
 
-        const dao: DeclastructDao<TestResource, typeof TestResource, any> = {
+        const dao: DeclastructDao<typeof TestResource, any> = {
           dobj: TestResource,
           get: {
             one: {

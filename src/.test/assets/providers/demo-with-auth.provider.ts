@@ -57,11 +57,7 @@ const validateAuthContext = (context: DemoAuthContext): void => {
  * .what = demo DAO requiring authentication context
  * .why = verifies provider context is properly passed to all DAO operations
  */
-const demoAuthDao: DeclastructDao<
-  DemoAuthResource,
-  typeof DemoAuthResource,
-  DemoAuthContext
-> = {
+const demoAuthDao: DeclastructDao<typeof DemoAuthResource, DemoAuthContext> = {
   dobj: DemoAuthResource,
   get: {
     one: {

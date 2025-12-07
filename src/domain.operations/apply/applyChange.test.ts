@@ -51,7 +51,7 @@ describe('applyChange', () => {
     const resource = new DemoResource({ id: 'create-1', name: 'Create Me' });
     const finsertSpy = jest.fn().mockResolvedValue(resource);
 
-    const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -108,7 +108,7 @@ describe('applyChange', () => {
     const desired = new DemoResource({ id: 'update-1', name: 'New Name' });
     const upsertSpy = jest.fn().mockResolvedValue(desired);
 
-    const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -164,7 +164,7 @@ describe('applyChange', () => {
     const remote = new DemoResource({ id: 'update-1', name: 'Old Name' });
     const desired = new DemoResource({ id: 'update-1', name: 'New Name' });
 
-    const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -222,7 +222,7 @@ describe('applyChange', () => {
     const resource = new DemoResource({ id: 'destroy-1', name: 'Delete Me' });
     const deleteSpy = jest.fn().mockResolvedValue(undefined);
 
-    const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -280,7 +280,7 @@ describe('applyChange', () => {
     const deleteSpy = jest.fn().mockResolvedValue(undefined);
     const finsertSpy = jest.fn().mockResolvedValue(desired);
 
-    const dao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {

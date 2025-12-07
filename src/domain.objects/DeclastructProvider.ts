@@ -4,7 +4,7 @@ import type { DeclastructDao } from './DeclastructDao';
 
 export type DeclastructDaosShape<TContext> = Record<
   string,
-  DeclastructDao<any, any, TContext>
+  DeclastructDao<any, TContext>
 >;
 
 /**
