@@ -62,31 +62,39 @@ const demoAuthDao: DeclastructDao<
   typeof DemoAuthResource,
   DemoAuthContext
 > = {
+  dobj: DemoAuthResource,
   get: {
-    byUnique: async (input, context) => {
-      // verify context is passed and contains auth token
-      validateAuthContext(context);
+    one: {
+      byUnique: async (input, context) => {
+        // verify context is passed and contains auth token
+        validateAuthContext(context);
 
-      const filePath = getResourceFilePath(input.exid);
+        const filePath = getResourceFilePath(input.exid);
 
-      // check if file exists
-      if (!existsSync(filePath)) return null;
+        // check if file exists
+        if (!existsSync(filePath)) return null;
 
-      // read and parse file
-      const json = await readFile(filePath, 'utf-8');
-      const data = JSON.parse(json);
+        // read and parse file
+        const json = await readFile(filePath, 'utf-8');
+        const data = JSON.parse(json);
 
-      return DemoAuthResource.as(data);
+        return DemoAuthResource.as(data);
+      },
+      byPrimary: null,
+      byRef: async (ref, context) => {
+        // verify context is passed
+        validateAuthContext(context);
+
+        // extract exid from ref
+        const exid = (ref as any).exid;
+        if (!exid) return null;
+
+        return demoAuthDao.get.one.byUnique({ exid } as any, context);
+      },
     },
-    byRef: async (ref, context) => {
-      // verify context is passed
-      validateAuthContext(context);
-
-      // extract exid from ref
-      const exid = (ref as any).exid;
-      if (!exid) return null;
-
-      return demoAuthDao.get.byUnique({ exid } as any, context);
+    ref: {
+      byPrimary: null,
+      byUnique: null,
     },
   },
   set: {
@@ -116,7 +124,7 @@ const demoAuthDao: DeclastructDao<
       // verify context is passed
       validateAuthContext(context);
 
-      const resource = await demoAuthDao.get.byRef(ref, context);
+      const resource = await demoAuthDao.get.one.byRef(ref, context);
       if (!resource) return;
 
       const filePath = getResourceFilePath(resource.exid);

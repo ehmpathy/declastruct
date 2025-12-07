@@ -22,35 +22,97 @@ export interface DeclastructDao<
   TResourceClass extends Refable<any, any, any>,
   TContext = never,
 > {
+  /**
+   * .what = the domain object class this dao operates on
+   * .why = enables downstream operations (like getRefByPrimary) to access static properties
+   */
+  dobj: TResourceClass;
+
+  /**
+   * .what = read operations for fetching resources and resolving refs
+   * .why = provides consistent, type-safe access to remote state
+   */
   get: {
     /**
-     * required - fetch by unique keys (enables idempotency)
+     * .what = fetch a single resource by reference
+     * .why = enables looking up current state of a resource
      */
-    byUnique(
-      input: RefByUnique<TResourceClass>,
-      context: TContext,
-    ): Promise<TResource | null>;
+    one: {
+      /**
+       * .what = fetch by unique keys
+       * .why = enables idempotent lookups via natural keys
+       */
+      byUnique(
+        input: RefByUnique<TResourceClass>,
+        context: TContext,
+      ): Promise<TResource | null>;
+
+      /**
+       * .what = fetch by primary keys
+       * .why = enables efficient lookups when primary key is known
+       *
+       * .note = set to null if resource lacks primary keys (forces explicit decision)
+       */
+      byPrimary:
+        | null
+        | ((
+            input: RefByPrimary<TResourceClass>,
+            context: TContext,
+          ) => Promise<TResource | null>);
+
+      /**
+       * .what = fetch by any supported reference type
+       * .why = enables flexible lookups when ref type is not known at compile time
+       */
+      byRef(
+        input: Ref<TResourceClass>,
+        context: TContext,
+      ): Promise<TResource | null>;
+    };
 
     /**
-     * optional - fetch by primary keys (if resource supports them)
+     * .what = ref resolution utilities for converting between ref types
+     * .why = enables working with generic Ref<T> while resolving to specific RefByPrimary/RefByUnique when needed
+     *
+     * .note = set methods to null if resource lacks primary keys (forces explicit decision)
      */
-    byPrimary?(
-      input: RefByPrimary<TResourceClass>,
-      context: TContext,
-    ): Promise<TResource | null>;
+    ref: {
+      /**
+       * .what = resolve any ref to RefByPrimary
+       * .why = enables getting primary key from any ref type
+       *
+       * .note = set to null if resource lacks primary keys
+       */
+      byPrimary:
+        | null
+        | ((
+            input: Ref<TResourceClass>,
+            context: TContext,
+          ) => Promise<RefByPrimary<TResourceClass>>);
 
-    /**
-     * required - fetch by any supported reference type
-     */
-    byRef(
-      input: Ref<TResourceClass>,
-      context: TContext,
-    ): Promise<TResource | null>;
+      /**
+       * .what = resolve any ref to RefByUnique
+       * .why = enables getting unique key from any ref type
+       *
+       * .note = set to null if resource lacks primary keys
+       */
+      byUnique:
+        | null
+        | ((
+            input: Ref<TResourceClass>,
+            context: TContext,
+          ) => Promise<RefByUnique<TResourceClass>>);
+    };
   };
 
+  /**
+   * .what = write operations for mutating resources
+   * .why = provides idempotent, type-safe mutations to remote state
+   */
   set: {
     /**
-     * required - find or insert resource (idempotent create)
+     * .what = find or insert resource
+     * .why = idempotent create - returns existing if found by unique keys, otherwise creates
      */
     finsert(
       input: TResource,
@@ -58,17 +120,27 @@ export interface DeclastructDao<
     ): Promise<HasMetadata<TResource>>;
 
     /**
-     * optional - create or update resource (idempotent upsert)
+     * .what = create or update resource
+     * .why = idempotent upsert - creates if not found, updates if found
+     *
+     * .note = set to null if resource does not support updates
      */
-    upsert?(
-      input: TResource,
-      context: TContext,
-    ): Promise<HasMetadata<TResource>>;
+    upsert:
+      | null
+      | ((
+          input: TResource,
+          context: TContext,
+        ) => Promise<HasMetadata<TResource>>);
 
     /**
-     * optional - delete resource
+     * .what = delete resource
+     * .why = removes resource from remote state
+     *
+     * .note = set to null if resource does not support deletion
      */
-    delete?(input: Ref<TResourceClass>, context: TContext): Promise<void>;
+    delete:
+      | null
+      | ((input: Ref<TResourceClass>, context: TContext) => Promise<void>);
   };
 }
 

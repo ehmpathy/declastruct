@@ -61,18 +61,27 @@ describe('DeclastructProvider', () => {
         typeof DemoResourceWithOptionalPrimary,
         any
       > = {
+        dobj: DemoResourceWithOptionalPrimary,
         get: {
-          byUnique: async () => null,
-          byPrimary: async (input) => {
-            // input.uuid should be string (not string | undefined)
-            const uuid: string = input.uuid;
-            expect(uuid).toBeDefined();
-            return null;
+          one: {
+            byUnique: async () => null,
+            byPrimary: async (input) => {
+              // input.uuid should be string (not string | undefined)
+              const uuid: string = input.uuid;
+              expect(uuid).toBeDefined();
+              return null;
+            },
+            byRef: async () => null,
           },
-          byRef: async () => null,
+          ref: {
+            byPrimary: null,
+            byUnique: null,
+          },
         },
         set: {
           finsert: async (r) => r as any,
+          upsert: null,
+          delete: null,
         },
       };
 
@@ -80,7 +89,11 @@ describe('DeclastructProvider', () => {
       const provider = new DeclastructProvider({
         name: 'optional-primary-key-provider',
         daos: {
-          DemoResourceWithOptionalPrimary: demoDao,
+          DemoResourceWithOptionalPrimary: demoDao as DeclastructDao<
+            any,
+            any,
+            any
+          >,
         },
         context: {},
         hooks: {
@@ -95,8 +108,8 @@ describe('DeclastructProvider', () => {
 
       // access dao to verify structure
       const dao = provider.daos.DemoResourceWithOptionalPrimary;
-      expect(dao?.get.byPrimary).toBeDefined();
-      expect(dao?.get.byUnique).toBeDefined();
+      expect(dao?.get.one.byPrimary).toBeDefined();
+      expect(dao?.get.one.byUnique).toBeDefined();
       expect(dao?.set.finsert).toBeDefined();
     });
   });
