@@ -16,7 +16,7 @@ describe('DeclastructDao', () => {
 
   it('should implement the interface structure', () => {
     // type verification
-    const dao: DeclastructDao<DemoResource, typeof DemoResource> = {
+    const dao: DeclastructDao<typeof DemoResource> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -44,7 +44,7 @@ describe('DeclastructDao', () => {
 
   it('should support fn | null methods', () => {
     // type verification
-    const dao: DeclastructDao<DemoResource, typeof DemoResource> = {
+    const dao: DeclastructDao<typeof DemoResource> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -105,10 +105,7 @@ describe('DeclastructDao', () => {
 
     it('dao.get.one.byPrimary should accept RefByPrimary with required uuid', () => {
       // type verification: byPrimary input should have uuid as required (not optional)
-      const dao: DeclastructDao<
-        DemoResourceWithOptionalPrimary,
-        typeof DemoResourceWithOptionalPrimary
-      > = {
+      const dao: DeclastructDao<typeof DemoResourceWithOptionalPrimary> = {
         dobj: DemoResourceWithOptionalPrimary,
         get: {
           one: {
@@ -154,7 +151,7 @@ describe('DeclastructDao', () => {
 
     it('should require dobj attribute', () => {
       // @ts-expect-error - missing dobj
-      const badDao: DeclastructDao<TestResource, typeof TestResource> = {
+      const badDao: DeclastructDao<typeof TestResource> = {
         get: {
           one: {
             byUnique: async () => null,
@@ -183,7 +180,7 @@ describe('DeclastructDao', () => {
     });
 
     it('should implement the new interface structure', () => {
-      const dao: DeclastructDao<TestResource, typeof TestResource> = {
+      const dao: DeclastructDao<typeof TestResource> = {
         dobj: TestResource,
         get: {
           one: {

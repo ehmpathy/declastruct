@@ -30,7 +30,7 @@ const getResourceFilePath = (id: string): string => {
  * .what = demo DAO with on-disk JSON persistence
  * .why = provides real persistence for integration tests
  */
-const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+const demoDao: DeclastructDao<typeof DemoResource, any> = {
   dobj: DemoResource,
   get: {
     one: {

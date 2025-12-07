@@ -16,7 +16,7 @@ export const getDaoByResource = ({
   resource: DomainEntity<any>;
   providers: DeclastructProvider<any, any>[];
 }): {
-  dao: DeclastructDao<DomainEntity<any>, any, any>;
+  dao: DeclastructDao<any, any>;
   context: any;
 } => {
   // get resource class name

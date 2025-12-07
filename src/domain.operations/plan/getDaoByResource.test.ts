@@ -19,7 +19,7 @@ describe('getDaoByResource', () => {
   }
 
   it('should return DAO and context when exactly one provider matches', () => {
-    const demoDao: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const demoDao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -63,7 +63,7 @@ describe('getDaoByResource', () => {
   });
 
   it('should throw UnexpectedCodePathError when multiple providers support same resource', () => {
-    const dao1: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao1: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {
@@ -83,7 +83,7 @@ describe('getDaoByResource', () => {
       },
     };
 
-    const dao2: DeclastructDao<DemoResource, typeof DemoResource, any> = {
+    const dao2: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
       get: {
         one: {

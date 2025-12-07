@@ -1,5 +1,4 @@
 import {
-  type DomainEntity,
   DomainLiteral,
   type Ref,
   type Refable,
@@ -15,10 +14,9 @@ import type { HasMetadata } from 'type-fns';
  *
  * .note =
  *   - TResourceClass is the class constructor (e.g., typeof MyResource) with static unique/primary properties
- *   - uses method syntax in the get & set for bivariance, to enable assignment to DeclastructDao<any, any, any>
+ *   - uses method syntax in the get & set for bivariance, to enable assignment to DeclastructDao<any, any>
  */
 export interface DeclastructDao<
-  TResource extends DomainEntity<any>,
   TResourceClass extends Refable<any, any, any>,
   TContext = never,
 > {
@@ -45,7 +43,7 @@ export interface DeclastructDao<
       byUnique(
         input: RefByUnique<TResourceClass>,
         context: TContext,
-      ): Promise<TResource | null>;
+      ): Promise<InstanceType<TResourceClass> | null>;
 
       /**
        * .what = fetch by primary keys
@@ -58,7 +56,7 @@ export interface DeclastructDao<
         | ((
             input: RefByPrimary<TResourceClass>,
             context: TContext,
-          ) => Promise<TResource | null>);
+          ) => Promise<InstanceType<TResourceClass> | null>);
 
       /**
        * .what = fetch by any supported reference type
@@ -67,7 +65,7 @@ export interface DeclastructDao<
       byRef(
         input: Ref<TResourceClass>,
         context: TContext,
-      ): Promise<TResource | null>;
+      ): Promise<InstanceType<TResourceClass> | null>;
     };
 
     /**
@@ -115,9 +113,9 @@ export interface DeclastructDao<
      * .why = idempotent create - returns existing if found by unique keys, otherwise creates
      */
     finsert(
-      input: TResource,
+      input: InstanceType<TResourceClass>,
       context: TContext,
-    ): Promise<HasMetadata<TResource>>;
+    ): Promise<HasMetadata<InstanceType<TResourceClass>>>;
 
     /**
      * .what = create or update resource
@@ -128,9 +126,9 @@ export interface DeclastructDao<
     upsert:
       | null
       | ((
-          input: TResource,
+          input: InstanceType<TResourceClass>,
           context: TContext,
-        ) => Promise<HasMetadata<TResource>>);
+        ) => Promise<HasMetadata<InstanceType<TResourceClass>>>);
 
     /**
      * .what = delete resource
@@ -145,9 +143,8 @@ export interface DeclastructDao<
 }
 
 export class DeclastructDao<
-    TResource extends DomainEntity<any>,
     TResourceClass extends Refable<any, any, any>,
     TContext,
   >
-  extends DomainLiteral<DeclastructDao<TResource, TResourceClass, TContext>>
-  implements DeclastructDao<TResource, TResourceClass, TContext> {}
+  extends DomainLiteral<DeclastructDao<TResourceClass, TContext>>
+  implements DeclastructDao<TResourceClass, TContext> {}

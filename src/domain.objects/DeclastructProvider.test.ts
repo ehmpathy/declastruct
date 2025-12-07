@@ -57,7 +57,6 @@ describe('DeclastructProvider', () => {
     it('should work with daos that have optional primary keys and byPrimary defined', () => {
       // define a dao for the resource with optional primary key
       const demoDao: DeclastructDao<
-        DemoResourceWithOptionalPrimary,
         typeof DemoResourceWithOptionalPrimary,
         any
       > = {
@@ -89,11 +88,7 @@ describe('DeclastructProvider', () => {
       const provider = new DeclastructProvider({
         name: 'optional-primary-key-provider',
         daos: {
-          DemoResourceWithOptionalPrimary: demoDao as DeclastructDao<
-            any,
-            any,
-            any
-          >,
+          DemoResourceWithOptionalPrimary: demoDao as DeclastructDao<any, any>,
         },
         context: {},
         hooks: {

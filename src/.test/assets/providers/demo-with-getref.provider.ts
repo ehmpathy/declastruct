@@ -72,7 +72,6 @@ const findResourceByUuid = async (
  * .why = enables testing getRefByPrimary and getRefByUnique utilities
  */
 const demoRefDao: DeclastructDao<
-  DemoRefResource,
   typeof DemoRefResource,
   // biome-ignore lint/complexity/noBannedTypes: empty object type needed
   {}
@@ -180,7 +179,7 @@ const demoRefDao: DeclastructDao<
 export const demoGetRefProvider = new DeclastructProvider({
   name: 'demo-getref-provider',
   daos: {
-    DemoRefResource: demoRefDao as DeclastructDao<any, any, any>,
+    DemoRefResource: demoRefDao as DeclastructDao<any, any>,
   },
   context: {},
   hooks: {
