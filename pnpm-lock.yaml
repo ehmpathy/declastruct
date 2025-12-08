@@ -76,8 +76,8 @@ importers:
         specifier: ^0.43.7
         version: 0.43.7(declapract@0.13.0(typescript@5.4.5))
       declastruct:
-        specifier: ^1.4.2
-        version: 1.4.2(domain-objects@0.31.3)
+        specifier: ^1.5.1
+        version: 1.5.1(domain-objects@0.31.3)
       declastruct-github:
         specifier: ^1.0.5
         version: 1.0.5
@@ -2121,8 +2121,8 @@ packages:
     resolution: {integrity: sha512-llW3KDP98H0ulAkKaDpSOLqt7SAdQiZSg+9AIeVsEhZUVAR252kOd7eMElhZVvmk+kwr0VeWexU0xtoKglkfHQ==}
     engines: {node: '>=8.0.0'}
 
-  declastruct@1.4.2:
-    resolution: {integrity: sha512-SbqlTmqbrk5zTx3S8zTEMWPYf0icQgnWqjB91DrDxOFjBtwkaz2EPbwLQ52lpJK1d4ZRXLKZpLbwi+0RiW8oqQ==}
+  declastruct@1.5.1:
+    resolution: {integrity: sha512-fndvTmyTk/htdXvZvXyZUp68MD6IjpkdBCZN8m07rJMygkgOvF5C0hJL2rwG13wm6xZZXL7gXGiX0IE5Cu8tsw==}
     engines: {node: '>=8.0.0'}
     hasBin: true
     peerDependencies:
@@ -6344,7 +6344,7 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  declastruct@1.4.2(domain-objects@0.31.3):
+  declastruct@1.5.1(domain-objects@0.31.3):
     dependencies:
       bottleneck: 2.19.5
       chalk: 5.4.1
