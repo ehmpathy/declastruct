@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { resolve } from 'path';
-
+import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 import { applyChanges } from '../../domain.operations/apply/applyChanges';
 
@@ -72,7 +72,7 @@ export const executeApplyCommand = async (input: {
     throw new BadRequestError('Wish file must export getProviders() function');
 
   // get resources and providers
-  const resources = await wish.getResources();
+  const resources: DeclaredResource[] = await wish.getResources();
   const providers = await wish.getProviders();
 
   // initialize providers

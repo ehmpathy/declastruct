@@ -4,7 +4,7 @@ import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { dirname, resolve } from 'path';
-
+import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
 import { planChanges } from '../../domain.operations/plan/planChanges';
 
 const log = console;
@@ -48,7 +48,7 @@ export const executePlanCommand = async ({
   }
 
   // get resources and providers
-  const resources = await wish.getResources();
+  const resources: DeclaredResource[] = await wish.getResources();
   const providers = await wish.getProviders();
 
   // initialize providers
