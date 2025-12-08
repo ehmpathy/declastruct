@@ -2,7 +2,7 @@
   "name": "declastruct",
   "author": "ehmpathy",
   "description": "Add declarative control to any resource constructs. Declare, plan, and apply within an observable pit-of-success.",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "repository": "ehmpathy/declastruct",
   "homepage": "https://github.com/ehmpathy/declastruct",
   "keywords": [
