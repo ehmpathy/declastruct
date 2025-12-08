@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/ehmpathy/declastruct/compare/v1.5.2...v1.6.0) (2025-12-08)
+
+
+### Features
+
+* **dao:** genDeclastructDao factory for pit-of-success++ ([#42](https://github.com/ehmpathy/declastruct/issues/42)) ([fd352ec](https://github.com/ehmpathy/declastruct/commit/fd352ecbfb43239c7bffe830ebe58bf4b8ae3363))
+
+
+### Bug Fixes
+
+* **refs:** get ref should return null instead of throw on unfound resources, like a normal get ([#40](https://github.com/ehmpathy/declastruct/issues/40)) ([9db61d0](https://github.com/ehmpathy/declastruct/commit/9db61d0232de12a28729a1a971fca49ca66544d8))
+
 ## [1.5.2](https://github.com/ehmpathy/declastruct/compare/v1.5.1...v1.5.2) (2025-12-08)
 
 
