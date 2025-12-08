@@ -1,6 +1,7 @@
 // domain objects
 
 export type { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
+export type { DeclaredResource } from '../../domain.objects/DeclaredResource';
 export {
   DeclastructChange,
   DeclastructChangeAction,
