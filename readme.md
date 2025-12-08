@@ -270,3 +270,145 @@ each `DeclastructChange` includes:
 ## inspiration
 
 inspired by Terraform's declarative approach, but designed to eliminate state file overhead, work with any resource construct, be reusable across both prod codepaths and cicd control, and leverage TypeScript's type system for safer declarative instructions.
+
+
+# plugin
+
+build your own provider to control any resource construct via declastruct.
+
+## 1. declare your resource
+
+define your resource as a [`domain-object`](https://github.com/ehmpathy/domain-objects) with key attributes:
+
+```ts
+import { DomainEntity } from 'domain-objects';
+
+interface DeclaredStripeCustomer {
+  id?: string;
+  email: string;
+  name: string;
+  status?: string;
+}
+class DeclaredStripeCustomer
+  extends DomainEntity<DeclaredStripeCustomer>
+  implements DeclaredStripeCustomer
+{
+  // primary key: the surrogate key identifier for this resource
+  public static primary = ['id'] as const;
+
+  // unique key: the natural key identifier for this resource (i.e., the non-primary unique key)
+  public static unique = ['email'] as const;
+
+  // metadata keys: readonly persistance-specific fields - excluded from change detection
+  // if unspecified, the defaults of 'id', 'uuid', 'createdAt', 'updatedAt', 'effectiveAt' will be assumed
+  public static metadata = ['id'] as const;
+
+  // readonly keys: readonly domain-intrinsic fields - excluded from change detection
+  // note: all metadata is implicitly readonly, so you only need to specify non-metadata readonly keys here
+  public static readonly = ['status'] as const;
+}
+```
+
+key attributes to consider:
+- **primary key** (`static primary`): surrogate identifier for efficient lookups after creation
+- **unique key** (`static unique`): natural key that uniquely identifies the resource, used for idempotent operations
+- **metadata keys** (`static metadata`): readonly persistence-layer fields that describe *how* the object is stored (e.g., `uuid`, `createdAt`). note, metadata is a specific subset of readonly
+- **readonly keys** (`static readonly`): readonly domain-layer fields that describe *what* the object is (e.g., `status`). note, you only need to declare the readonly attributes that are not already flagged as metadata here
+
+## 2. generate your dao
+
+use `genDeclastructDao` to create a type-safe DAO with auto-wired ref resolution:
+
+```ts
+import { genDeclastructDao } from 'declastruct';
+import Stripe from 'stripe';
+
+// define the context type for your provider
+interface StripeContext {
+  stripe: Stripe;
+}
+
+const daoStripeCustomer = genDeclastructDao<
+  typeof DeclaredStripeCustomer,
+  StripeContext
+>({
+  dobj: DeclaredStripeCustomer,
+  get: {
+    one: {
+      byUnique: async ({ email }, context) => {
+        // lookup by natural key (email)
+        const customer = await context.stripe.customers.list({ email });
+        return customer.data[0] ? toResource(customer.data[0]) : null;
+      },
+      byPrimary: async ({ id }, context) => {
+        // lookup by stripe-assigned id
+        const customer = await context.stripe.customers.retrieve(id);
+        return customer ? toResource(customer) : null;
+      },
+    },
+  },
+  set: {
+    finsert: async (resource, context) => {
+      // find-or-insert: idempotent create
+      const foundBefore = await daoStripeCustomer.get.one.byUnique(
+        { email: resource.email },
+        context,
+      );
+      if (foundBefore) return foundBefore;
+
+      const created = await context.stripe.customers.create({
+        email: resource.email,
+        name: resource.name,
+      });
+      return toResource(created);
+    },
+    upsert: async (resource, context) => {
+      // update-or-insert: idempotent update
+      const foundBefore = await daoStripeCustomer.get.one.byUnique(
+        { email: resource.email },
+        context,
+      );
+      if (foundBefore) {
+        const updated = await context.stripe.customers.update(foundBefore.id, {
+          name: resource.name,
+        });
+        return toResource(updated);
+      }
+      return daoStripeCustomer.set.finsert(resource, context);
+    },
+    delete: async (ref, context) => {
+      const foundBefore = await daoStripeCustomer.get.one.byRef(ref, context);
+      if (foundBefore) await context.stripe.customers.del(foundBefore.id);
+    },
+  },
+});
+```
+
+the factory automatically:
+- **builds get.one.byRef**: `get.one.byRef` is built for you, based on `get.one.byUnique` and `get.one.byPrimary`
+- **builds get.ref.byPrimary,.byUnique**: if `byPrimary` is defined, `get.ref.byPrimary` and `get.ref.byUnique` are built for you, based on `get.one.byUnique` and `get.one.byPrimary`
+- **enforces type safety**: if `byPrimary` is null, `get.ref.*` are typed as null (prevents accidental calls)
+
+## 3. create your provider
+
+bundle your DAOs into a provider:
+
+```ts
+import { DeclastructProvider } from 'declastruct';
+
+export const stripeProvider = new DeclastructProvider({
+  name: 'stripe',
+  daos: {
+    DeclaredStripeCustomer: daoStripeCustomer,
+  },
+  context: {
+    stripe,  // stripe client instance
+  },
+  hooks: {
+    beforeAll: async () => { /* setup */ },
+    afterAll: async () => { /* cleanup */ },
+  },
+});
+```
+
+now users can declare stripe customers and use `plan` + `apply` to control them declaratively.
