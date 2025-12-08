@@ -6,7 +6,7 @@ import {
   type RefByPrimary,
   refByPrimary,
 } from 'domain-objects';
-import { BadRequestError, UnexpectedCodePathError } from 'helpful-errors';
+import { UnexpectedCodePathError } from 'helpful-errors';
 
 import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
 
@@ -25,7 +25,7 @@ export const getRefByPrimary = async <
   context: {
     dao: DeclastructDao<TResourceClass, TContext>;
   } & TContext,
-): Promise<RefByPrimary<TResourceClass>> => {
+): Promise<RefByPrimary<TResourceClass> | null> => {
   // if already RefByPrimary, return as-is without db call
   if (isRefByPrimary({ of: context.dao.dobj })(input.ref)) return input.ref;
 
@@ -34,11 +34,8 @@ export const getRefByPrimary = async <
     // fetch the resource by unique key
     const resource = await context.dao.get.one.byUnique(input.ref, context);
 
-    // throw if resource not found
-    if (!resource)
-      throw new BadRequestError('resource not found by unique ref', {
-        ref: input.ref,
-      });
+    // return null if resource not found (resource may not exist yet)
+    if (!resource) return null;
 
     // extract primary key from the resource
     return refByPrimary<TResourceClass>(resource);

@@ -1,3 +1,4 @@
+import { UnexpectedCodePathError } from 'helpful-errors';
 import { given, then, useBeforeEach, when } from 'test-fns';
 
 import {
@@ -57,13 +58,12 @@ describe('getRefByPrimary.integration', () => {
 
   given('[case2] a RefByUnique for a non-existent resource', () => {
     when('[t0] called with RefByUnique', () => {
-      then('it should throw BadRequestError', async () => {
-        await expect(
-          getRefByPrimary(
-            { ref: { exid: 'non-existent-exid' } },
-            { dao: demoRefDao },
-          ),
-        ).rejects.toThrow('resource not found by unique ref');
+      then('it should return null', async () => {
+        const result = await getRefByPrimary(
+          { ref: { exid: 'non-existent-exid' } },
+          { dao: demoRefDao },
+        );
+        expect(result).toBeNull();
       });
     });
   });
@@ -113,9 +113,9 @@ describe('getRefByPrimary.integration', () => {
         );
 
         // type check: result should have uuid property
-        const uuid: string = result.uuid;
-        expect(uuid).toBeDefined();
-        expect(typeof uuid).toBe('string');
+        expect(result).not.toBeNull();
+        expect(result?.uuid).toBeDefined();
+        expect(typeof result?.uuid).toBe('string');
       });
     });
 
@@ -126,14 +126,17 @@ describe('getRefByPrimary.integration', () => {
           { dao: demoRefDao },
         );
 
+        expect(primaryRef).not.toBeNull();
+        if (!primaryRef)
+          throw new UnexpectedCodePathError('primaryRef should not be null');
         const byPrimary = demoRefDao.get.one.byPrimary;
         expect(byPrimary).not.toBeNull();
 
-        const fetched = await byPrimary!(primaryRef, {});
+        const fetched = await byPrimary?.(primaryRef, {});
         expect(fetched).not.toBeNull();
-        expect(fetched!.uuid).toEqual(scene.resource.uuid);
-        expect(fetched!.exid).toEqual(scene.resource.exid);
-        expect(fetched!.name).toEqual(scene.resource.name);
+        expect(fetched?.uuid).toEqual(scene.resource.uuid);
+        expect(fetched?.exid).toEqual(scene.resource.exid);
+        expect(fetched?.name).toEqual(scene.resource.name);
       });
     });
   });

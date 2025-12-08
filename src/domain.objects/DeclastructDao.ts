@@ -86,7 +86,7 @@ export interface DeclastructDao<
         | ((
             input: Ref<TResourceClass>,
             context: TContext,
-          ) => Promise<RefByPrimary<TResourceClass>>);
+          ) => Promise<RefByPrimary<TResourceClass> | null>);
 
       /**
        * .what = resolve any ref to RefByUnique
@@ -99,7 +99,7 @@ export interface DeclastructDao<
         | ((
             input: Ref<TResourceClass>,
             context: TContext,
-          ) => Promise<RefByUnique<TResourceClass>>);
+          ) => Promise<RefByUnique<TResourceClass> | null>);
     };
   };
 
