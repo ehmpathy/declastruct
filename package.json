@@ -82,7 +82,7 @@
     "declapract": "^0.13.0",
     "declapract-typescript-ehmpathy": "^0.43.7",
     "declastruct": "^1.5.1",
-    "declastruct-github": "^1.0.5",
+    "declastruct-github": "^1.0.7",
     "depcheck": "1.4.3",
     "esbuild-register": "3.6.0",
     "husky": "8.0.3",
