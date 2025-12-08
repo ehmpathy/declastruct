@@ -1,5 +1,4 @@
-import { DomainEntity, type RefByUnique } from 'domain-objects';
-import { getError } from 'helpful-errors';
+import { DomainEntity } from 'domain-objects';
 import { given, then, when } from 'test-fns';
 
 import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
@@ -112,7 +111,7 @@ describe('getRefByUnique', () => {
     });
 
     when('resource does not exist', () => {
-      then('it should throw BadRequestError', async () => {
+      then('it should return null', async () => {
         const byPrimarySpy = jest.fn().mockResolvedValue(null);
 
         const dao: DeclastructDao<typeof TestResource, any> = {
@@ -136,12 +135,13 @@ describe('getRefByUnique', () => {
         };
 
         // call with RefByPrimary for non-existent resource
-        const error = await getError(
-          getRefByUnique({ ref: { uuid: 'not-found' } }, { dao }),
+        const result = await getRefByUnique(
+          { ref: { uuid: 'not-found' } },
+          { dao },
         );
 
-        // verify error
-        expect(error.message).toContain('resource not found by primary ref');
+        // verify null is returned
+        expect(result).toBeNull();
       });
     });
   });
@@ -214,8 +214,8 @@ describe('getRefByUnique', () => {
         );
 
         // type assertion: result should have externalId (unique key), not uuid (primary key)
-        const _typeCheck: RefByUnique<typeof TestResource> = result;
-        expect(_typeCheck.externalId).toBe('ext-123');
+        expect(result).not.toBeNull();
+        expect(result?.externalId).toBe('ext-123');
       });
     });
   });

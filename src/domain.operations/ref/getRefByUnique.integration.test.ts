@@ -1,3 +1,4 @@
+import { UnexpectedCodePathError } from 'helpful-errors';
 import { given, then, useBeforeEach, when } from 'test-fns';
 
 import {
@@ -57,13 +58,12 @@ describe('getRefByUnique.integration', () => {
 
   given('[case2] a RefByPrimary for a non-existent resource', () => {
     when('[t0] called with RefByPrimary', () => {
-      then('it should throw BadRequestError', async () => {
-        await expect(
-          getRefByUnique(
-            { ref: { uuid: 'non-existent-uuid' } },
-            { dao: demoRefDao },
-          ),
-        ).rejects.toThrow('resource not found by primary ref');
+      then('it should return null', async () => {
+        const result = await getRefByUnique(
+          { ref: { uuid: 'non-existent-uuid' } },
+          { dao: demoRefDao },
+        );
+        expect(result).toBeNull();
       });
     });
   });
@@ -113,9 +113,9 @@ describe('getRefByUnique.integration', () => {
         );
 
         // type check: result should have exid property
-        const exid: string = result.exid;
-        expect(exid).toBeDefined();
-        expect(typeof exid).toBe('string');
+        expect(result).not.toBeNull();
+        expect(result?.exid).toBeDefined();
+        expect(typeof result?.exid).toBe('string');
       });
     });
 
@@ -126,11 +126,14 @@ describe('getRefByUnique.integration', () => {
           { dao: demoRefDao },
         );
 
+        expect(uniqueRef).not.toBeNull();
+        if (!uniqueRef)
+          throw new UnexpectedCodePathError('uniqueRef should not be null');
         const fetched = await demoRefDao.get.one.byUnique(uniqueRef, {});
         expect(fetched).not.toBeNull();
-        expect(fetched!.uuid).toEqual(scene.resource.uuid);
-        expect(fetched!.exid).toEqual(scene.resource.exid);
-        expect(fetched!.name).toEqual(scene.resource.name);
+        expect(fetched?.uuid).toEqual(scene.resource.uuid);
+        expect(fetched?.exid).toEqual(scene.resource.exid);
+        expect(fetched?.name).toEqual(scene.resource.name);
       });
     });
   });
@@ -154,6 +157,9 @@ describe('getRefByUnique.integration', () => {
           { ref: originalPrimary },
           { dao: demoRefDao },
         );
+        expect(uniqueRef).not.toBeNull();
+        if (!uniqueRef)
+          throw new UnexpectedCodePathError('uniqueRef should not be null');
 
         // unique -> primary
         const backToPrimary = await getRefByPrimary(
