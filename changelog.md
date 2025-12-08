@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.2](https://github.com/ehmpathy/declastruct/compare/v1.5.1...v1.5.2) (2025-12-08)
+
+
+### Bug Fixes
+
+* **cicd:** bump declastruct to unblock plan ([#38](https://github.com/ehmpathy/declastruct/issues/38)) ([f101803](https://github.com/ehmpathy/declastruct/commit/f101803ee199757f445e6101981e789928114eb0))
+* **cicd:** bump declastruct to unblock plan ([#39](https://github.com/ehmpathy/declastruct/issues/39)) ([66a78df](https://github.com/ehmpathy/declastruct/commit/66a78df10ec4c6b183f1ea68f7b01e4b4801d8f5))
+* **sdk:** expose a generic DeclaredResource type ([#36](https://github.com/ehmpathy/declastruct/issues/36)) ([560bb8e](https://github.com/ehmpathy/declastruct/commit/560bb8eea29ca6cb68743c6f58cca4f82c62bc49))
+
 ## [1.5.1](https://github.com/ehmpathy/declastruct/compare/v1.5.0...v1.5.1) (2025-12-07)
 
 
