@@ -3,7 +3,8 @@ import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
-import { dirname, resolve } from 'path';
+import { dirname, relative, resolve } from 'path';
+import { getGitRepoRoot } from 'rhachet-artifact-git';
 import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
 import { planChanges } from '../../domain.operations/plan/planChanges';
 
@@ -25,6 +26,11 @@ export const executePlanCommand = async ({
   const resolvedWishPath = resolve(process.cwd(), wishFilePath);
   const resolvedPlanPath = resolve(process.cwd(), planFilePath);
 
+  // get git root for relative path display
+  const gitRoot = await getGitRepoRoot({ from: process.cwd() });
+  const relativeWishPath = relative(gitRoot, resolvedWishPath);
+  const relativePlanPath = relative(gitRoot, resolvedPlanPath);
+
   // validate wish file exists
   if (!existsSync(resolvedWishPath)) {
     throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
@@ -32,8 +38,8 @@ export const executePlanCommand = async ({
 
   log.info('');
   log.info('🌊 declastruct plan');
-  log.info(`   wish: ${resolvedWishPath}`);
-  log.info(`   plan: ${resolvedPlanPath}`);
+  log.info(`   wish: ${relativeWishPath}`);
+  log.info(`   plan: ${relativePlanPath}`);
   log.info('');
 
   // import wish file
@@ -86,6 +92,6 @@ export const executePlanCommand = async ({
   // log summary
   log.info('');
   log.info(`🌊 planned for ${plan.changes.length} resources`);
-  log.info(`   into ${resolvedPlanPath}`);
+  log.info(`   into ${relativePlanPath}`);
   log.info('');
 };

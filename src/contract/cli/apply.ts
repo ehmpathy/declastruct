@@ -3,7 +3,8 @@ import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
-import { resolve } from 'path';
+import { relative, resolve } from 'path';
+import { getGitRepoRoot } from 'rhachet-artifact-git';
 import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 import { applyChanges } from '../../domain.operations/apply/applyChanges';
@@ -55,11 +56,18 @@ export const executeApplyCommand = async (input: {
   if (!existsSync(resolvedWishPath))
     throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
 
+  // get git root for relative path display
+  const gitRoot = await getGitRepoRoot({ from: process.cwd() });
+  const relativePlanPath = resolvedPlanPath
+    ? relative(gitRoot, resolvedPlanPath)
+    : null;
+  const relativeWishPath = relative(gitRoot, resolvedWishPath);
+
   // log header
   log.info('');
   log.info('🌊 declastruct apply');
-  if (resolvedPlanPath) log.info(`   plan: ${resolvedPlanPath}`);
-  log.info(`   wish: ${resolvedWishPath}`);
+  if (relativePlanPath) log.info(`   plan: ${relativePlanPath}`);
+  log.info(`   wish: ${relativeWishPath}`);
   log.info('');
 
   // import wish file
