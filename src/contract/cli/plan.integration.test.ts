@@ -1,16 +1,33 @@
 import { existsSync } from 'fs';
 import { mkdir, readFile, writeFile } from 'fs/promises';
-import { resolve } from 'path';
+import { basename, resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import { executeApplyCommand } from './apply';
 import { executePlanCommand } from './plan';
+
+/**
+ * .what = clones a fixture file into temp dir with unique exid
+ * .why = enables parallel test execution without race conditions
+ */
+const cloneFixtureWithExid = async (input: {
+  fixturePath: string;
+  tempDir: string;
+  exid: string;
+}): Promise<string> => {
+  const content = await readFile(input.fixturePath, 'utf-8');
+  const replaced = content.replace(/__TEST_EXID__/g, input.exid);
+  const targetPath = resolve(input.tempDir, basename(input.fixturePath));
+  await writeFile(targetPath, replaced, 'utf-8');
+  return targetPath;
+};
 
 /**
  * .what = generates unique temp directory for test run
  * .why = enables isolated test artifacts without cleanup
  */
-const genTempDir = async () => {
+const genTempDir = async (): Promise<string> => {
   const testUuid = getUuid();
   const tempDir = resolve(process.cwd(), `src/.test/assets/.temp/${testUuid}`);
   await mkdir(tempDir, { recursive: true });
@@ -199,5 +216,45 @@ export const getProviders = async (): Promise<DeclastructProvider<any, any>[]> =
         planFilePath: badAuthPlanPath,
       }),
     ).rejects.toThrow('demoAuthToken required in context');
+  });
+
+  it('should plan DESTROY for resources marked with del()', async () => {
+    const tempDir = await genTempDir();
+    const testExid = getUuid();
+    const planFilePath = resolve(tempDir, 'plan.json');
+
+    // clone fixtures with test-scoped exid
+    const setupWishFilePath = await cloneFixtureWithExid({
+      fixturePath: resolve(
+        process.cwd(),
+        'src/.test/assets/wish-for-del.fixture.ts',
+      ),
+      tempDir,
+      exid: testExid,
+    });
+    const delWishFilePath = await cloneFixtureWithExid({
+      fixturePath: resolve(
+        process.cwd(),
+        'src/.test/assets/wish-with-del.fixture.ts',
+      ),
+      tempDir,
+      exid: testExid,
+    });
+
+    // step 1: create resource first
+    await executePlanCommand({ wishFilePath: setupWishFilePath, planFilePath });
+    await executeApplyCommand({ planFilePath });
+
+    // step 2: plan with del() - should show DESTROY
+    await executePlanCommand({ wishFilePath: delWishFilePath, planFilePath });
+
+    // read and verify plan
+    const planJson = await readFile(planFilePath, 'utf-8');
+    const plan = new DeclastructPlan(JSON.parse(planJson));
+
+    expect(plan.changes.length).toBe(1);
+    expect(plan.changes[0]?.action).toBe('DESTROY');
+    expect(plan.changes[0]?.state.desired).toBeNull();
+    expect(plan.changes[0]?.state.remote).toBeDefined();
   });
 });

@@ -6,6 +6,7 @@ import {
   genSampleDemoResource,
 } from '../../.test/assets/providers/demo.provider';
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
+import { del } from '../del/del';
 import { planChanges } from './planChanges';
 
 describe('planChanges', () => {
@@ -262,5 +263,60 @@ describe('planChanges', () => {
     // verify plans have same hash (deterministic)
     expect(plan1.hash).toBe(plan2.hash);
     expect(plan1.changes.length).toBe(plan2.changes.length);
+  });
+
+  it('should plan DESTROY for resources marked with del()', async () => {
+    // create remote state first
+    const resource = genSampleDemoResource({ name: 'To Be Deleted' });
+    const dao = demoProvider.daos.DemoResource;
+    await dao.set.finsert(resource, {});
+
+    // mark resource for deletion using del()
+    const markedForDeletion = del(resource);
+
+    // plan changes
+    const plan = await planChanges(
+      {
+        resources: [markedForDeletion],
+        providers: [demoProvider],
+        wishFilePath,
+      },
+      createContext(),
+    );
+
+    // verify DESTROY action
+    expect(plan.changes.length).toBe(1);
+    const change = plan.changes[0]!;
+    expect(change.action).toBe(DeclastructChangeAction.DESTROY);
+    expect(change.forResource.class).toBe('DemoResource');
+    expect(change.forResource.slug).toContain(resource.exid);
+    expect(change.state.desired).toBeNull();
+    expect(change.state.remote).toBeDefined();
+    expect((change.state.remote as any)?.name).toBe('To Be Deleted');
+  });
+
+  it('should plan DESTROY with diff showing deletion', async () => {
+    // create remote state first
+    const resource = genSampleDemoResource({ name: 'Will Be Gone' });
+    const dao = demoProvider.daos.DemoResource;
+    await dao.set.finsert(resource, {});
+
+    // mark resource for deletion using del()
+    const markedForDeletion = del(resource);
+
+    // plan changes
+    const plan = await planChanges(
+      {
+        resources: [markedForDeletion],
+        providers: [demoProvider],
+        wishFilePath,
+      },
+      createContext(),
+    );
+
+    // verify diff is present (shows what's being deleted)
+    const change = plan.changes[0]!;
+    expect(change.state.difference).toBeDefined();
+    expect(change.state.difference).not.toBeNull();
   });
 });
