@@ -1,11 +1,38 @@
 import { existsSync } from 'fs';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
-import { resolve } from 'path';
+import { basename, resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 import { executeApplyCommand } from './apply';
 import { executePlanCommand } from './plan';
+
+/**
+ * .what = clones a fixture file into temp dir with unique exid
+ * .why = enables parallel test execution without race conditions
+ */
+const cloneFixtureWithExid = async (input: {
+  fixturePath: string;
+  tempDir: string;
+  exid: string;
+}): Promise<string> => {
+  const content = await readFile(input.fixturePath, 'utf-8');
+  const replaced = content.replace(/__TEST_EXID__/g, input.exid);
+  const targetPath = resolve(input.tempDir, basename(input.fixturePath));
+  await writeFile(targetPath, replaced, 'utf-8');
+  return targetPath;
+};
+
+/**
+ * .what = generates unique temp directory for test run
+ * .why = enables isolated test artifacts without cleanup
+ */
+const genTempDir = async (): Promise<string> => {
+  const testUuid = getUuid();
+  const tempDir = resolve(process.cwd(), `src/.test/assets/.temp/${testUuid}`);
+  await mkdir(tempDir, { recursive: true });
+  return tempDir;
+};
 
 /**
  * .what = creates an isolated wish file for a test
@@ -291,5 +318,103 @@ describe('executeApplyCommand', () => {
 
   it('should throw when neither --plan nor --wish is provided', async () => {
     await expect(executeApplyCommand({})).rejects.toThrow('--plan required');
+  });
+
+  describe('del() support', () => {
+    it('should apply DESTROY action for resources marked with del()', async () => {
+      const tempDir = await genTempDir();
+      const testExid = getUuid();
+      const planFilePath = resolve(tempDir, 'plan.json');
+
+      // clone fixtures with test-scoped exid
+      const setupWishFilePath = await cloneFixtureWithExid({
+        fixturePath: resolve(
+          process.cwd(),
+          'src/.test/assets/wish-for-del.fixture.ts',
+        ),
+        tempDir,
+        exid: testExid,
+      });
+      const delWishFilePath = await cloneFixtureWithExid({
+        fixturePath: resolve(
+          process.cwd(),
+          'src/.test/assets/wish-with-del.fixture.ts',
+        ),
+        tempDir,
+        exid: testExid,
+      });
+
+      // step 1: create resource first
+      await executePlanCommand({
+        wishFilePath: setupWishFilePath,
+        planFilePath,
+      });
+      await executeApplyCommand({ planFilePath });
+
+      // step 2: plan and apply deletion
+      await executePlanCommand({ wishFilePath: delWishFilePath, planFilePath });
+
+      const planJson = await readFile(planFilePath, 'utf-8');
+      const plan = new DeclastructPlan(JSON.parse(planJson));
+      expect(plan.changes[0]!.action).toBe('DESTROY');
+
+      // apply deletion
+      await executeApplyCommand({ planFilePath });
+
+      // step 3: verify resource is gone - plan again without del()
+      await executePlanCommand({
+        wishFilePath: setupWishFilePath,
+        planFilePath,
+      });
+
+      const verifyPlanJson = await readFile(planFilePath, 'utf-8');
+      const verifyPlan = new DeclastructPlan(JSON.parse(verifyPlanJson));
+
+      // should need to CREATE again since resource was deleted
+      expect(verifyPlan.changes[0]!.action).toBe('CREATE');
+    });
+
+    it('should handle del() in yolo mode', async () => {
+      const tempDir = await genTempDir();
+      const testExid = getUuid();
+
+      // clone fixtures with test-scoped exid
+      const setupWishFilePath = await cloneFixtureWithExid({
+        fixturePath: resolve(
+          process.cwd(),
+          'src/.test/assets/wish-for-del.fixture.ts',
+        ),
+        tempDir,
+        exid: testExid,
+      });
+      const delWishFilePath = await cloneFixtureWithExid({
+        fixturePath: resolve(
+          process.cwd(),
+          'src/.test/assets/wish-with-del.fixture.ts',
+        ),
+        tempDir,
+        exid: testExid,
+      });
+
+      // step 1: create resource in yolo mode
+      await executeApplyCommand({
+        planFilePath: 'yolo',
+        wishFilePath: setupWishFilePath,
+      });
+
+      // step 2: delete in yolo mode using del()
+      const logSpy = jest.spyOn(console, 'info');
+
+      await executeApplyCommand({
+        planFilePath: 'yolo',
+        wishFilePath: delWishFilePath,
+      });
+
+      // verify DESTROY was logged
+      const logCalls = logSpy.mock.calls.map((call) => call.join(' '));
+      expect(logCalls.some((log) => log.includes('DESTROY'))).toBe(true);
+
+      logSpy.mockRestore();
+    });
   });
 });

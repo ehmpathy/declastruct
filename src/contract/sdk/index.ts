@@ -18,5 +18,6 @@ export type {
 export { genDeclastructDao } from '../../domain.objects/genDeclastructDao';
 export type { IsoTimestamp } from '../../domain.objects/IsoTimestamp';
 // domain operations
+export { del, isMarkedForDeletion } from '../../domain.operations/del/del';
 export { getRefByPrimary } from '../../domain.operations/ref/getRefByPrimary';
 export { getRefByUnique } from '../../domain.operations/ref/getRefByUnique';

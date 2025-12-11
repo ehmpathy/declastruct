@@ -5,6 +5,7 @@ import type { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct
 import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
 import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
 import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import { isMarkedForDeletion } from '../../domain.operations/del/del';
 import { asIsoTimestamp } from '../../infra/asIsoTimestamp';
 import { colorizeAction } from '../../infra/colorizeAction';
 import { withSpinner } from '../../infra/withSpinner';
@@ -58,9 +59,12 @@ export const planChanges = async (
       const durationSec = (durationMs / 1000).toFixed(2);
       context.log.info(`   ├─ ✔ done in ${durationSec}s`);
 
+      // determine desired state - null if marked for deletion
+      const desiredState = isMarkedForDeletion(resource) ? null : resource;
+
       // compute change
       const computed = computeChange({
-        desired: resource,
+        desired: desiredState,
         remote: remoteState,
       });
 
