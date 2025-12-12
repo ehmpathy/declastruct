@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.0](https://github.com/ehmpathy/declastruct/compare/v1.6.0...v1.7.0) (2025-12-12)
+
+
+### Features
+
+* **delete:** support deletes via declarative instruction ([#45](https://github.com/ehmpathy/declastruct/issues/45)) ([62017e9](https://github.com/ehmpathy/declastruct/commit/62017e9902ac5d7be01ff115d1ede8485375ca13))
+
+
+### Bug Fixes
+
+* **cicd:** bump to npm oidc on publish ([#46](https://github.com/ehmpathy/declastruct/issues/46)) ([5fdf2ac](https://github.com/ehmpathy/declastruct/commit/5fdf2ac608ce39d9fee779bed2ba1f3a414c393b))
+* **cli:** declare wish and plan paths relative to pwd ([#43](https://github.com/ehmpathy/declastruct/issues/43)) ([e0779b4](https://github.com/ehmpathy/declastruct/commit/e0779b46d8aa4c978b470f83003a6a703d4f487c))
+* **types:** recover bivariance with nullable factory, optional interface ([#47](https://github.com/ehmpathy/declastruct/issues/47)) ([ab59fc3](https://github.com/ehmpathy/declastruct/commit/ab59fc36750013bfba0224792e843b06f653d804))
+
 ## [1.6.0](https://github.com/ehmpathy/declastruct/compare/v1.5.2...v1.6.0) (2025-12-08)
 
 
