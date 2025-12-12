@@ -36,14 +36,14 @@ describe('getRefByUnique', () => {
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -82,14 +82,14 @@ describe('getRefByUnique', () => {
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -123,14 +123,14 @@ describe('getRefByUnique', () => {
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -159,14 +159,14 @@ describe('getRefByUnique', () => {
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -196,14 +196,14 @@ describe('getRefByUnique', () => {
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 

@@ -4,8 +4,8 @@ import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
+import { genDeclastructDao } from '../../../domain.objects/genDeclastructDao';
 
 /**
  * .what = demo resource for integration testing
@@ -30,7 +30,8 @@ const getResourceFilePath = (id: string): string => {
  * .what = demo DAO with on-disk JSON persistence
  * .why = provides real persistence for integration tests
  */
-const demoDao: DeclastructDao<typeof DemoResource, any> = {
+// biome-ignore lint/complexity/noBannedTypes: empty context type for demo
+const demoDao = genDeclastructDao<typeof DemoResource, {}>({
   dobj: DemoResource,
   get: {
     one: {
@@ -47,17 +48,6 @@ const demoDao: DeclastructDao<typeof DemoResource, any> = {
         return DemoResource.as(data);
       },
       byPrimary: null,
-      byRef: async (ref) => {
-        // extract exid from ref
-        const exid = (ref as any).exid;
-        if (!exid) return null;
-
-        return demoDao.get.one.byUnique({ exid } as any, {});
-      },
-    },
-    ref: {
-      byPrimary: null,
-      byUnique: null,
     },
   },
   set: {
@@ -89,7 +79,7 @@ const demoDao: DeclastructDao<typeof DemoResource, any> = {
       }
     },
   },
-};
+});
 
 /**
  * .what = demo provider with on-disk persistence

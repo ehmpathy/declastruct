@@ -1,13 +1,13 @@
 import { DomainEntity } from 'domain-objects';
 import { existsSync, readdirSync } from 'fs';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
-import { UnexpectedCodePathError } from 'helpful-errors';
 import { resolve } from 'path';
 import type { HasMetadata } from 'type-fns';
 import { getUuid } from 'uuid-fns';
 
 import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
+import { genDeclastructDao } from '../../../domain.objects/genDeclastructDao';
 
 /**
  * .what = demo resource with both primary and unique keys
@@ -71,11 +71,8 @@ const findResourceByUuid = async (
  * .what = demo DAO with both primary and unique key support
  * .why = enables testing getRefByPrimary and getRefByUnique utilities
  */
-const demoRefDao: DeclastructDao<
-  typeof DemoRefResource,
-  // biome-ignore lint/complexity/noBannedTypes: empty object type needed
-  {}
-> = {
+// biome-ignore lint/complexity/noBannedTypes: empty context type for demo
+const demoRefDao = genDeclastructDao<typeof DemoRefResource, {}>({
   dobj: DemoRefResource,
   get: {
     one: {
@@ -95,28 +92,6 @@ const demoRefDao: DeclastructDao<
         // scan disk to find by uuid
         return findResourceByUuid(input.uuid);
       },
-      byRef: async (ref) => {
-        // try primary key first
-        const uuid = (ref as any).uuid;
-        if (uuid) {
-          const byPrimary = demoRefDao.get.one.byPrimary;
-          if (!byPrimary)
-            throw new UnexpectedCodePathError('byPrimary not defined');
-          return byPrimary({ uuid }, {});
-        }
-
-        // try unique key
-        const exid = (ref as any).exid;
-        if (exid) {
-          return demoRefDao.get.one.byUnique({ exid }, {});
-        }
-
-        return null;
-      },
-    },
-    ref: {
-      byPrimary: null,
-      byUnique: null,
     },
   },
   set: {
@@ -170,7 +145,7 @@ const demoRefDao: DeclastructDao<
       }
     },
   },
-};
+});
 
 /**
  * .what = demo provider with full ref resolution support

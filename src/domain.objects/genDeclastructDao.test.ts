@@ -1,5 +1,6 @@
 import { DomainEntity } from 'domain-objects';
 
+import type { DeclastructDaosShape } from './DeclastructProvider';
 import { genDeclastructDao } from './genDeclastructDao';
 
 describe('genDeclastructDao', () => {
@@ -80,18 +81,18 @@ describe('genDeclastructDao', () => {
         },
       });
 
-      // verify get.ref.byPrimary is null (not callable)
-      expect(dao.get.ref.byPrimary).toBeNull();
-      expect(dao.get.ref.byUnique).toBeNull();
+      // verify get.ref.byPrimary is undefined (not callable)
+      expect(dao.get.ref.byPrimary).toBeUndefined();
+      expect(dao.get.ref.byUnique).toBeUndefined();
 
       // verify get.one.byRef is still auto-composed
       expect(typeof dao.get.one.byRef).toBe('function');
 
-      // type test: these should be typed as null
-      const _byPrimary: null = dao.get.ref.byPrimary;
-      const _byUnique: null = dao.get.ref.byUnique;
-      expect(_byPrimary).toBeNull();
-      expect(_byUnique).toBeNull();
+      // type test: these should be typed as undefined
+      const _byPrimary: undefined = dao.get.ref.byPrimary;
+      const _byUnique: undefined = dao.get.ref.byUnique;
+      expect(_byPrimary).toBeUndefined();
+      expect(_byUnique).toBeUndefined();
     });
 
     it('should error when trying to call get.ref.byPrimary on dao without primary', () => {
@@ -111,15 +112,15 @@ describe('genDeclastructDao', () => {
       });
 
       // type test: attempting to call null methods should be a type error
-      // @ts-expect-error - byPrimary is null, not callable
+      // @ts-expect-error - byPrimary is undefined, not callable
       const _callByPrimary = () => dao.get.ref.byPrimary({ exid: 'test' }, {});
 
-      // @ts-expect-error - byUnique is null, not callable
+      // @ts-expect-error - byUnique is undefined, not callable
       const _callByUnique = () => dao.get.ref.byUnique({ exid: 'test' }, {});
 
-      // verify they're null at runtime (don't actually call them)
-      expect(dao.get.ref.byPrimary).toBeNull();
-      expect(dao.get.ref.byUnique).toBeNull();
+      // verify they're undefined at runtime (don't actually call them)
+      expect(dao.get.ref.byPrimary).toBeUndefined();
+      expect(dao.get.ref.byUnique).toBeUndefined();
       expect(_callByPrimary).toBeDefined();
       expect(_callByUnique).toBeDefined();
     });
@@ -426,6 +427,139 @@ describe('genDeclastructDao', () => {
         {},
       );
       expect(refByUnique).toBeNull();
+    });
+  });
+
+  describe('provider compatibility', () => {
+    interface ProviderResource {
+      uuid?: string;
+      exid: string;
+      name: string;
+    }
+    class ProviderResource
+      extends DomainEntity<ProviderResource>
+      implements ProviderResource
+    {
+      public static primary = ['uuid'] as const;
+      public static unique = ['exid'] as const;
+    }
+
+    it('should assign dao to DeclastructDaosShape for use in DeclastructProvider', () => {
+      // create a dao with genDeclastructDao
+      const dao = genDeclastructDao<typeof ProviderResource, {}>({
+        dobj: ProviderResource,
+        get: {
+          one: {
+            byUnique: async () => null,
+            byPrimary: async () => null,
+          },
+        },
+        set: {
+          finsert: async (input) => input as any,
+          upsert: null,
+          delete: null,
+        },
+      });
+
+      // type test: dao should be assignable to DeclastructDaosShape
+      // this verifies bivariance works correctly after the callable interface syntax fix
+      const daos: DeclastructDaosShape<{}> = {
+        ProviderResource: dao,
+      };
+
+      expect(daos.ProviderResource).toBe(dao);
+    });
+
+    it('should assign dao without primary to DeclastructDaosShape', () => {
+      interface NoPrimaryResource {
+        exid: string;
+        name: string;
+      }
+      class NoPrimaryResource
+        extends DomainEntity<NoPrimaryResource>
+        implements NoPrimaryResource
+      {
+        public static unique = ['exid'] as const;
+      }
+
+      const dao = genDeclastructDao<typeof NoPrimaryResource, {}>({
+        dobj: NoPrimaryResource,
+        get: {
+          one: {
+            byUnique: async () => null,
+            byPrimary: null,
+          },
+        },
+        set: {
+          finsert: async (input) => input as any,
+          upsert: null,
+          delete: null,
+        },
+      });
+
+      // type test: dao without primary should also be assignable
+      const daos: DeclastructDaosShape<{}> = {
+        NoPrimaryResource: dao,
+      };
+
+      expect(daos.NoPrimaryResource).toBe(dao);
+    });
+
+    it('should assign multiple daos to DeclastructDaosShape', () => {
+      interface ResourceA {
+        uuid?: string;
+        exid: string;
+      }
+      class ResourceA extends DomainEntity<ResourceA> implements ResourceA {
+        public static primary = ['uuid'] as const;
+        public static unique = ['exid'] as const;
+      }
+
+      interface ResourceB {
+        slug: string;
+        value: number;
+      }
+      class ResourceB extends DomainEntity<ResourceB> implements ResourceB {
+        public static unique = ['slug'] as const;
+      }
+
+      const daoA = genDeclastructDao<typeof ResourceA, {}>({
+        dobj: ResourceA,
+        get: {
+          one: {
+            byUnique: async () => null,
+            byPrimary: async () => null,
+          },
+        },
+        set: {
+          finsert: async (input) => input as any,
+          upsert: async (input) => input as any,
+          delete: async () => {},
+        },
+      });
+
+      const daoB = genDeclastructDao<typeof ResourceB, {}>({
+        dobj: ResourceB,
+        get: {
+          one: {
+            byUnique: async () => null,
+            byPrimary: null,
+          },
+        },
+        set: {
+          finsert: async (input) => input as any,
+          upsert: null,
+          delete: null,
+        },
+      });
+
+      // type test: heterogeneous daos should all fit into DeclastructDaosShape
+      const daos: DeclastructDaosShape<{}> = {
+        ResourceA: daoA,
+        ResourceB: daoB,
+      };
+
+      expect(Object.keys(daos)).toEqual(['ResourceA', 'ResourceB']);
     });
   });
 });

@@ -5,8 +5,8 @@ import { BadRequestError, UnexpectedCodePathError } from 'helpful-errors';
 import { resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
 import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
+import { genDeclastructDao } from '../../../domain.objects/genDeclastructDao';
 
 /**
  * .what = demo resource requiring authentication
@@ -57,81 +57,69 @@ const validateAuthContext = (context: DemoAuthContext): void => {
  * .what = demo DAO requiring authentication context
  * .why = verifies provider context is properly passed to all DAO operations
  */
-const demoAuthDao: DeclastructDao<typeof DemoAuthResource, DemoAuthContext> = {
-  dobj: DemoAuthResource,
-  get: {
-    one: {
-      byUnique: async (input, context) => {
-        // verify context is passed and contains auth token
-        validateAuthContext(context);
+const demoAuthDao = genDeclastructDao<typeof DemoAuthResource, DemoAuthContext>(
+  {
+    dobj: DemoAuthResource,
+    get: {
+      one: {
+        byUnique: async (input, context) => {
+          // verify context is passed and contains auth token
+          validateAuthContext(context);
 
-        const filePath = getResourceFilePath(input.exid);
+          const filePath = getResourceFilePath(input.exid);
 
-        // check if file exists
-        if (!existsSync(filePath)) return null;
+          // check if file exists
+          if (!existsSync(filePath)) return null;
 
-        // read and parse file
-        const json = await readFile(filePath, 'utf-8');
-        const data = JSON.parse(json);
+          // read and parse file
+          const json = await readFile(filePath, 'utf-8');
+          const data = JSON.parse(json);
 
-        return DemoAuthResource.as(data);
+          return DemoAuthResource.as(data);
+        },
+        byPrimary: null,
       },
-      byPrimary: null,
-      byRef: async (ref, context) => {
+    },
+    set: {
+      finsert: async (resource, context) => {
         // verify context is passed
         validateAuthContext(context);
 
-        // extract exid from ref
-        const exid = (ref as any).exid;
-        if (!exid) return null;
+        const filePath = getResourceFilePath(resource.exid);
 
-        return demoAuthDao.get.one.byUnique({ exid } as any, context);
+        // write resource to disk
+        await writeFile(filePath, JSON.stringify(resource, null, 2), 'utf-8');
+
+        return resource;
+      },
+      upsert: async (resource, context) => {
+        // verify context is passed
+        validateAuthContext(context);
+
+        const filePath = getResourceFilePath(resource.exid);
+
+        // write resource to disk (overwrite if exists)
+        await writeFile(filePath, JSON.stringify(resource, null, 2), 'utf-8');
+
+        return resource;
+      },
+      delete: async (ref, context) => {
+        // verify context is passed
+        validateAuthContext(context);
+
+        const resource = await demoAuthDao.get.one.byRef(ref, context);
+        if (!resource) return;
+
+        const filePath = getResourceFilePath(resource.exid);
+
+        // remove file if it exists
+        if (existsSync(filePath)) {
+          await rm(filePath);
+        }
       },
     },
-    ref: {
-      byPrimary: null,
-      byUnique: null,
-    },
   },
-  set: {
-    finsert: async (resource, context) => {
-      // verify context is passed
-      validateAuthContext(context);
-
-      const filePath = getResourceFilePath(resource.exid);
-
-      // write resource to disk
-      await writeFile(filePath, JSON.stringify(resource, null, 2), 'utf-8');
-
-      return resource;
-    },
-    upsert: async (resource, context) => {
-      // verify context is passed
-      validateAuthContext(context);
-
-      const filePath = getResourceFilePath(resource.exid);
-
-      // write resource to disk (overwrite if exists)
-      await writeFile(filePath, JSON.stringify(resource, null, 2), 'utf-8');
-
-      return resource;
-    },
-    delete: async (ref, context) => {
-      // verify context is passed
-      validateAuthContext(context);
-
-      const resource = await demoAuthDao.get.one.byRef(ref, context);
-      if (!resource) return;
-
-      const filePath = getResourceFilePath(resource.exid);
-
-      // remove file if it exists
-      if (existsSync(filePath)) {
-        await rm(filePath);
-      }
-    },
-  },
-};
+);
 
 /**
  * .what = demo provider requiring authentication context

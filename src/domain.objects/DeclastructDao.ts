@@ -49,14 +49,12 @@ export interface DeclastructDao<
        * .what = fetch by primary keys
        * .why = enables efficient lookups when primary key is known
        *
-       * .note = set to null if resource lacks primary keys (forces explicit decision)
+       * .note = undefined if resource lacks primary keys; would be null, but that breaks bivariance
        */
-      byPrimary:
-        | null
-        | ((
-            input: RefByPrimary<TResourceClass>,
-            context: TContext,
-          ) => Promise<InstanceType<TResourceClass> | null>);
+      byPrimary?(
+        input: RefByPrimary<TResourceClass>,
+        context: TContext,
+      ): Promise<InstanceType<TResourceClass> | null>;
 
       /**
        * .what = fetch by any supported reference type
@@ -79,27 +77,23 @@ export interface DeclastructDao<
        * .what = resolve any ref to RefByPrimary
        * .why = enables getting primary key from any ref type
        *
-       * .note = set to null if resource lacks primary keys
+       * .note = undefined if resource lacks primary keys; would be null, but that breaks bivariance
        */
-      byPrimary:
-        | null
-        | ((
-            input: Ref<TResourceClass>,
-            context: TContext,
-          ) => Promise<RefByPrimary<TResourceClass> | null>);
+      byPrimary?(
+        input: Ref<TResourceClass>,
+        context: TContext,
+      ): Promise<RefByPrimary<TResourceClass> | null>;
 
       /**
        * .what = resolve any ref to RefByUnique
        * .why = enables getting unique key from any ref type
        *
-       * .note = set to null if resource lacks primary keys
+       * .note = undefined if resource lacks primary keys; would be null, but that breaks bivariance
        */
-      byUnique:
-        | null
-        | ((
-            input: Ref<TResourceClass>,
-            context: TContext,
-          ) => Promise<RefByUnique<TResourceClass> | null>);
+      byUnique?(
+        input: Ref<TResourceClass>,
+        context: TContext,
+      ): Promise<RefByUnique<TResourceClass> | null>;
     };
   };
 
@@ -121,24 +115,20 @@ export interface DeclastructDao<
      * .what = create or update resource
      * .why = idempotent upsert - creates if not found, updates if found
      *
-     * .note = set to null if resource does not support updates
+     * .note = undefined if resource does not support updates; would be null, but that breaks bivariance
      */
-    upsert:
-      | null
-      | ((
-          input: InstanceType<TResourceClass>,
-          context: TContext,
-        ) => Promise<HasMetadata<InstanceType<TResourceClass>>>);
+    upsert?(
+      input: InstanceType<TResourceClass>,
+      context: TContext,
+    ): Promise<HasMetadata<InstanceType<TResourceClass>>>;
 
     /**
      * .what = delete resource
      * .why = removes resource from remote state
      *
-     * .note = set to null if resource does not support deletion
+     * .note = undefined if resource does not support deletion; would be null, but that breaks bivariance
      */
-    delete:
-      | null
-      | ((input: Ref<TResourceClass>, context: TContext) => Promise<void>);
+    delete?(input: Ref<TResourceClass>, context: TContext): Promise<void>;
   };
 }
 
