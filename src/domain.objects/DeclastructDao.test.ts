@@ -21,18 +21,18 @@ describe('DeclastructDao', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 
@@ -120,14 +120,14 @@ describe('DeclastructDao', () => {
             byRef: async () => null,
           },
           ref: {
-            byPrimary: null,
-            byUnique: null,
+            byPrimary: undefined,
+            byUnique: undefined,
           },
         },
         set: {
           finsert: async (r) => r as any,
-          upsert: null,
-          delete: null,
+          upsert: undefined,
+          delete: undefined,
         },
       };
 
@@ -155,18 +155,18 @@ describe('DeclastructDao', () => {
         get: {
           one: {
             byUnique: async () => null,
-            byPrimary: null,
+            byPrimary: undefined,
             byRef: async () => null,
           },
           ref: {
-            byPrimary: null,
-            byUnique: null,
+            byPrimary: undefined,
+            byUnique: undefined,
           },
         },
         set: {
           finsert: async (input) => input as any,
-          upsert: null,
-          delete: null,
+          upsert: undefined,
+          delete: undefined,
         },
       };
       expect(badDao).toBeDefined();
@@ -189,14 +189,14 @@ describe('DeclastructDao', () => {
             byRef: async () => null,
           },
           ref: {
-            byPrimary: null,
-            byUnique: null,
+            byPrimary: async () => ({ uuid: 'test' }),
+            byUnique: async () => ({ externalId: 'test' }),
           },
         },
         set: {
           finsert: async (input) => input as any,
-          upsert: null,
-          delete: null,
+          upsert: async (input) => input as any,
+          delete: async () => {},
         },
       };
 

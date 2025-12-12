@@ -56,18 +56,18 @@ describe('applyChange', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: finsertSpy,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 
@@ -113,18 +113,18 @@ describe('applyChange', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
         upsert: upsertSpy,
-        delete: null,
+        delete: undefined,
       },
     };
 
@@ -169,18 +169,18 @@ describe('applyChange', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 
@@ -227,17 +227,17 @@ describe('applyChange', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
+        upsert: undefined,
         delete: deleteSpy,
       },
     };
@@ -285,17 +285,17 @@ describe('applyChange', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: finsertSpy,
-        upsert: null,
+        upsert: undefined,
         delete: deleteSpy,
       },
     };

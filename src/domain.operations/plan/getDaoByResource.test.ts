@@ -24,18 +24,18 @@ describe('getDaoByResource', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 
@@ -68,18 +68,18 @@ describe('getDaoByResource', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 
@@ -88,18 +88,18 @@ describe('getDaoByResource', () => {
       get: {
         one: {
           byUnique: async () => null,
-          byPrimary: null,
+          byPrimary: undefined,
           byRef: async () => null,
         },
         ref: {
-          byPrimary: null,
-          byUnique: null,
+          byPrimary: undefined,
+          byUnique: undefined,
         },
       },
       set: {
         finsert: async (input) => input as any,
-        upsert: null,
-        delete: null,
+        upsert: undefined,
+        delete: undefined,
       },
     };
 

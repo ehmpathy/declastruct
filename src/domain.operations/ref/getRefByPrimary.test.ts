@@ -32,18 +32,18 @@ describe('getRefByPrimary', () => {
           get: {
             one: {
               byUnique: byUniqueSpy,
-              byPrimary: null,
+              byPrimary: undefined,
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -78,18 +78,18 @@ describe('getRefByPrimary', () => {
           get: {
             one: {
               byUnique: byUniqueSpy,
-              byPrimary: null,
+              byPrimary: undefined,
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -119,18 +119,18 @@ describe('getRefByPrimary', () => {
           get: {
             one: {
               byUnique: byUniqueSpy,
-              byPrimary: null,
+              byPrimary: undefined,
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -155,18 +155,18 @@ describe('getRefByPrimary', () => {
           get: {
             one: {
               byUnique: async () => null,
-              byPrimary: null,
+              byPrimary: undefined,
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
@@ -192,18 +192,18 @@ describe('getRefByPrimary', () => {
           get: {
             one: {
               byUnique: async () => foundResource,
-              byPrimary: null,
+              byPrimary: undefined,
               byRef: async () => null,
             },
             ref: {
-              byPrimary: null,
-              byUnique: null,
+              byPrimary: undefined,
+              byUnique: undefined,
             },
           },
           set: {
             finsert: async (r) => r as any,
-            upsert: null,
-            delete: null,
+            upsert: undefined,
+            delete: undefined,
           },
         };
 
