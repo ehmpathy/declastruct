@@ -76,13 +76,13 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(typescript@5.4.5)
       declapract-typescript-ehmpathy:
-        specifier: ^0.43.7
-        version: 0.43.7(declapract@0.13.0(typescript@5.4.5))
+        specifier: 0.43.16
+        version: 0.43.16(declapract@0.13.0(typescript@5.4.5))
       declastruct:
-        specifier: ^1.5.1
+        specifier: 1.5.1
         version: 1.5.1(domain-objects@0.31.3)
       declastruct-github:
-        specifier: ^1.0.7
+        specifier: 1.0.7
         version: 1.0.7
       depcheck:
         specifier: 1.4.3
@@ -2110,8 +2110,8 @@ packages:
       supports-color:
         optional: true
 
-  declapract-typescript-ehmpathy@0.43.7:
-    resolution: {integrity: sha512-vZe7IoJTmsSRh6w5xDiF4afHFV33Oqe97WXFyMWp1cl6ZJZ8RJH2oUVeA/XEGEiGiIQXnJe3y7D/U0eRpai8EQ==}
+  declapract-typescript-ehmpathy@0.43.16:
+    resolution: {integrity: sha512-r9HMHJJHERuDTiAStYaB5OZyE7xbs33XhCsYHToWyahzDcje5XWGFxa5+Lf08XijB8oJdr0D9M9bQX0hEavK3w==}
     peerDependencies:
       declapract: '>=0.12.1'
 
@@ -6297,11 +6297,11 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  declapract-typescript-ehmpathy@0.43.7(declapract@0.13.0(typescript@5.4.5)):
+  declapract-typescript-ehmpathy@0.43.16(declapract@0.13.0(typescript@5.4.5)):
     dependencies:
       chalk: 4.1.2
       declapract: 0.13.0(typescript@5.4.5)
-      domain-objects: 0.31.0
+      domain-objects: 0.31.3
       expect: 29.4.2
       flat: 5.0.2
       helpful-errors: 1.5.3
