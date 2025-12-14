@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/ehmpathy/declastruct/compare/v1.7.0...v1.7.1) (2025-12-14)
+
+
+### Bug Fixes
+
+* **terms:** prefer findsert over finsert for clarity ([#48](https://github.com/ehmpathy/declastruct/issues/48)) ([96f7023](https://github.com/ehmpathy/declastruct/commit/96f7023aa148ddfb4e9631c50b951ad62f365924))
+
 ## [1.7.0](https://github.com/ehmpathy/declastruct/compare/v1.6.0...v1.7.0) (2025-12-12)
 
 
