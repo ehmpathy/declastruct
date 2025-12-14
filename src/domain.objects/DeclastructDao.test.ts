@@ -30,7 +30,7 @@ describe('DeclastructDao', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: undefined,
       },
@@ -39,7 +39,7 @@ describe('DeclastructDao', () => {
     expect(dao.dobj).toBe(DemoResource);
     expect(dao.get.one.byUnique).toBeDefined();
     expect(dao.get.one.byRef).toBeDefined();
-    expect(dao.set.finsert).toBeDefined();
+    expect(dao.set.findsert).toBeDefined();
   });
 
   it('should support fn | null methods', () => {
@@ -58,7 +58,7 @@ describe('DeclastructDao', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: async (input) => input as any,
         delete: async () => {},
       },
@@ -125,7 +125,7 @@ describe('DeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (r) => r as any,
+          findsert: async (r) => r as any,
           upsert: undefined,
           delete: undefined,
         },
@@ -164,7 +164,7 @@ describe('DeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: undefined,
           delete: undefined,
         },
@@ -194,7 +194,7 @@ describe('DeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: async (input) => input as any,
           delete: async () => {},
         },
@@ -203,7 +203,7 @@ describe('DeclastructDao', () => {
       expect(dao.dobj).toBe(TestResource);
       expect(dao.get.one.byUnique).toBeDefined();
       expect(dao.get.one.byRef).toBeDefined();
-      expect(dao.set.finsert).toBeDefined();
+      expect(dao.set.findsert).toBeDefined();
     });
   });
 });

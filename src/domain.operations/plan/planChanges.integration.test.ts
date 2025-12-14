@@ -76,8 +76,8 @@ describe('planChanges', () => {
 
     // create remote state
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resources[0]!, {});
-    await dao.set.finsert(resources[1]!, {});
+    await dao.set.findsert(resources[0]!, {});
+    await dao.set.findsert(resources[1]!, {});
 
     // plan changes with spy context
     const context = createContext();
@@ -107,7 +107,7 @@ describe('planChanges', () => {
     // create remote state
     const remoteResource = genSampleDemoResource({ name: 'Old Name' });
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(remoteResource, {});
+    await dao.set.findsert(remoteResource, {});
 
     // define desired resource with new name (same exid)
     const resources = [remoteResource.clone({ name: 'New Name' })];
@@ -138,8 +138,8 @@ describe('planChanges', () => {
     const resource1 = genSampleDemoResource({ name: 'To Delete' });
     const resource2 = genSampleDemoResource({ name: 'To Keep' });
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource1, {});
-    await dao.set.finsert(resource2, {});
+    await dao.set.findsert(resource1, {});
+    await dao.set.findsert(resource2, {});
 
     // define desired resources (only resource2)
     const resources = [resource2];
@@ -198,8 +198,8 @@ describe('planChanges', () => {
 
     // create remote state for some resources
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource1, {});
-    await dao.set.finsert(resource2, {});
+    await dao.set.findsert(resource1, {});
+    await dao.set.findsert(resource2, {});
 
     // define desired resources
     const resources = [
@@ -269,7 +269,7 @@ describe('planChanges', () => {
     // create remote state first
     const resource = genSampleDemoResource({ name: 'To Be Deleted' });
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource, {});
+    await dao.set.findsert(resource, {});
 
     // mark resource for deletion using del()
     const markedForDeletion = del(resource);
@@ -299,7 +299,7 @@ describe('planChanges', () => {
     // create remote state first
     const resource = genSampleDemoResource({ name: 'Will Be Gone' });
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource, {});
+    await dao.set.findsert(resource, {});
 
     // mark resource for deletion using del()
     const markedForDeletion = del(resource);

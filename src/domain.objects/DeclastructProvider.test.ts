@@ -78,7 +78,7 @@ describe('DeclastructProvider', () => {
           },
         },
         set: {
-          finsert: async (r) => r as any,
+          findsert: async (r) => r as any,
           upsert: undefined,
           delete: undefined,
         },
@@ -105,7 +105,7 @@ describe('DeclastructProvider', () => {
       const dao = provider.daos.DemoResourceWithOptionalPrimary;
       expect(dao?.get.one.byPrimary).toBeDefined();
       expect(dao?.get.one.byUnique).toBeDefined();
-      expect(dao?.set.finsert).toBeDefined();
+      expect(dao?.set.findsert).toBeDefined();
     });
   });
 });

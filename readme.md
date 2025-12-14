@@ -171,7 +171,7 @@ instead of HCL, YAML, or another DSL:
 declastruct providers follow a pit-of-success pattern that guarantees:
 
 **idempotency** — all operations can be safely retried
-- `finsert`: find-or-insert (safe create)
+- `findsert`: find-or-insert (safe create)
 - `upsert`: update-or-insert (safe update)
 - repeat any operation multiple times, get the same result each time
 
@@ -222,7 +222,7 @@ interface DeclastructDao<TResource, TResourceClass, TContext> {
     byRef: (ref: Ref, context) => Promise<TResource | null>;
   };
   set: {
-    finsert: (resource: TResource, context) => Promise<TResource>;
+    findsert: (resource: TResource, context) => Promise<TResource>;
     upsert?: (resource: TResource, context) => Promise<TResource>;
     delete?: (ref: Ref, context) => Promise<void>;
   };
@@ -348,7 +348,7 @@ const daoStripeCustomer = genDeclastructDao<
     },
   },
   set: {
-    finsert: async (resource, context) => {
+    findsert: async (resource, context) => {
       // find-or-insert: idempotent create
       const foundBefore = await daoStripeCustomer.get.one.byUnique(
         { email: resource.email },
@@ -374,7 +374,7 @@ const daoStripeCustomer = genDeclastructDao<
         });
         return toResource(updated);
       }
-      return daoStripeCustomer.set.finsert(resource, context);
+      return daoStripeCustomer.set.findsert(resource, context);
     },
     delete: async (ref, context) => {
       const foundBefore = await daoStripeCustomer.get.one.byRef(ref, context);

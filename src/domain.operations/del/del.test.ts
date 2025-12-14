@@ -2,7 +2,7 @@ import {
   DemoResource,
   genSampleDemoResource,
 } from '../../.test/assets/providers/demo.provider';
-import { DECLASTRUCT_DELETE } from '../../domain/symbols';
+import { DECLASTRUCT_DELETE } from '../../domain.objects/symbols';
 import { del, isMarkedForDeletion } from './del';
 
 describe('del', () => {

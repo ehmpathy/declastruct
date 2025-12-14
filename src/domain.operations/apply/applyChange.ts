@@ -42,7 +42,7 @@ export const applyChange = async ({
   switch (change.action) {
     case DeclastructChangeAction.CREATE:
       // create new resource using provider context
-      await dao.set.finsert(
+      await dao.set.findsert(
         change.state.desired ??
           UnexpectedCodePathError.throw(
             'expected change.state.desired for CREATE',
@@ -101,7 +101,7 @@ export const applyChange = async ({
           ),
         providerContext,
       );
-      await dao.set.finsert(
+      await dao.set.findsert(
         change.state.desired ??
           UnexpectedCodePathError.throw(
             'expected change.state.desired for REPLACE',

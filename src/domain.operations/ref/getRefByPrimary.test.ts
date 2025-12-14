@@ -41,7 +41,7 @@ describe('getRefByPrimary', () => {
             },
           },
           set: {
-            finsert: async (r) => r as any,
+            findsert: async (r) => r as any,
             upsert: undefined,
             delete: undefined,
           },
@@ -87,7 +87,7 @@ describe('getRefByPrimary', () => {
             },
           },
           set: {
-            finsert: async (r) => r as any,
+            findsert: async (r) => r as any,
             upsert: undefined,
             delete: undefined,
           },
@@ -128,7 +128,7 @@ describe('getRefByPrimary', () => {
             },
           },
           set: {
-            finsert: async (r) => r as any,
+            findsert: async (r) => r as any,
             upsert: undefined,
             delete: undefined,
           },
@@ -164,7 +164,7 @@ describe('getRefByPrimary', () => {
             },
           },
           set: {
-            finsert: async (r) => r as any,
+            findsert: async (r) => r as any,
             upsert: undefined,
             delete: undefined,
           },
@@ -201,7 +201,7 @@ describe('getRefByPrimary', () => {
             },
           },
           set: {
-            finsert: async (r) => r as any,
+            findsert: async (r) => r as any,
             upsert: undefined,
             delete: undefined,
           },

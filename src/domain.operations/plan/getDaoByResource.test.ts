@@ -33,7 +33,7 @@ describe('getDaoByResource', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: undefined,
       },
@@ -77,7 +77,7 @@ describe('getDaoByResource', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: undefined,
       },
@@ -97,7 +97,7 @@ describe('getDaoByResource', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: undefined,
       },

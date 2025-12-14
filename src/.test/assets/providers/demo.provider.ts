@@ -51,7 +51,7 @@ const demoDao = genDeclastructDao<typeof DemoResource, {}>({
     },
   },
   set: {
-    finsert: async (resource) => {
+    findsert: async (resource) => {
       const filePath = getResourceFilePath(resource.exid);
 
       // write resource to disk

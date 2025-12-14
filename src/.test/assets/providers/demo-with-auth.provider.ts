@@ -81,7 +81,7 @@ const demoAuthDao = genDeclastructDao<typeof DemoAuthResource, DemoAuthContext>(
       },
     },
     set: {
-      finsert: async (resource, context) => {
+      findsert: async (resource, context) => {
         // verify context is passed
         validateAuthContext(context);
 

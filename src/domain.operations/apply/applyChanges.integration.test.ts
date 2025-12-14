@@ -101,7 +101,7 @@ describe('applyChanges', () => {
 
     // create initial remote state
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(initialResource, {});
+    await dao.set.findsert(initialResource, {});
 
     // define desired resource with updated name (same exid)
     const resources = [initialResource.clone({ name: 'New Name' })];
@@ -152,7 +152,7 @@ describe('applyChanges', () => {
 
     // create remote state
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource, {});
+    await dao.set.findsert(resource, {});
 
     // define same resource (no changes)
     const resources = [resource];
@@ -245,8 +245,8 @@ describe('applyChanges', () => {
 
     // create remote state for some resources
     const dao = demoProvider.daos.DemoResource;
-    await dao.set.finsert(resource1, {});
-    await dao.set.finsert(resource2, {});
+    await dao.set.findsert(resource1, {});
+    await dao.set.findsert(resource2, {});
 
     // define desired resources
     const resources = [
