@@ -106,7 +106,7 @@ export interface DeclastructDao<
      * .what = find or insert resource
      * .why = idempotent create - returns existing if found by unique keys, otherwise creates
      */
-    finsert(
+    findsert(
       input: InstanceType<TResourceClass>,
       context: TContext,
     ): Promise<HasMetadata<InstanceType<TResourceClass>>>;

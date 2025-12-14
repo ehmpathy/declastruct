@@ -41,7 +41,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -75,7 +75,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -105,7 +105,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -135,7 +135,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -181,7 +181,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input, context) => {
+          findsert: async (input, context) => {
             // type test: context type is inferred in set methods too
             const _apiKey: string = context.credentials.apiKey;
             expect(_apiKey).toBeUndefined();
@@ -217,7 +217,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => {
+          findsert: async (input) => {
             // type test: input should be typed as DemoResourceWithPrimary
             const _exid: string = input.exid;
             const _name: string = input.name;
@@ -287,7 +287,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (resource) => {
+          findsert: async (resource) => {
             const withUuid = TestResource.as({
               ...resource,
               uuid: resource.uuid ?? 'gen-uuid',
@@ -301,7 +301,7 @@ describe('genDeclastructDao', () => {
       });
 
       // insert a resource
-      await dao.set.finsert(
+      await dao.set.findsert(
         TestResource.as({ exid: 'test-exid', name: 'Test' }),
         {},
       );
@@ -331,7 +331,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (resource) => {
+          findsert: async (resource) => {
             const withUuid = TestResource.as({
               ...resource,
               uuid: resource.uuid ?? 'gen-uuid',
@@ -345,7 +345,7 @@ describe('genDeclastructDao', () => {
       });
 
       // insert a resource
-      await dao.set.finsert(
+      await dao.set.findsert(
         TestResource.as({ exid: 'test-exid', name: 'Test' }),
         {},
       );
@@ -372,7 +372,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (resource) => {
+          findsert: async (resource) => {
             const withUuid = TestResource.as({
               ...resource,
               uuid: resource.uuid ?? 'gen-uuid',
@@ -386,7 +386,7 @@ describe('genDeclastructDao', () => {
       });
 
       // insert a resource
-      await dao.set.finsert(
+      await dao.set.findsert(
         TestResource.as({ exid: 'test-exid', name: 'Test' }),
         {},
       );
@@ -410,7 +410,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -455,7 +455,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -491,7 +491,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },
@@ -532,7 +532,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: async (input) => input as any,
           delete: async () => {},
         },
@@ -547,7 +547,7 @@ describe('genDeclastructDao', () => {
           },
         },
         set: {
-          finsert: async (input) => input as any,
+          findsert: async (input) => input as any,
           upsert: null,
           delete: null,
         },

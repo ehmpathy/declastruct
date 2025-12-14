@@ -212,7 +212,7 @@ export function genDeclastructDao<
         },
       },
       set: {
-        finsert: input.set.finsert,
+        findsert: input.set.findsert,
         upsert,
         delete: del,
       },
@@ -235,7 +235,7 @@ export function genDeclastructDao<
       },
     },
     set: {
-      finsert: input.set.finsert,
+      findsert: input.set.findsert,
       upsert,
       delete: del,
     },

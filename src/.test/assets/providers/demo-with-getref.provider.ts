@@ -95,7 +95,7 @@ const demoRefDao = genDeclastructDao<typeof DemoRefResource, {}>({
     },
   },
   set: {
-    finsert: async (resource): Promise<HasMetadata<DemoRefResource>> => {
+    findsert: async (resource): Promise<HasMetadata<DemoRefResource>> => {
       // assign uuid if not present
       const uuid = resource.uuid ?? getUuid();
       const resourceWithUuid = DemoRefResource.as({

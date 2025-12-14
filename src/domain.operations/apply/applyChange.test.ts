@@ -47,9 +47,9 @@ describe('applyChange', () => {
     expect(result).toBe(change);
   });
 
-  it('should call finsert for CREATE action', async () => {
+  it('should call findsert for CREATE action', async () => {
     const resource = new DemoResource({ id: 'create-1', name: 'Create Me' });
-    const finsertSpy = jest.fn().mockResolvedValue(resource);
+    const findsertSpy = jest.fn().mockResolvedValue(resource);
 
     const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
@@ -65,7 +65,7 @@ describe('applyChange', () => {
         },
       },
       set: {
-        finsert: finsertSpy,
+        findsert: findsertSpy,
         upsert: undefined,
         delete: undefined,
       },
@@ -100,7 +100,7 @@ describe('applyChange', () => {
       providers: [provider],
     });
 
-    expect(finsertSpy).toHaveBeenCalledWith(resource, {});
+    expect(findsertSpy).toHaveBeenCalledWith(resource, {});
   });
 
   it('should call upsert for UPDATE action', async () => {
@@ -122,7 +122,7 @@ describe('applyChange', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: upsertSpy,
         delete: undefined,
       },
@@ -178,7 +178,7 @@ describe('applyChange', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: undefined,
       },
@@ -236,7 +236,7 @@ describe('applyChange', () => {
         },
       },
       set: {
-        finsert: async (input) => input as any,
+        findsert: async (input) => input as any,
         upsert: undefined,
         delete: deleteSpy,
       },
@@ -274,11 +274,11 @@ describe('applyChange', () => {
     expect(deleteSpy).toHaveBeenCalledWith(resource, {});
   });
 
-  it('should call delete then finsert for REPLACE action', async () => {
+  it('should call delete then findsert for REPLACE action', async () => {
     const remote = new DemoResource({ id: 'replace-1', name: 'Old' });
     const desired = new DemoResource({ id: 'replace-2', name: 'New' });
     const deleteSpy = jest.fn().mockResolvedValue(undefined);
-    const finsertSpy = jest.fn().mockResolvedValue(desired);
+    const findsertSpy = jest.fn().mockResolvedValue(desired);
 
     const dao: DeclastructDao<typeof DemoResource, any> = {
       dobj: DemoResource,
@@ -294,7 +294,7 @@ describe('applyChange', () => {
         },
       },
       set: {
-        finsert: finsertSpy,
+        findsert: findsertSpy,
         upsert: undefined,
         delete: deleteSpy,
       },
@@ -330,6 +330,6 @@ describe('applyChange', () => {
     });
 
     expect(deleteSpy).toHaveBeenCalledWith(remote, {});
-    expect(finsertSpy).toHaveBeenCalledWith(desired, {});
+    expect(findsertSpy).toHaveBeenCalledWith(desired, {});
   });
 });

@@ -27,7 +27,7 @@ describe('getRefByUnique.integration', () => {
     () => {
       const scene = useBeforeEach(async () => {
         const resource = genSampleDemoRefResource({ name: 'Test Resource' });
-        const persisted = await demoRefDao.set.finsert(resource, {});
+        const persisted = await demoRefDao.set.findsert(resource, {});
         return { resource: persisted };
       });
 
@@ -72,8 +72,8 @@ describe('getRefByUnique.integration', () => {
     const scene = useBeforeEach(async () => {
       const resource1 = genSampleDemoRefResource({ name: 'First Resource' });
       const resource2 = genSampleDemoRefResource({ name: 'Second Resource' });
-      const persisted1 = await demoRefDao.set.finsert(resource1, {});
-      const persisted2 = await demoRefDao.set.finsert(resource2, {});
+      const persisted1 = await demoRefDao.set.findsert(resource1, {});
+      const persisted2 = await demoRefDao.set.findsert(resource2, {});
       return { resource1: persisted1, resource2: persisted2 };
     });
 
@@ -101,7 +101,7 @@ describe('getRefByUnique.integration', () => {
   given('[case4] verifying type safety', () => {
     const scene = useBeforeEach(async () => {
       const resource = genSampleDemoRefResource({ name: 'Type Test' });
-      const persisted = await demoRefDao.set.finsert(resource, {});
+      const persisted = await demoRefDao.set.findsert(resource, {});
       return { resource: persisted };
     });
 
@@ -141,7 +141,7 @@ describe('getRefByUnique.integration', () => {
   given('[case5] round-trip ref resolution', () => {
     const scene = useBeforeEach(async () => {
       const resource = genSampleDemoRefResource({ name: 'Round Trip Test' });
-      const persisted = await demoRefDao.set.finsert(resource, {});
+      const persisted = await demoRefDao.set.findsert(resource, {});
       return { resource: persisted };
     });
 
