@@ -2,17 +2,18 @@ import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 import type { ContextLogTrail } from 'simple-log-methods';
 
-import type { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
+import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
 import {
   type DeclastructChange,
   DeclastructChangeAction,
-} from '../../domain.objects/DeclastructChange';
-import type { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
-import { colorizeAction } from '../../infra/colorizeAction';
-import { withSpinner } from '../../infra/withSpinner';
-import { planChanges } from '../plan/planChanges';
-import { assertPlanStillValid } from '../plan/validate';
+} from '@src/domain.objects/DeclastructChange';
+import type { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
+import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { planChanges } from '@src/domain.operations/plan/planChanges';
+import { assertPlanStillValid } from '@src/domain.operations/plan/validate';
+import { colorizeAction } from '@src/infra/colorizeAction';
+import { withSpinner } from '@src/infra/withSpinner';
+
 import { applyChange } from './applyChange';
 
 /**

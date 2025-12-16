@@ -1,8 +1,9 @@
 import {
   DemoResource,
   genSampleDemoResource,
-} from '../../.test/assets/providers/demo.provider';
-import { DECLASTRUCT_DELETE } from '../../domain.objects/symbols';
+} from '@src/.test/assets/providers/demo.provider';
+import { DECLASTRUCT_DELETE } from '@src/domain.objects/symbols';
+
 import { del, isMarkedForDeletion } from './del';
 
 describe('del', () => {

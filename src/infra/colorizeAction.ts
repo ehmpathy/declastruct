@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-import { DeclastructChangeAction } from '../domain.objects/DeclastructChange';
+import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
 
 /**
  * .what = returns a colorized action label for CLI output

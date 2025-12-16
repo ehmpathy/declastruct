@@ -1,8 +1,9 @@
 import { DomainEntity } from 'domain-objects';
 import { getError } from 'helpful-errors';
 
-import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructDao } from '@src/domain.objects/DeclastructDao';
+import { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+
 import { getDaoByResource } from './getDaoByResource';
 
 describe('getDaoByResource', () => {

@@ -1,6 +1,6 @@
 import type { DomainEntity } from 'domain-objects';
 
-import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
 import {
   DemoResource,
   demoProvider,

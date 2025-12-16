@@ -8,8 +8,9 @@ import {
 } from 'domain-objects';
 import { BadRequestError } from 'helpful-errors';
 
-import { getRefByPrimary } from '../domain.operations/ref/getRefByPrimary';
-import { getRefByUnique } from '../domain.operations/ref/getRefByUnique';
+import { getRefByPrimary } from '@src/domain.operations/ref/getRefByPrimary';
+import { getRefByUnique } from '@src/domain.operations/ref/getRefByUnique';
+
 import type { DeclastructDao } from './DeclastructDao';
 
 /**

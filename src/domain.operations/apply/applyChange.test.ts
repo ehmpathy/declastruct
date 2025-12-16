@@ -4,9 +4,10 @@ import { getError } from 'helpful-errors';
 import {
   DeclastructChange,
   DeclastructChangeAction,
-} from '../../domain.objects/DeclastructChange';
-import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
-import { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+} from '@src/domain.objects/DeclastructChange';
+import type { DeclastructDao } from '@src/domain.objects/DeclastructDao';
+import { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+
 import { applyChange } from './applyChange';
 
 describe('applyChange', () => {

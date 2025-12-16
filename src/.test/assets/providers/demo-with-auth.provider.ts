@@ -5,8 +5,8 @@ import { BadRequestError, UnexpectedCodePathError } from 'helpful-errors';
 import { resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
-import { genDeclastructDao } from '../../../domain.objects/genDeclastructDao';
+import { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { genDeclastructDao } from '@src/domain.objects/genDeclastructDao';
 
 /**
  * .what = demo resource requiring authentication

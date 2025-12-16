@@ -14,3 +14,6 @@ ignores:
   - esbuild-register
   - "@swc/core"
   - "@swc/jest"
+  - "@src/*"
+  - "@src/.*"
+  - tsc-alias
