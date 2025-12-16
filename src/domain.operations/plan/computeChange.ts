@@ -31,7 +31,7 @@ const checkAreResourcesEquivalent = (input: {
 /**
  * .what = computes a single change by comparing desired vs remote state
  * .why = determines the action needed to achieve desired state for one resource
- * .note = uses IIFE to compute action immutably
+ * .note = returns null when both desired and remote are null (nothing to track)
  */
 export const computeChange = ({
   desired,
@@ -39,10 +39,13 @@ export const computeChange = ({
 }: {
   desired: DomainEntity<any> | null;
   remote: DomainEntity<any> | null;
-}): DeclastructChange => {
+}): DeclastructChange | null => {
+  // resource doesn't exist and isn't desired - nothing to track
+  if (!remote && !desired) return null;
+
   // determine action based on state comparison
   const action = (() => {
-    // resource doesn't exist remotely
+    // resource doesn't exist remotely but is desired - create it
     if (!remote) return DeclastructChangeAction.CREATE;
 
     // resource exists but should be deleted
