@@ -69,6 +69,15 @@ export const planChanges = async (
         remote: remoteState,
       });
 
+      // skip if nothing to track (resource doesn't exist and isn't desired)
+      if (!computed) {
+        context.log.info(
+          `   └─ decision ${colorizeAction(DeclastructChangeAction.OMIT)}`,
+        );
+        context.log.info('');
+        return null;
+      }
+
       // log decision
       context.log.info(`   └─ decision ${colorizeAction(computed.action)}`);
 
@@ -84,7 +93,7 @@ export const planChanges = async (
 
       return computed;
     });
-    changes.push(change);
+    if (change) changes.push(change);
   }
 
   // log success message if everything is in sync

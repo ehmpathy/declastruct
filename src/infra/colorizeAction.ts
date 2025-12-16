@@ -19,6 +19,8 @@ export const colorizeAction = (action: DeclastructChangeAction): string => {
       return chalk.hex('#fca5a5')('[DESTROY]'); // pastel red
     case DeclastructChangeAction.REPLACE:
       return chalk.hex('#fca5a5')('[REPLACE]'); // pastel red, since it includes a destroy
+    case DeclastructChangeAction.OMIT:
+      return chalk.hex('#9ca3af')('[OMIT]'); // pastel gray
     default:
       return `[${action}]`;
   }

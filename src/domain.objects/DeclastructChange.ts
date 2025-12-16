@@ -29,6 +29,11 @@ export enum DeclastructChangeAction {
    * replace an existing resource (delete then create)
    */
   REPLACE = 'REPLACE',
+
+  /**
+   * omit from instructions (resource doesn't exist and isn't desired)
+   */
+  OMIT = 'OMIT',
 }
 
 /**

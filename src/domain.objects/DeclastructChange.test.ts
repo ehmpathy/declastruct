@@ -7,12 +7,13 @@ import {
 
 describe('DeclastructChange', () => {
   describe('DeclastructChangeAction', () => {
-    it('should export all 5 action types', () => {
+    it('should export all 6 action types', () => {
       expect(DeclastructChangeAction.KEEP).toBe('KEEP');
       expect(DeclastructChangeAction.CREATE).toBe('CREATE');
       expect(DeclastructChangeAction.UPDATE).toBe('UPDATE');
       expect(DeclastructChangeAction.DESTROY).toBe('DESTROY');
       expect(DeclastructChangeAction.REPLACE).toBe('REPLACE');
+      expect(DeclastructChangeAction.OMIT).toBe('OMIT');
     });
   });
 
