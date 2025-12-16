@@ -1,5 +1,5 @@
-import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
-import { DECLASTRUCT_DELETE } from '../../domain.objects/symbols';
+import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
+import { DECLASTRUCT_DELETE } from '@src/domain.objects/symbols';
 
 /**
  * .what = marks a resource for deletion via declarative instruction

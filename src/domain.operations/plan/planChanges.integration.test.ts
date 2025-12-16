@@ -4,9 +4,10 @@ import { resolve } from 'path';
 import {
   demoProvider,
   genSampleDemoResource,
-} from '../../.test/assets/providers/demo.provider';
-import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
-import { del } from '../del/del';
+} from '@src/.test/assets/providers/demo.provider';
+import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
+import { del } from '@src/domain.operations/del/del';
+
 import { planChanges } from './planChanges';
 
 describe('planChanges', () => {

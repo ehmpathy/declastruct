@@ -9,7 +9,8 @@ import { UnexpectedCodePathError } from 'helpful-errors';
 import {
   DeclastructChange,
   DeclastructChangeAction,
-} from '../../domain.objects/DeclastructChange';
+} from '@src/domain.objects/DeclastructChange';
+
 import { getDisplayableDiff } from './getDisplayableDiff';
 
 /**

@@ -1,13 +1,15 @@
 #!/usr/bin/env tsx
+
 import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { relative, resolve } from 'path';
 import { getGitRepoRoot } from 'rhachet-artifact-git';
-import type { DeclaredResource } from '../../domain.objects/DeclaredResource';
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import { applyChanges } from '../../domain.operations/apply/applyChanges';
+
+import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
+import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
+import { applyChanges } from '@src/domain.operations/apply/applyChanges';
 
 const log = console;
 

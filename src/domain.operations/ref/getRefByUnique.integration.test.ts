@@ -6,7 +6,8 @@ import {
   demoGetRefProvider,
   demoRefDao,
   genSampleDemoRefResource,
-} from '../../.test/assets/providers/demo-with-getref.provider';
+} from '@src/.test/assets/providers/demo-with-getref.provider';
+
 import { getRefByUnique } from './getRefByUnique';
 
 describe('getRefByUnique.integration', () => {

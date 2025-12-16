@@ -3,7 +3,8 @@ import { mkdir, readFile, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
+
 import { executeApplyCommand } from './apply';
 import { executePlanCommand } from './plan';
 

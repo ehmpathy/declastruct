@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 
-import type { DeclastructChange } from '../../domain.objects/DeclastructChange';
+import type { DeclastructChange } from '@src/domain.objects/DeclastructChange';
 
 /**
  * .what = computes deterministic hash of changes

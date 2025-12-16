@@ -1,7 +1,8 @@
 import { DomainEntity } from 'domain-objects';
 import { given, then, when } from 'test-fns';
 
-import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
+import type { DeclastructDao } from '@src/domain.objects/DeclastructDao';
+
 import { getRefByPrimary } from './getRefByPrimary';
 
 describe('getRefByPrimary', () => {
