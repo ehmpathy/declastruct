@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.2](https://github.com/ehmpathy/declastruct/compare/v1.7.1...v1.7.2) (2025-12-16)
+
+
+### Bug Fixes
+
+* **cicd:** selfbuild declastruct to selfapply ([#53](https://github.com/ehmpathy/declastruct/issues/53)) ([38eaadc](https://github.com/ehmpathy/declastruct/commit/38eaadc3b46f61e22fb3e6a296d4e9e260b59434))
+* **practs:** deworm and bump to latest best ([#50](https://github.com/ehmpathy/declastruct/issues/50)) ([68268f2](https://github.com/ehmpathy/declastruct/commit/68268f299209ee7748169b8115295ad66e58a454))
+
 ## [1.7.1](https://github.com/ehmpathy/declastruct/compare/v1.7.0...v1.7.1) (2025-12-14)
 
 
