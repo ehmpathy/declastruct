@@ -1,14 +1,15 @@
 import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 import type { ContextLogTrail } from 'simple-log-methods';
 
-import type { ContextDeclastruct } from '../../domain.objects/ContextDeclastruct';
-import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
-import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
-import { isMarkedForDeletion } from '../../domain.operations/del/del';
-import { asIsoTimestamp } from '../../infra/asIsoTimestamp';
-import { colorizeAction } from '../../infra/colorizeAction';
-import { withSpinner } from '../../infra/withSpinner';
+import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
+import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
+import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
+import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { isMarkedForDeletion } from '@src/domain.operations/del/del';
+import { asIsoTimestamp } from '@src/infra/asIsoTimestamp';
+import { colorizeAction } from '@src/infra/colorizeAction';
+import { withSpinner } from '@src/infra/withSpinner';
+
 import { computeChange } from './computeChange';
 import { getDaoByResource } from './getDaoByResource';
 import { hashChanges } from './hashChanges';

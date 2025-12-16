@@ -5,9 +5,9 @@ import { resolve } from 'path';
 import type { HasMetadata } from 'type-fns';
 import { getUuid } from 'uuid-fns';
 
-import type { DeclastructDao } from '../../../domain.objects/DeclastructDao';
-import { DeclastructProvider } from '../../../domain.objects/DeclastructProvider';
-import { genDeclastructDao } from '../../../domain.objects/genDeclastructDao';
+import type { DeclastructDao } from '@src/domain.objects/DeclastructDao';
+import { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { genDeclastructDao } from '@src/domain.objects/genDeclastructDao';
 
 /**
  * .what = demo resource with both primary and unique keys

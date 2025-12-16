@@ -1,6 +1,7 @@
 import { DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 
-import { DeclastructChangeAction } from '../../domain.objects/DeclastructChange';
+import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
+
 import { computeChange } from './computeChange';
 
 describe('computeChange', () => {

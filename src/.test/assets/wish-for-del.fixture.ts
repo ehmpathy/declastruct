@@ -1,7 +1,7 @@
 import type { DomainEntity } from 'domain-objects';
 import { resolve } from 'path';
 
-import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
+import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
 
 // use dynamic require with absolute path since this file may be cloned to temp dir
 // eslint-disable-next-line @typescript-eslint/no-require-imports

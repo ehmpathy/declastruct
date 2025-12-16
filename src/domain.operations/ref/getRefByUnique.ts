@@ -8,7 +8,7 @@ import {
 } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
 
-import type { DeclastructDao } from '../../domain.objects/DeclastructDao';
+import type { DeclastructDao } from '@src/domain.objects/DeclastructDao';
 
 /**
  * .what = resolves any ref to RefByUnique

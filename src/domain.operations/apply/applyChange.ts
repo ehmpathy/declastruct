@@ -4,9 +4,9 @@ import { UnexpectedCodePathError } from 'helpful-errors';
 import {
   type DeclastructChange,
   DeclastructChangeAction,
-} from '../../domain.objects/DeclastructChange';
-import type { DeclastructProvider } from '../../domain.objects/DeclastructProvider';
-import { getDaoByResource } from '../plan/getDaoByResource';
+} from '@src/domain.objects/DeclastructChange';
+import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { getDaoByResource } from '@src/domain.operations/plan/getDaoByResource';
 
 /**
  * .what = applies a single change to infrastructure

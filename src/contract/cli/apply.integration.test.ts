@@ -3,7 +3,8 @@ import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import { basename, resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
-import { DeclastructPlan } from '../../domain.objects/DeclastructPlan';
+import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
+
 import { executeApplyCommand } from './apply';
 import { executePlanCommand } from './plan';
 
@@ -52,8 +53,8 @@ const createIsolatedWishFile = async (): Promise<string> => {
 
   const wishContent = `
 import { DomainEntity } from 'domain-objects';
-import { DeclastructProvider } from '../../src/domain.objects/DeclastructProvider';
-import { DemoResource, demoProvider } from '../../src/.test/assets/providers/demo.provider';
+import { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
+import { DemoResource, demoProvider } from '@src/.test/assets/providers/demo.provider';
 
 export const getResources = async (): Promise<DomainEntity<any>[]> => {
   return [
