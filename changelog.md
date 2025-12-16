@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.3](https://github.com/ehmpathy/declastruct/compare/v1.7.2...v1.7.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* **del:** compute action OMIT for resources that are already deleted ([#52](https://github.com/ehmpathy/declastruct/issues/52)) ([1338c76](https://github.com/ehmpathy/declastruct/commit/1338c76dbb642b3d341904a5110a4d0bbf2a2f0d))
+
 ## [1.7.2](https://github.com/ehmpathy/declastruct/compare/v1.7.1...v1.7.2) (2025-12-16)
 
 
