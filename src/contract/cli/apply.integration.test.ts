@@ -1,5 +1,6 @@
 import { existsSync } from 'fs';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
+import { BadRequestError } from 'helpful-errors';
 import { basename, resolve } from 'path';
 import { getUuid } from 'uuid-fns';
 
@@ -90,7 +91,11 @@ describe('executeApplyCommand', () => {
     const wishFilePath = await createIsolatedWishFile();
 
     // first generate a plan
-    await executePlanCommand({ wishFilePath, planFilePath });
+    await executePlanCommand({
+      wishFilePath,
+      planFilePath,
+      snapFilePath: null,
+    });
 
     // verify plan was created
     expect(existsSync(planFilePath)).toBe(true);
@@ -114,7 +119,7 @@ describe('executeApplyCommand', () => {
 
     await expect(
       executeApplyCommand({ planFilePath: nonexistentPlanPath }),
-    ).rejects.toThrow('Plan file not found');
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('should throw when wish file referenced in plan does not exist', async () => {
@@ -128,7 +133,9 @@ describe('executeApplyCommand', () => {
 
     await writeFile(planFilePath, JSON.stringify(invalidPlan, null, 2));
 
-    await expect(executeApplyCommand({ planFilePath })).rejects.toThrow();
+    await expect(executeApplyCommand({ planFilePath })).rejects.toThrow(
+      BadRequestError,
+    );
   });
 
   it('should throw when wish file does not export getResources', async () => {
@@ -151,7 +158,7 @@ describe('executeApplyCommand', () => {
     await writeFile(planFilePath, JSON.stringify(invalidPlan, null, 2));
 
     await expect(executeApplyCommand({ planFilePath })).rejects.toThrow(
-      'Wish file must export getResources() function',
+      BadRequestError,
     );
 
     // cleanup
@@ -163,7 +170,11 @@ describe('executeApplyCommand', () => {
     const wishFilePath = await createIsolatedWishFile();
 
     // generate plan
-    await executePlanCommand({ wishFilePath, planFilePath });
+    await executePlanCommand({
+      wishFilePath,
+      planFilePath,
+      snapFilePath: null,
+    });
 
     // spy on console to verify logging
     const logSpy = jest.spyOn(console, 'info');
@@ -187,14 +198,22 @@ describe('executeApplyCommand', () => {
     const wishFilePath = await createIsolatedWishFile();
 
     // generate initial plan
-    await executePlanCommand({ wishFilePath, planFilePath });
+    await executePlanCommand({
+      wishFilePath,
+      planFilePath,
+      snapFilePath: null,
+    });
 
     // apply changes
     await executeApplyCommand({ planFilePath });
 
     // generate new plan (should now show KEEP actions)
     await rm(planFilePath);
-    await executePlanCommand({ wishFilePath, planFilePath });
+    await executePlanCommand({
+      wishFilePath,
+      planFilePath,
+      snapFilePath: null,
+    });
 
     // read new plan
     const planJson = await readFile(planFilePath, 'utf-8');
@@ -213,7 +232,11 @@ describe('executeApplyCommand', () => {
     const wishFilePath = await createIsolatedWishFile();
 
     // generate initial plan
-    await executePlanCommand({ wishFilePath, planFilePath });
+    await executePlanCommand({
+      wishFilePath,
+      planFilePath,
+      snapFilePath: null,
+    });
 
     // modify the plan's hash to make it stale
     const planJson = await readFile(planFilePath, 'utf-8');
@@ -224,7 +247,7 @@ describe('executeApplyCommand', () => {
 
     // applying stale plan should throw
     await expect(executeApplyCommand({ planFilePath })).rejects.toThrow(
-      'plan is stale',
+      BadRequestError,
     );
   });
 
@@ -251,7 +274,7 @@ describe('executeApplyCommand', () => {
     it('should throw when --wish is not provided with --plan yolo', async () => {
       await expect(
         executeApplyCommand({ planFilePath: 'yolo' }),
-      ).rejects.toThrow('--wish required when --plan yolo');
+      ).rejects.toThrow(BadRequestError);
     });
 
     it('should throw when wish file does not exist in yolo mode', async () => {
@@ -260,7 +283,7 @@ describe('executeApplyCommand', () => {
           planFilePath: 'yolo',
           wishFilePath: '/nonexistent/wish.ts',
         }),
-      ).rejects.toThrow('Wish file not found');
+      ).rejects.toThrow(BadRequestError);
     });
 
     it('should skip staleness validation in yolo mode', async () => {
@@ -318,7 +341,7 @@ describe('executeApplyCommand', () => {
   });
 
   it('should throw when neither --plan nor --wish is provided', async () => {
-    await expect(executeApplyCommand({})).rejects.toThrow('--plan required');
+    await expect(executeApplyCommand({})).rejects.toThrow(BadRequestError);
   });
 
   describe('del() support', () => {
@@ -349,11 +372,16 @@ describe('executeApplyCommand', () => {
       await executePlanCommand({
         wishFilePath: setupWishFilePath,
         planFilePath,
+        snapFilePath: null,
       });
       await executeApplyCommand({ planFilePath });
 
       // step 2: plan and apply deletion
-      await executePlanCommand({ wishFilePath: delWishFilePath, planFilePath });
+      await executePlanCommand({
+        wishFilePath: delWishFilePath,
+        planFilePath,
+        snapFilePath: null,
+      });
 
       const planJson = await readFile(planFilePath, 'utf-8');
       const plan = new DeclastructPlan(JSON.parse(planJson));
@@ -366,6 +394,7 @@ describe('executeApplyCommand', () => {
       await executePlanCommand({
         wishFilePath: setupWishFilePath,
         planFilePath,
+        snapFilePath: null,
       });
 
       const verifyPlanJson = await readFile(planFilePath, 'utf-8');

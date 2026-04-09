@@ -302,6 +302,24 @@
         "hooks": [
           {
             "type": "command",
+            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/sessionstart.notify-permissions",
+            "timeout": 5,
+            "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhachet roles boot --repo .this --role any --if-present",
+            "timeout": 60,
+            "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhachet roles boot --repo ehmpathy --role mechanic",
+            "timeout": 60,
+            "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
             "command": "./node_modules/.bin/rhx route.drive --mode hook",
             "timeout": 5,
             "author": "repo=bhrain/role=driver"
@@ -323,24 +341,6 @@
             "command": "./node_modules/.bin/rhachet roles boot --repo ehmpathy --role ergonomist",
             "timeout": 60,
             "author": "repo=ehmpathy/role=ergonomist"
-          },
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/sessionstart.notify-permissions",
-            "timeout": 5,
-            "author": "repo=ehmpathy/role=mechanic"
-          },
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhachet roles boot --repo .this --role any --if-present",
-            "timeout": 60,
-            "author": "repo=ehmpathy/role=mechanic"
-          },
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhachet roles boot --repo ehmpathy --role mechanic",
-            "timeout": 60,
-            "author": "repo=ehmpathy/role=mechanic"
           }
         ]
       },
@@ -357,40 +357,6 @@
       }
     ],
     "PreToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhx route.bounce --mode hook",
-            "timeout": 5,
-            "author": "repo=bhrain/role=driver"
-          },
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/pretooluse.forbid-terms.gerunds",
-            "timeout": 5,
-            "author": "repo=ehmpathy/role=mechanic"
-          },
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/pretooluse.forbid-terms.blocklist",
-            "timeout": 5,
-            "author": "repo=ehmpathy/role=mechanic"
-          }
-        ]
-      },
-      {
-        "matcher": "Read|Write|Edit|Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./node_modules/.bin/rhx route.mutate.guard --mode hook",
-            "timeout": 5,
-            "author": "repo=bhrain/role=driver"
-          }
-        ]
-      },
       {
         "matcher": "Bash",
         "hooks": [
@@ -417,6 +383,29 @@
             "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/pretooluse.check-permissions",
             "timeout": 5,
             "author": "repo=ehmpathy/role=mechanic"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/pretooluse.forbid-terms.gerunds",
+            "timeout": 5,
+            "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhachet run --repo ehmpathy --role mechanic --init claude.hooks/pretooluse.forbid-terms.blocklist",
+            "timeout": 5,
+            "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhx route.bounce --mode hook",
+            "timeout": 5,
+            "author": "repo=bhrain/role=driver"
           }
         ]
       },
@@ -452,6 +441,17 @@
             "author": "repo=ehmpathy/role=mechanic"
           }
         ]
+      },
+      {
+        "matcher": "Read|Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhx route.mutate.guard --mode hook",
+            "timeout": 5,
+            "author": "repo=bhrain/role=driver"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -460,15 +460,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./node_modules/.bin/rhx route.drive --mode hook",
-            "timeout": 5,
-            "author": "repo=bhrain/role=driver"
-          },
-          {
-            "type": "command",
             "command": "pnpm run --if-present fix",
             "timeout": 30,
             "author": "repo=ehmpathy/role=mechanic"
+          },
+          {
+            "type": "command",
+            "command": "./node_modules/.bin/rhx route.drive --mode hook",
+            "timeout": 5,
+            "author": "repo=bhrain/role=driver"
           }
         ]
       }

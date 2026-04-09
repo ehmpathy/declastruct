@@ -40,7 +40,7 @@ describe('planChanges', () => {
     ];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -83,7 +83,7 @@ describe('planChanges', () => {
 
     // plan changes with spy context
     const context = createContext();
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -115,7 +115,7 @@ describe('planChanges', () => {
     const resources = [remoteResource.clone({ name: 'New Name' })];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -149,7 +149,7 @@ describe('planChanges', () => {
     // Note: planChanges only looks at desired resources, not remote state
     // DELETE actions would need to be detected by comparing remote state to desired
     // This is a design limitation - planChanges only processes desired resources
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -211,7 +211,7 @@ describe('planChanges', () => {
     ];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -244,7 +244,7 @@ describe('planChanges', () => {
     ];
 
     // plan twice
-    const plan1 = await planChanges(
+    const { plan: plan1 } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -253,7 +253,7 @@ describe('planChanges', () => {
       createContext(),
     );
 
-    const plan2 = await planChanges(
+    const { plan: plan2 } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -277,7 +277,7 @@ describe('planChanges', () => {
     const markedForDeletion = del(resource);
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources: [markedForDeletion],
         providers: [demoProvider],
@@ -307,7 +307,7 @@ describe('planChanges', () => {
     const markedForDeletion = del(resource);
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources: [markedForDeletion],
         providers: [demoProvider],

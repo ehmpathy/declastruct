@@ -11,6 +11,7 @@ import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastru
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
 import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
 import { applyChanges } from '@src/domain.operations/apply/applyChanges';
+import { initializeProviders } from '@src/infra/initializeProviders';
 
 const log = console;
 
@@ -30,10 +31,15 @@ export const executeApplyCommand = async (input: {
   if (isYoloMode) {
     // yolo mode requires --wish
     if (!input.wishFilePath)
-      throw new BadRequestError('--wish required when --plan yolo');
+      throw new BadRequestError('--wish required when --plan yolo', {
+        hint: 'add --wish <file> to specify the wish file',
+      });
   } else {
     // standard mode requires --plan (not "yolo")
-    if (!input.planFilePath) throw new BadRequestError('--plan required');
+    if (!input.planFilePath)
+      throw new BadRequestError('--plan required', {
+        hint: 'add --plan <file> to specify the plan file',
+      });
   }
 
   // resolve plan path (null for yolo mode)
@@ -45,7 +51,10 @@ export const executeApplyCommand = async (input: {
   const plan = await (async (): Promise<DeclastructPlan | null> => {
     if (!resolvedPlanPath) return null;
     if (!existsSync(resolvedPlanPath))
-      throw new BadRequestError(`Plan file not found: ${resolvedPlanPath}`);
+      throw new BadRequestError('plan file not found', {
+        path: resolvedPlanPath,
+        hint: 'check that the --plan path points to an extant file',
+      });
     const planJson = await readFile(resolvedPlanPath, 'utf-8');
     return new DeclastructPlan(JSON.parse(planJson));
   })();
@@ -57,7 +66,10 @@ export const executeApplyCommand = async (input: {
 
   // validate wish file exists
   if (!existsSync(resolvedWishPath))
-    throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
+    throw new BadRequestError('wish file not found', {
+      path: resolvedWishPath,
+      hint: 'check that the wish file path is correct',
+    });
 
   // get git root for relative path display
   const gitRoot = await getGitRepoRoot({ from: process.cwd() });
@@ -69,8 +81,13 @@ export const executeApplyCommand = async (input: {
   // log header
   log.info('');
   log.info('🌊 declastruct apply');
-  if (relativePlanPath) log.info(`   plan: ${relativePlanPath}`);
-  log.info(`   wish: ${relativeWishPath}`);
+  if (relativePlanPath) {
+    log.info(`   ├─ plan: ${relativePlanPath}`);
+    log.info(`   └─ wish: ${relativeWishPath}`);
+  } else {
+    log.info(`   ├─ plan: (yolo)`);
+    log.info(`   └─ wish: ${relativeWishPath}`);
+  }
   log.info('');
 
   // create cli context with passthrough args from plan
@@ -91,17 +108,22 @@ export const executeApplyCommand = async (input: {
 
   // validate exports
   if (typeof wish.getResources !== 'function')
-    throw new BadRequestError('Wish file must export getResources() function');
+    throw new BadRequestError('wish file must export getResources() function', {
+      path: resolvedWishPath,
+      hint: 'add `export const getResources = () => [...]` to the wish file',
+    });
   if (typeof wish.getProviders !== 'function')
-    throw new BadRequestError('Wish file must export getProviders() function');
+    throw new BadRequestError('wish file must export getProviders() function', {
+      path: resolvedWishPath,
+      hint: 'add `export const getProviders = () => [...]` to the wish file',
+    });
 
   // get resources and providers
   const resources: DeclaredResource[] = await wish.getResources();
   const providers = await wish.getProviders();
 
   // initialize providers
-  // log.info('✨ start providers...');
-  await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
+  await initializeProviders({ providers });
 
   // create context with passthrough args
   const context = {
@@ -127,6 +149,7 @@ export const executeApplyCommand = async (input: {
 
   // log summary
   log.info('');
-  log.info(`🌊 applied ${result.appliedChanges.length} changes`);
+  log.info('🌊 declastruct apply');
+  log.info(`   └─ applied: ${result.appliedChanges.length}`);
   log.info('');
 };

@@ -10,6 +10,10 @@ import { getGitRepoRoot } from 'rhachet-artifact-git';
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
 import { planChanges } from '@src/domain.operations/plan/planChanges';
+import {
+  finalizeProviders,
+  initializeProviders,
+} from '@src/infra/initializeProviders';
 
 const log = console;
 
@@ -21,30 +25,43 @@ const log = console;
 export const executePlanCommand = async ({
   wishFilePath,
   planFilePath,
+  snapFilePath,
   passthroughArgs = [],
 }: {
   wishFilePath: string;
   planFilePath: string;
+  snapFilePath: string | null;
   passthroughArgs?: string[];
 }): Promise<void> => {
   // resolve paths
   const resolvedWishPath = resolve(process.cwd(), wishFilePath);
   const resolvedPlanPath = resolve(process.cwd(), planFilePath);
+  const resolvedSnapPath = snapFilePath
+    ? resolve(process.cwd(), snapFilePath)
+    : null;
 
   // get git root for relative path display
   const gitRoot = await getGitRepoRoot({ from: process.cwd() });
   const relativeWishPath = relative(gitRoot, resolvedWishPath);
   const relativePlanPath = relative(gitRoot, resolvedPlanPath);
+  const relativeSnapPath = resolvedSnapPath
+    ? relative(gitRoot, resolvedSnapPath)
+    : null;
 
   // validate wish file exists
   if (!existsSync(resolvedWishPath)) {
-    throw new BadRequestError(`Wish file not found: ${resolvedWishPath}`);
+    throw new BadRequestError('wish file not found', {
+      path: resolvedWishPath,
+      hint: 'check that the --wish path points to an extant file',
+    });
   }
 
   log.info('');
   log.info('🌊 declastruct plan');
-  log.info(`   wish: ${relativeWishPath}`);
-  log.info(`   plan: ${relativePlanPath}`);
+  log.info(`   ├─ wish: ${relativeWishPath}`);
+  log.info(`   ├─ plan: ${relativePlanPath}`);
+  if (relativeSnapPath) log.info(`   └─ snap: ${relativeSnapPath}`);
+  else log.info(`   └─ snap: (none)`);
   log.info('');
 
   // create cli context with passthrough args
@@ -64,10 +81,16 @@ export const executePlanCommand = async ({
 
   // validate exports
   if (typeof wish.getResources !== 'function') {
-    throw new BadRequestError('Wish file must export getResources() function');
+    throw new BadRequestError('wish file must export getResources() function', {
+      path: resolvedWishPath,
+      hint: 'add `export const getResources = () => [...]` to the wish file',
+    });
   }
   if (typeof wish.getProviders !== 'function') {
-    throw new BadRequestError('Wish file must export getProviders() function');
+    throw new BadRequestError('wish file must export getProviders() function', {
+      path: resolvedWishPath,
+      hint: 'add `export const getProviders = () => [...]` to the wish file',
+    });
   }
 
   // get resources and providers
@@ -75,8 +98,7 @@ export const executePlanCommand = async ({
   const providers = await wish.getProviders();
 
   // initialize providers
-  // log.info('✨ start providers...');
-  await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
+  await initializeProviders({ providers });
 
   // create context with passthrough args
   const context = {
@@ -85,8 +107,8 @@ export const executePlanCommand = async ({
     passthrough: cliContext.passthrough,
   };
 
-  // plan changes (logs emitted in real-time by planChanges)
-  const plan = await planChanges(
+  // plan changes (outputs emitted in real-time by planChanges)
+  const { plan, snapshot } = await planChanges(
     {
       resources,
       providers,
@@ -102,14 +124,26 @@ export const executePlanCommand = async ({
   // write plan to file
   await writeFile(resolvedPlanPath, JSON.stringify(plan, null, 2), 'utf-8');
 
+  // write snapshot to file if requested
+  if (resolvedSnapPath) {
+    const snapDir = dirname(resolvedSnapPath);
+    await mkdir(snapDir, { recursive: true });
+    await writeFile(
+      resolvedSnapPath,
+      JSON.stringify(snapshot, null, 2),
+      'utf-8',
+    );
+  }
+
   // cleanup providers
-  // log.info('');
-  // log.info('✨ stop providers...');
-  await Promise.all(providers.map((p: any) => p.hooks.afterAll()));
+  await finalizeProviders({ providers });
 
   // log summary
   log.info('');
-  log.info(`🌊 planned for ${plan.changes.length} resources`);
-  log.info(`   into ${relativePlanPath}`);
+  log.info('🌊 declastruct plan');
+  log.info(`   ├─ resources: ${plan.changes.length}`);
+  log.info(`   ├─ plan: ${relativePlanPath}`);
+  if (relativeSnapPath) log.info(`   └─ snap: ${relativeSnapPath}`);
+  else log.info(`   └─ snap: (none)`);
   log.info('');
 };
