@@ -5,7 +5,7 @@ describe('DeclastructPlan', () => {
     const plan = new DeclastructPlan({
       hash: 'abc123',
       createdAt: '2025-11-22T10:30:00.000Z',
-      wish: { uri: '/path/to/wish.ts' },
+      wish: { uri: '/path/to/wish.ts', argv: [] },
       changes: [],
     });
 
@@ -23,7 +23,7 @@ describe('DeclastructPlan', () => {
     const plan = new DeclastructPlan({
       hash: 'test-hash',
       createdAt: '2025-11-22T10:30:00.000Z',
-      wish: { uri: '/test' },
+      wish: { uri: '/test', argv: [] },
       changes: [],
     });
 

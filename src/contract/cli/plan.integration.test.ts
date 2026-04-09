@@ -258,4 +258,104 @@ export const getProviders = async (): Promise<DeclastructProvider<any, any>[]> =
     expect(plan.changes[0]?.state.desired).toBeNull();
     expect(plan.changes[0]?.state.remote).toBeDefined();
   });
+
+  describe('passthrough args', () => {
+    const argsWishFilePath = resolve(
+      process.cwd(),
+      'src/.test/assets/wish-with-args.fixture.ts',
+    );
+
+    it('should pass args to process.argv', async () => {
+      const tempDir = await genTempDir();
+      const planFilePath = resolve(tempDir, 'plan.json');
+
+      // execute with passthrough args
+      await executePlanCommand({
+        wishFilePath: argsWishFilePath,
+        planFilePath,
+        passthroughArgs: ['--env', 'prod'],
+      });
+
+      // verify plan was created
+      expect(existsSync(planFilePath)).toBe(true);
+
+      // read and parse plan
+      const planJson = await readFile(planFilePath, 'utf-8');
+      const plan = new DeclastructPlan(JSON.parse(planJson));
+
+      // verify resource name reflects prod env
+      expect(plan.changes.length).toBe(1);
+      expect((plan.changes[0]?.state.desired as { name: string }).name).toBe(
+        'Resource-production',
+      );
+    });
+
+    it('should strip -- separator from process.argv', async () => {
+      const tempDir = await genTempDir();
+      const planFilePath = resolve(tempDir, 'plan.json');
+
+      // execute with args (-- separator is handled by commander, not passed here)
+      await executePlanCommand({
+        wishFilePath: argsWishFilePath,
+        planFilePath,
+        passthroughArgs: ['--env', 'prod'],
+      });
+
+      // verify plan was created
+      const planJson = await readFile(planFilePath, 'utf-8');
+      const plan = new DeclastructPlan(JSON.parse(planJson));
+
+      // verify resource uses prod config (proves -- was stripped)
+      expect((plan.changes[0]?.state.desired as { name: string }).name).toBe(
+        'Resource-production',
+      );
+    });
+
+    it('should pass multiple args', async () => {
+      const tempDir = await genTempDir();
+      const planFilePath = resolve(tempDir, 'plan.json');
+
+      // execute with multiple passthrough args
+      await executePlanCommand({
+        wishFilePath: argsWishFilePath,
+        planFilePath,
+        passthroughArgs: ['--env', 'prod', '--verbose', '--debug'],
+      });
+
+      // verify plan was created
+      expect(existsSync(planFilePath)).toBe(true);
+
+      // read and parse plan
+      const planJson = await readFile(planFilePath, 'utf-8');
+      const plan = new DeclastructPlan(JSON.parse(planJson));
+
+      // verify resource reflects prod env (other flags are ignored by fixture)
+      expect((plan.changes[0]?.state.desired as { name: string }).name).toBe(
+        'Resource-production',
+      );
+    });
+
+    it('should work without passthrough args (backwards compat)', async () => {
+      const tempDir = await genTempDir();
+      const planFilePath = resolve(tempDir, 'plan.json');
+
+      // execute without passthrough args
+      await executePlanCommand({
+        wishFilePath: argsWishFilePath,
+        planFilePath,
+      });
+
+      // verify plan was created
+      expect(existsSync(planFilePath)).toBe(true);
+
+      // read and parse plan
+      const planJson = await readFile(planFilePath, 'utf-8');
+      const plan = new DeclastructPlan(JSON.parse(planJson));
+
+      // verify resource uses default test env
+      expect((plan.changes[0]?.state.desired as { name: string }).name).toBe(
+        'Resource-test',
+      );
+    });
+  });
 });

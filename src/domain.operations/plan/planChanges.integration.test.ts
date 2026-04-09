@@ -29,6 +29,7 @@ describe('planChanges', () => {
       warn: jest.fn(),
       debug: jest.fn(),
     },
+    passthrough: { argv: [] },
   });
 
   it('should plan CREATE actions for resources that do not exist remotely', async () => {

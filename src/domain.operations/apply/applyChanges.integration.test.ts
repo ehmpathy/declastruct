@@ -31,6 +31,7 @@ describe('applyChanges', () => {
       warn: jest.fn(),
       debug: jest.fn(),
     },
+    passthrough: { argv: [] },
   });
 
   it('should apply CREATE changes and verify files created on disk', async () => {

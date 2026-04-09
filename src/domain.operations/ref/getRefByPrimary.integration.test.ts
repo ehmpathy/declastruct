@@ -6,12 +6,14 @@ import {
   demoGetRefProvider,
   demoRefDao,
   genSampleDemoRefResource,
+  setDemoRefNamespace,
 } from '@src/.test/assets/providers/demo-with-getref.provider';
 
 import { getRefByPrimary } from './getRefByPrimary';
 
 describe('getRefByPrimary.integration', () => {
   beforeAll(async () => {
+    setDemoRefNamespace('getRefByPrimary');
     await demoGetRefProvider.hooks.beforeAll();
   });
 

@@ -7,6 +7,7 @@ import { BadRequestError } from 'helpful-errors';
 import { dirname, relative, resolve } from 'path';
 import { getGitRepoRoot } from 'rhachet-artifact-git';
 
+import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
 import { planChanges } from '@src/domain.operations/plan/planChanges';
 
@@ -20,9 +21,11 @@ const log = console;
 export const executePlanCommand = async ({
   wishFilePath,
   planFilePath,
+  passthroughArgs = [],
 }: {
   wishFilePath: string;
   planFilePath: string;
+  passthroughArgs?: string[];
 }): Promise<void> => {
   // resolve paths
   const resolvedWishPath = resolve(process.cwd(), wishFilePath);
@@ -44,7 +47,19 @@ export const executePlanCommand = async ({
   log.info(`   plan: ${relativePlanPath}`);
   log.info('');
 
-  // import wish file
+  // create cli context with passthrough args
+  const cliContext: ContextDeclastructCli = {
+    passthrough: { argv: passthroughArgs },
+  };
+
+  // inject passthrough args into process.argv before import
+  process.argv = [
+    process.argv[0]!,
+    process.argv[1]!,
+    ...cliContext.passthrough.argv,
+  ];
+
+  // import wish file (now sees passthrough.argv in process.argv)
   const wish = await import(resolvedWishPath);
 
   // validate exports
@@ -63,10 +78,11 @@ export const executePlanCommand = async ({
   // log.info('✨ start providers...');
   await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
 
-  // create context
+  // create context with passthrough args
   const context = {
     bottleneck: new Bottleneck({ maxConcurrent: 1 }),
     log,
+    passthrough: cliContext.passthrough,
   };
 
   // plan changes (logs emitted in real-time by planChanges)

@@ -23,9 +23,16 @@ export interface DeclastructPlan {
    */
   wish: {
     /**
-     * file path URI to the wish file containing resources and providers
+     * file path URI to the wish file
      */
     uri: string;
+
+    /**
+     * args passed via -- separator at plan time
+     *
+     * .why = apply must replay these to get same resources for staleness check
+     */
+    argv: string[];
   };
 
   /**
