@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/ehmpathy/declastruct/compare/v1.7.3...v1.8.0) (2026-04-09)
+
+
+### Features
+
+* **cli:** add arg passthrough via -- separator ([#55](https://github.com/ehmpathy/declastruct/issues/55)) ([46ebbb7](https://github.com/ehmpathy/declastruct/commit/46ebbb7bdd31068c235b9304cdbffd12559bd862))
+
 ## [1.7.3](https://github.com/ehmpathy/declastruct/compare/v1.7.2...v1.7.3) (2025-12-16)
 
 
