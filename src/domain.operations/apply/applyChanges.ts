@@ -3,6 +3,7 @@ import { UnexpectedCodePathError } from 'helpful-errors';
 import type { ContextLogTrail } from 'simple-log-methods';
 
 import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
+import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import {
   type DeclastructChange,
   DeclastructChangeAction,
@@ -29,7 +30,7 @@ export const applyChanges = async (
     resources: DomainEntity<any>[];
     providers: DeclastructProvider<any, any>[];
   },
-  context: ContextLogTrail & ContextDeclastruct,
+  context: ContextLogTrail & ContextDeclastruct & ContextDeclastructCli,
 ): Promise<{ appliedChanges: DeclastructChange[] }> => {
   // replan to get current state
   const currentPlan = await planChanges(

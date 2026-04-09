@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`invoke CLI plan --help should show passthrough args in plan help text 1`] = `
+"Usage: declastruct plan --wish <file> --into <file> [-- <wish-args>]
+
+Generate a change plan from a wish file
+
+Options:
+  --wish <file>  Path to wish file
+  --into <file>  Path to output plan file
+  -h, --help     display help for command
+"
+`;
+
+exports[`invoke CLI plan with unknown option should guide user to use -- when unknown option passed 1`] = `
+"error: unknown option '--env'
+hint: to pass args to your wish file, use: -- --env
+"
+`;

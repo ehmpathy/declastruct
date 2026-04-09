@@ -2,6 +2,7 @@ import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 import type { ContextLogTrail } from 'simple-log-methods';
 
 import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
+import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
 import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
 import type { DeclastructProvider } from '@src/domain.objects/DeclastructProvider';
@@ -25,7 +26,7 @@ export const planChanges = async (
     providers: DeclastructProvider<any, any>[];
     wishFilePath: string;
   },
-  context: ContextLogTrail & ContextDeclastruct,
+  context: ContextLogTrail & ContextDeclastruct & ContextDeclastructCli,
 ): Promise<DeclastructPlan> => {
   // log plan phase header
   context.log.info('🔮 plan changes...');
@@ -111,6 +112,7 @@ export const planChanges = async (
     createdAt: asIsoTimestamp(new Date()),
     wish: {
       uri: input.wishFilePath,
+      argv: context.passthrough.argv,
     },
     changes,
   });

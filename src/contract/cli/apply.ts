@@ -7,6 +7,7 @@ import { BadRequestError } from 'helpful-errors';
 import { relative, resolve } from 'path';
 import { getGitRepoRoot } from 'rhachet-artifact-git';
 
+import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
 import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
 import { applyChanges } from '@src/domain.operations/apply/applyChanges';
@@ -72,6 +73,19 @@ export const executeApplyCommand = async (input: {
   log.info(`   wish: ${relativeWishPath}`);
   log.info('');
 
+  // create cli context with passthrough args from plan
+  const cliContext: ContextDeclastructCli = {
+    passthrough: { argv: plan?.wish.argv ?? [] },
+  };
+
+  // inject argv from plan so wish file sees same args as plan time
+  // this ensures staleness check compares same resources
+  process.argv = [
+    process.argv[0]!,
+    process.argv[1]!,
+    ...cliContext.passthrough.argv,
+  ];
+
   // import wish file
   const wish = await import(resolvedWishPath);
 
@@ -89,10 +103,11 @@ export const executeApplyCommand = async (input: {
   // log.info('✨ start providers...');
   await Promise.all(providers.map((p: any) => p.hooks.beforeAll()));
 
-  // create context
+  // create context with passthrough args
   const context = {
     bottleneck: new Bottleneck({ maxConcurrent: 1 }),
     log,
+    passthrough: cliContext.passthrough,
   };
 
   // apply changes (plan=null triggers yolo mode, skipping validation)

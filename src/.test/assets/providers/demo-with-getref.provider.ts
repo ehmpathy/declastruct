@@ -27,11 +27,28 @@ class DemoRefResource
 }
 
 /**
+ * .what = namespace for temp directory isolation
+ * .why = enables parallel test execution without interference
+ */
+let currentNamespace = 'default';
+
+/**
+ * .what = sets namespace for temp directory isolation
+ * .why = each test file can use a unique namespace to prevent interference
+ */
+export const setDemoRefNamespace = (namespace: string): void => {
+  currentNamespace = namespace;
+};
+
+/**
  * .what = resolves temp directory path
  * .why = centralizes directory location
  */
 const getTempDir = (): string => {
-  return resolve(process.cwd(), '.test/demo/getref-provider/.temp');
+  return resolve(
+    process.cwd(),
+    `.test/demo/getref-provider/.temp/${currentNamespace}`,
+  );
 };
 
 /**

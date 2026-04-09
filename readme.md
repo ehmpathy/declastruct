@@ -120,6 +120,48 @@ planned changes:
     + metadata: { source: "app-web" }
 ```
 
+#### pass args to your wish file
+
+pass args to your wish file via `--` separator:
+
+```sh
+npx declastruct plan \
+  --wish provision/resources.ts \
+  --into provision/.temp/plan.json \
+  -- --env prod --region us-west-2
+```
+
+args after `--` are injected into `process.argv` before the wish file loads. parse them with node's `parseArgs`:
+
+```ts
+import { parseArgs } from 'util';
+
+const { values } = parseArgs({
+  args: process.argv.slice(2),
+  options: {
+    env: { type: 'string', default: 'test' },
+    region: { type: 'string', default: 'us-east-1' },
+  },
+});
+
+export const getResources = async () => {
+  // use values.env, values.region to configure resources
+  return [
+    DeclaredAwsS3Bucket.as({
+      name: `app-${values.env}-assets`,
+      region: values.region,
+    }),
+  ];
+};
+```
+
+**typo safety:** unknown flags without `--` trigger an error with guidance:
+
+```
+error: unknown option '--env'
+hint: to pass args to your wish file, use: -- --env
+```
+
 ### 3. **apply** the plan 🪄
 
 apply the plan to make your wish come true
