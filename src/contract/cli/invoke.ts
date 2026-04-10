@@ -1,10 +1,20 @@
 import { Command } from 'commander';
+import { BadRequestError } from 'helpful-errors';
 
 import pkg from '../../../package.json';
 import { executeApplyCommand } from './apply';
 import { executePlanCommand } from './plan';
 
 const log = console;
+
+/**
+ * .what = determines exit code based on error type
+ * .why = semantic exit codes let callers know if they can retry or must fix
+ */
+const getExitCodeForError = (error: unknown): number => {
+  if (error instanceof BadRequestError) return 2;
+  return 1;
+};
 
 /**
  * .what = invokes CLI commands based on user input
@@ -24,6 +34,7 @@ export const invoke = async ({ args }: { args: string[] }): Promise<void> => {
     .description('Generate a change plan from a wish file')
     .requiredOption('--wish <file>', 'Path to wish file')
     .requiredOption('--into <file>', 'Path to output plan file')
+    .option('--snap <file>', 'Path to output snapshot file')
     .usage('--wish <file> --into <file> [-- <wish-args>]')
     .allowExcessArguments(true)
     .configureOutput({
@@ -46,11 +57,15 @@ export const invoke = async ({ args }: { args: string[] }): Promise<void> => {
         await executePlanCommand({
           wishFilePath: options.wish,
           planFilePath: options.into,
+          snapFilePath: options.snap ?? null,
           passthroughArgs,
         });
       } catch (error) {
-        log.error('✖ Error during plan:', error);
-        process.exit(1);
+        // allowlist: BadRequestError (user must fix) and Error (malfunction)
+        // rethrow anything else (non-Error thrown = unexpected)
+        if (!(error instanceof Error)) throw error;
+        log.error('✖ plan failed:', error);
+        process.exit(getExitCodeForError(error));
       }
     });
 
@@ -67,8 +82,11 @@ export const invoke = async ({ args }: { args: string[] }): Promise<void> => {
           wishFilePath: options.wish,
         });
       } catch (error) {
-        log.error('✖ Error during apply:', error);
-        process.exit(1);
+        // allowlist: BadRequestError (user must fix) and Error (malfunction)
+        // rethrow non-Error values (unexpected)
+        if (!(error instanceof Error)) throw error;
+        log.error('✖ apply failed:', error);
+        process.exit(getExitCodeForError(error));
       }
     });
 

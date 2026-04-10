@@ -1,6 +1,7 @@
 import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
+import { BadRequestError } from 'helpful-errors';
 import { resolve } from 'path';
 
 import {
@@ -42,7 +43,7 @@ describe('applyChanges', () => {
     ];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -109,7 +110,7 @@ describe('applyChanges', () => {
     const resources = [initialResource.clone({ name: 'New Name' })];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -160,7 +161,7 @@ describe('applyChanges', () => {
     const resources = [resource];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -210,7 +211,7 @@ describe('applyChanges', () => {
     ];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -258,7 +259,7 @@ describe('applyChanges', () => {
     ];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -315,7 +316,7 @@ describe('applyChanges', () => {
     const initialResources = [genSampleDemoResource({ name: 'Original Name' })];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources: initialResources,
         providers: [demoProvider],
@@ -351,7 +352,7 @@ describe('applyChanges', () => {
         },
         createContext(),
       ),
-    ).rejects.toThrow();
+    ).rejects.toThrow(BadRequestError);
   });
 
   it('should be idempotent - reapplying same plan is safe', async () => {
@@ -359,7 +360,7 @@ describe('applyChanges', () => {
     const resources = [genSampleDemoResource({ name: 'Test Resource' })];
 
     // plan changes
-    const plan = await planChanges(
+    const { plan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -384,7 +385,7 @@ describe('applyChanges', () => {
     );
 
     // replan with same resources
-    const plan2 = await planChanges(
+    const { plan: plan2 } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -422,7 +423,7 @@ describe('applyChanges', () => {
     const resources = [genSampleDemoResource({ name: 'Test Resource' })];
 
     // plan changes
-    const originalPlan = await planChanges(
+    const { plan: originalPlan } = await planChanges(
       {
         resources,
         providers: [demoProvider],
@@ -458,6 +459,6 @@ describe('applyChanges', () => {
         },
         createContext(),
       ),
-    ).rejects.toThrow('plan is stale');
+    ).rejects.toThrow(BadRequestError);
   });
 });

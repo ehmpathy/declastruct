@@ -18,6 +18,40 @@ import { withSpinner } from '@src/infra/withSpinner';
 import { applyChange } from './applyChange';
 
 /**
+ * .what = checks if plan has any non-KEEP changes
+ * .why = determines whether apply phase should proceed
+ */
+const hasChangesToApply = (input: {
+  changes: DeclastructChange[];
+}): boolean => {
+  return input.changes.some(
+    (change) => change.action !== DeclastructChangeAction.KEEP,
+  );
+};
+
+/**
+ * .what = finds resource that matches forResource identifier
+ * .why = locates the declared resource for a planned change
+ */
+const getOneResourceForChange = <T extends DomainEntity<any>>(input: {
+  resources: T[];
+  forResource: { class: string; slug: string };
+}): T => {
+  const resourceFound = input.resources.find(
+    (candidate) =>
+      candidate.constructor.name === input.forResource.class &&
+      getUniqueIdentifierSlug(candidate) === input.forResource.slug,
+  );
+  if (!resourceFound) {
+    UnexpectedCodePathError.throw(
+      'could not find resource specified in plan. was it removed?',
+      { forResource: input.forResource },
+    );
+  }
+  return resourceFound as T;
+};
+
+/**
  * .what = applies changes to achieve desired state
  * .why = executes infrastructure changes in a controlled, observable manner
  * .note = idempotent - reapplying same plan is safe (guards check if already applied)
@@ -33,7 +67,7 @@ export const applyChanges = async (
   context: ContextLogTrail & ContextDeclastruct & ContextDeclastructCli,
 ): Promise<{ appliedChanges: DeclastructChange[] }> => {
   // replan to get current state
-  const currentPlan = await planChanges(
+  const { plan: currentPlan } = await planChanges(
     {
       resources: input.resources,
       providers: input.providers,
@@ -45,13 +79,10 @@ export const applyChanges = async (
   // use current plan for apply (works for both modes)
   const planToApply = currentPlan;
 
-  // check if there are any actionable changes (non-KEEP)
-  const hasActionableChanges = planToApply.changes.some(
-    (change) => change.action !== DeclastructChangeAction.KEEP,
-  );
-
   // skip apply phase if everything is in sync
-  if (!hasActionableChanges) return { appliedChanges: [] };
+  if (!hasChangesToApply({ changes: planToApply.changes })) {
+    return { appliedChanges: [] };
+  }
 
   // validate plan matches current state (skip if no plan provided, i.e. yolo mode)
   if (input.plan) {
@@ -84,16 +115,10 @@ export const applyChanges = async (
     }
 
     // find the desired resource
-    const resourceFound =
-      input.resources.find(
-        (candidate) =>
-          candidate.constructor.name === change.forResource.class &&
-          getUniqueIdentifierSlug(candidate) === change.forResource.slug,
-      ) ??
-      UnexpectedCodePathError.throw(
-        'could not find resource specified in plan. was it removed?',
-        { change },
-      );
+    const resourceFound = getOneResourceForChange({
+      resources: input.resources,
+      forResource: change.forResource,
+    });
 
     // log the action line (stays fixed)
     const actionLabel = colorizeAction(change.action);

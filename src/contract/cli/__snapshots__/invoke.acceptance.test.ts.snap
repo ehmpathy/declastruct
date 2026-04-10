@@ -8,6 +8,7 @@ Generate a change plan from a wish file
 Options:
   --wish <file>  Path to wish file
   --into <file>  Path to output plan file
+  --snap <file>  Path to output snapshot file
   -h, --help     display help for command
 "
 `;

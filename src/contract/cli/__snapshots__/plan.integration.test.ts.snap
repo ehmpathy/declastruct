@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`executePlanCommand --snap flag should produce snapshot output that matches expected format 1`] = `
+{
+  "observedAt": "[TIMESTAMP]",
+  "remote": [
+    {
+      "forResource": {
+        "class": "DemoResource",
+        "slug": "DemoResource.[UUID].[EXID]",
+      },
+      "state": null,
+    },
+    {
+      "forResource": {
+        "class": "DemoResource",
+        "slug": "DemoResource.[UUID].[EXID]",
+      },
+      "state": null,
+    },
+  ],
+  "wished": [
+    {
+      "forResource": {
+        "class": "DemoResource",
+        "slug": "DemoResource.[UUID].[EXID]",
+      },
+      "state": {
+        "_dobj": "DemoResource",
+        "exid": "[EXID]",
+        "name": "First Resource",
+      },
+    },
+    {
+      "forResource": {
+        "class": "DemoResource",
+        "slug": "DemoResource.[UUID].[EXID]",
+      },
+      "state": {
+        "_dobj": "DemoResource",
+        "exid": "[EXID]",
+        "name": "Second Resource",
+      },
+    },
+  ],
+}
+`;
