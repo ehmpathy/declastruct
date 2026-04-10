@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/ehmpathy/declastruct/compare/v1.8.0...v1.9.0) (2026-04-10)
+
+
+### Features
+
+* **plan:** add --snap flag to capture full remote and wished state ([#56](https://github.com/ehmpathy/declastruct/issues/56)) ([4605678](https://github.com/ehmpathy/declastruct/commit/4605678f558629a945b3e4b10720a11b0a34fb03))
+
 ## [1.8.0](https://github.com/ehmpathy/declastruct/compare/v1.7.3...v1.8.0) (2026-04-09)
 
 
