@@ -13,6 +13,54 @@ Options:
 "
 `;
 
+exports[`invoke CLI plan success output should show apply hint after plan completes 1`] = `
+"
+🌊 declastruct plan
+   ├─ wish: src/.test/assets/wish.fixture.ts
+   ├─ plan: src/.test/assets/.temp/[UUID]/plan.json
+   └─ snap: (none)
+
+🔮 plan changes...
+
+○ DemoResource.[UUID].[HASH]
+   └─ ⠋ inflight 0.0s
+   ├─ ✔ done in 0.00s
+   └─ decision [CREATE]
+      - Remote
+      + Desired
+
+      - Object {}
+      + DemoResource {
+      +   "exid": "[UUID]",
+      +   "name": "First Resource",
+      + }
+
+○ DemoResource.[UUID].[HASH]
+   └─ ⠋ inflight 0.0s
+   ├─ ✔ done in 0.00s
+   └─ decision [CREATE]
+      - Remote
+      + Desired
+
+      - Object {}
+      + DemoResource {
+      +   "exid": "[UUID]",
+      +   "name": "Second Resource",
+      + }
+
+
+🌊 declastruct plan
+   ├─ resources: 2
+   ├─ plan: src/.test/assets/.temp/[UUID]/plan.json
+   └─ snap: (none)
+
+🥥 did you know?
+   ├─ to apply, run
+   └─ declastruct apply --plan src/.test/assets/.temp/[UUID]/plan.json
+
+"
+`;
+
 exports[`invoke CLI plan with unknown option should guide user to use -- when unknown option passed 1`] = `
 "error: unknown option '--env'
 hint: to pass args to your wish file, use: -- --env

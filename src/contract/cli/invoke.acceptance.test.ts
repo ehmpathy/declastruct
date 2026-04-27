@@ -48,6 +48,50 @@ const genTempDir = async (): Promise<string> => {
 };
 
 describe('invoke CLI', () => {
+  describe('plan success output', () => {
+    it('should show apply hint after plan completes', async () => {
+      const tempDir = await genTempDir();
+      const planFilePath = resolve(tempDir, 'plan.json');
+      const wishFilePath = resolve(
+        process.cwd(),
+        'src/.test/assets/wish.fixture.ts',
+      );
+
+      const { stdout, exitCode } = await execCli([
+        'plan',
+        '--wish',
+        wishFilePath,
+        '--into',
+        planFilePath,
+      ]);
+
+      expect(exitCode).toBe(0);
+      expect(stdout).toContain('🥥 did you know?');
+      expect(stdout).toContain('to apply, run');
+      expect(stdout).toContain('declastruct apply --plan');
+
+      // sanitize dynamic values for stable snapshot
+      const sanitized = stdout
+        // strip ANSI escape sequences (cursor movement, colors, etc)
+        // biome-ignore lint/suspicious/noControlCharactersInRegex: ANSI escape sequences use control chars
+        .replace(/\x1b\[[0-9;]*[A-Za-z]/g, '')
+        // strip carriage returns
+        .replace(/\r/g, '')
+        // strip whitespace at end of lines
+        .replace(/[ \t]+$/gm, '')
+        .replace(/\.temp\/[a-f0-9-]+\//g, '.temp/[UUID]/')
+        .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/g, '[TIMESTAMP]')
+        // sanitize resource slugs: DemoResource.uuid.hash → DemoResource.[UUID].[HASH]
+        .replace(
+          /DemoResource\.[a-f0-9-]{36}\.[a-f0-9]+/g,
+          'DemoResource.[UUID].[HASH]',
+        )
+        // sanitize exid values: "exid": "uuid" → "exid": "[UUID]"
+        .replace(/"exid": "[a-f0-9-]{36}"/g, '"exid": "[UUID]"');
+      expect(sanitized).toMatchSnapshot();
+    });
+  });
+
   describe('plan --help', () => {
     it('should show passthrough args in plan help text', async () => {
       const { stdout, exitCode } = await execCli(['plan', '--help']);

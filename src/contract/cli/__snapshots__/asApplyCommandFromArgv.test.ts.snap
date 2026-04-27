@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`asApplyCommandFromArgv given: [case1] npx invocation with basic flags when: [t0] transformed then: produces apply command with plan flag 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case2] pnpm dlx invocation when: [t0] transformed then: preserves pnpm dlx prefix 1`] = `"pnpm dlx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case3] yarn dlx invocation when: [t0] transformed then: preserves yarn dlx prefix 1`] = `"yarn dlx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case4] local node_modules invocation when: [t0] transformed then: uses npx prefix 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case5] command with --snap flag when: [t0] transformed then: removes --snap flag 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case6] command with passthrough args when: [t0] transformed then: removes passthrough args 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case7] command with other flags to preserve when: [t0] transformed then: preserves other flags 1`] = `"npx declastruct apply --plan plan.json --verbose --debug"`;
+
+exports[`asApplyCommandFromArgv given: [case8] command with --flag=value syntax when: [t0] transformed then: removes --wish=value and --into=value 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case9] bare invocation (global install) when: [t0] transformed then: produces command without prefix 1`] = `"declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case10] relative plan path when: [t0] transformed then: uses the provided plan path 1`] = `"npx declastruct apply --plan provision/aws/.temp/plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case11] minimal argv with no flags when: [t0] transformed then: produces minimal apply command 1`] = `"npx declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case12] empty plan file path when: [t0] transformed then: produces command with empty plan path 1`] = `"npx declastruct apply --plan "`;
+
+exports[`asApplyCommandFromArgv given: [case13] unknown exec path (edge case) when: [t0] transformed then: produces bare command 1`] = `"declastruct apply --plan plan.json"`;
+
+exports[`asApplyCommandFromArgv given: [case14] empty argv when: [t0] transformed then: produces bare apply command 1`] = `"declastruct apply --plan plan.json"`;
