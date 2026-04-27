@@ -73,7 +73,7 @@ describe('invoke CLI', () => {
       // sanitize dynamic values for stable snapshot
       const sanitized = stdout
         // strip ANSI escape sequences (cursor movement, colors, etc)
-        // eslint-disable-next-line no-control-regex
+        // biome-ignore lint/suspicious/noControlCharactersInRegex: ANSI escape sequences use control chars
         .replace(/\x1b\[[0-9;]*[A-Za-z]/g, '')
         // strip carriage returns
         .replace(/\r/g, '')
