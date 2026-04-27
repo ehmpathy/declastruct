@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/ehmpathy/declastruct/compare/v1.9.0...v1.9.1) (2026-04-27)
+
+
+### Bug Fixes
+
+* **cli:** show apply command hint after plan completes ([#59](https://github.com/ehmpathy/declastruct/issues/59)) ([8ef30bd](https://github.com/ehmpathy/declastruct/commit/8ef30bd65952981bbc435cd205958126a9936f1a))
+
 ## [1.9.0](https://github.com/ehmpathy/declastruct/compare/v1.8.0...v1.9.0) (2026-04-10)
 
 
