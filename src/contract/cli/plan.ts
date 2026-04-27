@@ -15,6 +15,8 @@ import {
   initializeProviders,
 } from '@src/infra/initializeProviders';
 
+import { asApplyCommandFromArgv } from './asApplyCommandFromArgv';
+
 const log = console;
 
 /**
@@ -33,6 +35,9 @@ export const executePlanCommand = async ({
   snapFilePath: string | null;
   passthroughArgs?: string[];
 }): Promise<void> => {
+  // capture original argv before it gets modified for passthrough args
+  const argvOriginal = [...process.argv];
+
   // resolve paths
   const resolvedWishPath = resolve(process.cwd(), wishFilePath);
   const resolvedPlanPath = resolve(process.cwd(), planFilePath);
@@ -145,5 +150,15 @@ export const executePlanCommand = async ({
   log.info(`   ├─ plan: ${relativePlanPath}`);
   if (relativeSnapPath) log.info(`   └─ snap: ${relativeSnapPath}`);
   else log.info(`   └─ snap: (none)`);
+  log.info('');
+
+  // log apply hint
+  const applyCommand = asApplyCommandFromArgv({
+    argv: argvOriginal,
+    planFilePath: relativePlanPath,
+  });
+  log.info('🥥 did you know?');
+  log.info('   ├─ to apply, run');
+  log.info(`   └─ ${applyCommand}`);
   log.info('');
 };
