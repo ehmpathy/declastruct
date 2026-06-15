@@ -51,9 +51,6 @@ jobs:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
 
-      - name: build since self-reference
-        run: npm run build
-
       - name: get github auth, if creds supplied
         if: ${{ inputs.creds-github-app-id }}
         id: github-app-token
@@ -125,9 +122,6 @@ jobs:
         with:
           name: declastruct-plan
           path: ${{ steps.extract-dir.outputs.wish-dir }}
-
-      - name: build since self-reference
-        run: npm run build
 
       - name: get github auth, if creds supplied
         if: ${{ inputs.creds-github-app-id }}

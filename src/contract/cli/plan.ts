@@ -1,11 +1,12 @@
 #!/usr/bin/env tsx
 
-import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { mkdir, writeFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { dirname, relative, resolve } from 'path';
 import { getGitRepoRoot } from 'rhachet-artifact-git';
+import { LogLevel, type LogMethods } from 'sdk-logs';
+import { genBottleneck } from 'with-bottleneck';
 
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
@@ -17,7 +18,17 @@ import {
 
 import { asApplyCommandFromArgv } from './asApplyCommandFromArgv';
 
-const log = console;
+/**
+ * .what = cli-friendly log methods that output plain strings
+ * .why = genLogMethods outputs structured JSON which is not human-readable
+ */
+const log: LogMethods = {
+  info: (...args) => console.info(...args),
+  warn: (...args) => console.warn(...args),
+  error: (...args) => console.error(...args),
+  debug: (...args) => console.debug(...args),
+  _: { level: LogLevel.INFO },
+};
 
 /**
  * .what = executes the plan command to generate an infrastructure change plan
@@ -107,7 +118,7 @@ export const executePlanCommand = async ({
 
   // create context with passthrough args
   const context = {
-    bottleneck: new Bottleneck({ maxConcurrent: 1 }),
+    bottleneck: genBottleneck({ concurrency: 1 }),
     log,
     passthrough: cliContext.passthrough,
   };

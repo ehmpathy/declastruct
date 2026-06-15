@@ -4,7 +4,7 @@ import {
   serialize,
 } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
-import type { ContextLogTrail } from 'simple-log-methods';
+import type { ContextLogTrail } from 'sdk-logs';
 
 import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
@@ -127,14 +127,16 @@ export const planChanges = async (
       // skip if nothing to track (resource doesn't exist and isn't desired)
       if (!computed) {
         context.log.info(
-          `   └─ decision ${colorizeAction(DeclastructChangeAction.OMIT)}`,
+          `   └─ decision ${await colorizeAction(DeclastructChangeAction.OMIT)}`,
         );
         context.log.info('');
         return null;
       }
 
       // log decision
-      context.log.info(`   └─ decision ${colorizeAction(computed.action)}`);
+      context.log.info(
+        `   └─ decision ${await colorizeAction(computed.action)}`,
+      );
 
       // and the diff too, indented to align with tree
       if (computed.state.difference) {

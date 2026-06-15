@@ -1,4 +1,4 @@
-import type Bottleneck from 'bottleneck';
+import type { Bottleneck } from 'with-bottleneck';
 
 /**
  * .what = standard context for all declastruct operations

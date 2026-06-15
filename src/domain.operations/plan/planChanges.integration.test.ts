@@ -1,5 +1,6 @@
-import Bottleneck from 'bottleneck';
 import { resolve } from 'path';
+import { LogLevel } from 'sdk-logs';
+import { genBottleneck } from 'with-bottleneck';
 
 import {
   demoProvider,
@@ -22,12 +23,13 @@ describe('planChanges', () => {
   });
 
   const createContext = () => ({
-    bottleneck: new Bottleneck({ maxConcurrent: 10 }),
+    bottleneck: genBottleneck({ concurrency: 10 }),
     log: {
       info: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
       debug: jest.fn(),
+      _: { level: LogLevel.DEBUG },
     },
     passthrough: { argv: [] },
   });

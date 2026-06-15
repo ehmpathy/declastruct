@@ -9,6 +9,7 @@ import {
   setDemoRefNamespace,
 } from '@src/.test/assets/providers/demo-with-getref.provider';
 
+import { getRefByPrimary } from './getRefByPrimary';
 import { getRefByUnique } from './getRefByUnique';
 
 describe('getRefByUnique.integration', () => {
@@ -148,11 +149,8 @@ describe('getRefByUnique.integration', () => {
       return { resource: persisted };
     });
 
-    when('[t0] converting primary to unique and back', () => {
+    when('[t0] primary to unique and back', () => {
       then('it should preserve the original reference', async () => {
-        // need to import getRefByPrimary for round-trip test
-        const { getRefByPrimary } = await import('./getRefByPrimary');
-
         const originalPrimary = { uuid: scene.resource.uuid };
 
         // primary -> unique

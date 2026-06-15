@@ -1,13 +1,20 @@
-import chalk from 'chalk';
-
 import { DeclastructChangeAction } from '@src/domain.objects/DeclastructChange';
+
+/**
+ * .what = dynamically imports chalk (ESM-only in v5+)
+ * .why = node16 module resolution requires dynamic import for ESM packages in CJS
+ */
+const getChalk = async () => (await import('chalk')).default;
 
 /**
  * .what = returns a colorized action label for CLI output
  * .why = improves visual distinction between action types
  * .note = uses pastel colors for a softer, zen aesthetic
  */
-export const colorizeAction = (action: DeclastructChangeAction): string => {
+export const colorizeAction = async (
+  action: DeclastructChangeAction,
+): Promise<string> => {
+  const chalk = await getChalk();
   switch (action) {
     case DeclastructChangeAction.KEEP:
       return chalk.hex('#9ca3af')('[KEEP]'); // pastel gray
