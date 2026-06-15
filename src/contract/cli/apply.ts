@@ -8,6 +8,9 @@ import { getGitRepoRoot } from 'rhachet-artifact-git';
 import { LogLevel, type LogMethods } from 'sdk-logs';
 import { genBottleneck } from 'with-bottleneck';
 
+// register tsconfig paths for dynamic imports of wish files
+import '@src/infra/registerTsconfigPaths';
+
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
 import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
@@ -115,7 +118,11 @@ export const executeApplyCommand = async (input: {
   ];
 
   // import wish file
-  const wish = await import(resolvedWishPath);
+  const wishModule = await import(resolvedWishPath);
+
+  // handle ESM/CJS interop - module may have named exports directly or via .default
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic import returns unknown shape
+  const wish: any = wishModule.default ?? wishModule;
 
   // validate exports
   if (typeof wish.getResources !== 'function')
