@@ -51,6 +51,9 @@ jobs:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
 
+      - name: build
+        run: npm run build
+
       - name: get github auth, if creds supplied
         if: ${{ inputs.creds-github-app-id }}
         id: github-app-token
@@ -112,6 +115,9 @@ jobs:
         with:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
+
+      - name: build
+        run: npm run build
 
       - name: extract directory from wish-path
         id: extract-dir
