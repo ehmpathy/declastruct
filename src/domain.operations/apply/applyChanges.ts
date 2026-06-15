@@ -1,6 +1,6 @@
 import { type DomainEntity, getUniqueIdentifierSlug } from 'domain-objects';
 import { UnexpectedCodePathError } from 'helpful-errors';
-import type { ContextLogTrail } from 'simple-log-methods';
+import type { ContextLogTrail } from 'sdk-logs';
 
 import type { ContextDeclastruct } from '@src/domain.objects/ContextDeclastruct';
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
@@ -109,7 +109,7 @@ export const applyChanges = async (
     // log KEEP actions and skip
     if (change.action === DeclastructChangeAction.KEEP) {
       context.log.info(
-        `↓ ${colorizeAction(change.action)} ${change.forResource.slug}`,
+        `↓ ${await colorizeAction(change.action)} ${change.forResource.slug}`,
       );
       continue;
     }
@@ -121,7 +121,7 @@ export const applyChanges = async (
     });
 
     // log the action line (stays fixed)
-    const actionLabel = colorizeAction(change.action);
+    const actionLabel = await colorizeAction(change.action);
     context.log.info(`○ ${actionLabel} ${change.forResource.slug}`);
 
     // apply the change with spinner on line below

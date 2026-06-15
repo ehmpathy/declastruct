@@ -51,7 +51,7 @@ jobs:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
 
-      - name: build since self-reference
+      - name: build
         run: npm run build
 
       - name: get github auth, if creds supplied
@@ -116,6 +116,9 @@ jobs:
           path: ./node_modules
           key: ${{ needs.install.outputs.node-modules-cache-key }}
 
+      - name: build
+        run: npm run build
+
       - name: extract directory from wish-path
         id: extract-dir
         run: echo "wish-dir=$(dirname "${{ inputs.wish-path }}")" >> "$GITHUB_OUTPUT"
@@ -125,9 +128,6 @@ jobs:
         with:
           name: declastruct-plan
           path: ${{ steps.extract-dir.outputs.wish-dir }}
-
-      - name: build since self-reference
-        run: npm run build
 
       - name: get github auth, if creds supplied
         if: ${{ inputs.creds-github-app-id }}

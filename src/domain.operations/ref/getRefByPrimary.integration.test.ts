@@ -7,8 +7,7 @@ import {
   demoRefDao,
   genSampleDemoRefResource,
   setDemoRefNamespace,
-} from '@src/.test/assets/providers/demo-with-getref.provider';
-
+} from '../../.test/assets/providers/demo-with-getref.provider';
 import { getRefByPrimary } from './getRefByPrimary';
 
 describe('getRefByPrimary.integration', () => {

@@ -1,11 +1,15 @@
 #!/usr/bin/env tsx
 
-import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { relative, resolve } from 'path';
 import { getGitRepoRoot } from 'rhachet-artifact-git';
+import { LogLevel, type LogMethods } from 'sdk-logs';
+import { genBottleneck } from 'with-bottleneck';
+
+// register tsconfig paths for dynamic imports of wish files
+import '@src/infra/registerTsconfigPaths';
 
 import type { ContextDeclastructCli } from '@src/domain.objects/ContextDeclastructCli';
 import type { DeclaredResource } from '@src/domain.objects/DeclaredResource';
@@ -13,7 +17,17 @@ import { DeclastructPlan } from '@src/domain.objects/DeclastructPlan';
 import { applyChanges } from '@src/domain.operations/apply/applyChanges';
 import { initializeProviders } from '@src/infra/initializeProviders';
 
-const log = console;
+/**
+ * .what = cli-friendly log methods that output plain strings
+ * .why = genLogMethods outputs structured JSON which is not human-readable
+ */
+const log: LogMethods = {
+  info: (...args) => console.info(...args),
+  warn: (...args) => console.warn(...args),
+  error: (...args) => console.error(...args),
+  debug: (...args) => console.debug(...args),
+  _: { level: LogLevel.INFO },
+};
 
 /**
  * .what = executes the apply command to apply infrastructure changes
@@ -104,7 +118,11 @@ export const executeApplyCommand = async (input: {
   ];
 
   // import wish file
-  const wish = await import(resolvedWishPath);
+  const wishModule = await import(resolvedWishPath);
+
+  // handle ESM/CJS interop - module may have named exports directly or via .default
+  // biome-ignore lint/suspicious/noExplicitAny: dynamic import returns unknown shape
+  const wish: any = wishModule.default ?? wishModule;
 
   // validate exports
   if (typeof wish.getResources !== 'function')
@@ -127,7 +145,7 @@ export const executeApplyCommand = async (input: {
 
   // create context with passthrough args
   const context = {
-    bottleneck: new Bottleneck({ maxConcurrent: 1 }),
+    bottleneck: genBottleneck({ concurrency: 1 }),
     log,
     passthrough: cliContext.passthrough,
   };

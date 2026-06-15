@@ -1,8 +1,9 @@
-import Bottleneck from 'bottleneck';
 import { existsSync } from 'fs';
 import { readFile } from 'fs/promises';
 import { BadRequestError } from 'helpful-errors';
 import { resolve } from 'path';
+import { LogLevel } from 'sdk-logs';
+import { genBottleneck } from 'with-bottleneck';
 
 import {
   demoProvider,
@@ -25,12 +26,13 @@ describe('applyChanges', () => {
   });
 
   const createContext = () => ({
-    bottleneck: new Bottleneck({ maxConcurrent: 1 }),
+    bottleneck: genBottleneck({ concurrency: 1 }),
     log: {
       info: jest.fn(),
       error: jest.fn(),
       warn: jest.fn(),
       debug: jest.fn(),
+      _: { level: LogLevel.DEBUG },
     },
     passthrough: { argv: [] },
   });

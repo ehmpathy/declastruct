@@ -12,12 +12,15 @@
     "outDir": "dist",
     "target": "es2020",
     "incremental": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "baseUrl": ".",
     "paths": {
       "@src/*": [
         "src/*"
+      ],
+      "@/*": [
+        "*"
       ]
     }
   },
@@ -29,6 +32,7 @@
     "**/*.ts"
   ],
   "exclude": [
+    ".agent/.cache",
     "dist",
     "coverage",
     "node_modules"

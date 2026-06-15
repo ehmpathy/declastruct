@@ -1,41 +1,36 @@
-import Bottleneck from 'bottleneck';
-import type { ContextLogTrail } from 'simple-log-methods';
+import { type ContextLogTrail, genLogMethods } from 'sdk-logs';
+import { genBottleneck } from 'with-bottleneck';
 
 import type { ContextDeclastruct } from './ContextDeclastruct';
 
 describe('ContextDeclastruct', () => {
   it('should accept single bottleneck configuration', () => {
     const context: ContextDeclastruct = {
-      bottleneck: new Bottleneck({ maxConcurrent: 5 }),
+      bottleneck: genBottleneck({ concurrency: 5 }),
     };
 
-    expect(context.bottleneck).toBeInstanceOf(Bottleneck);
+    expect(context.bottleneck).toBeDefined();
   });
 
   it('should accept split bottleneck configuration', () => {
     const context: ContextDeclastruct = {
       bottleneck: {
-        onPlan: new Bottleneck({ maxConcurrent: 10 }),
-        onApply: new Bottleneck({ maxConcurrent: 1 }),
+        onPlan: genBottleneck({ concurrency: 10 }),
+        onApply: genBottleneck({ concurrency: 1 }),
       },
     };
 
     expect(context.bottleneck).toHaveProperty('onPlan');
     expect(context.bottleneck).toHaveProperty('onApply');
-    expect((context.bottleneck as any).onPlan).toBeInstanceOf(Bottleneck);
-    expect((context.bottleneck as any).onApply).toBeInstanceOf(Bottleneck);
+    expect((context.bottleneck as any).onPlan).toBeDefined();
+    expect((context.bottleneck as any).onApply).toBeDefined();
   });
 
   it('should be able to intersect with ContextLogTrail', () => {
     // type verification
     const context: ContextDeclastruct & ContextLogTrail = {
-      bottleneck: new Bottleneck({ maxConcurrent: 5 }),
-      log: {
-        info: () => {},
-        warn: () => {},
-        error: () => {},
-        debug: () => {},
-      },
+      bottleneck: genBottleneck({ concurrency: 5 }),
+      log: genLogMethods(),
     };
 
     expect(context.bottleneck).toBeDefined();
